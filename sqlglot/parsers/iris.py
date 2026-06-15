@@ -123,7 +123,7 @@ class IrisParser(TSQLParser):
 
             if op:
                 this = op(self, this, field)
-            elif isinstance(this, exp.Column) and not this.args.get("catalog"):
+            elif isinstance(this, exp.Column) and not this.args.get("catalog") and isinstance(field, (exp.Column, exp.Identifier)):
                 this = self.expression(
                     exp.Column(
                         this=field,
@@ -464,6 +464,9 @@ class IrisParser(TSQLParser):
                     self._advance()
                     self._advance()
                     return exp.to_identifier(f"%{self._prev.text}")
+                self._advance()
+                self._advance()
+                return self.expression(exp.IrisPercentField(this=name, double=False))
         return super()._parse_id_var(any_token=any_token, tokens=tokens)
 
     def _parse_factor(self) -> exp.Expr | None:

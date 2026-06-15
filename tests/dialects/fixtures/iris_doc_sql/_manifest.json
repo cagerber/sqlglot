@@ -1213,5 +1213,147 @@
       "fixture": "RSQL_datatype.json",
       "status": "harvested"
     }
+  ],
+  "gsql_pages": [
+    {
+      "doc_key": "GSQL_overview",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_overview",
+      "title": "SQL Overview",
+      "status": "harvested",
+      "fixture": "GSQL_overview.json",
+      "page_kind": "index"
+    },
+    {
+      "doc_key": "GSQL_intr",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_intr",
+      "title": "Introduction to SQL",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_basics",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_basics",
+      "title": "SQL Basics",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_langelements",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_langelements",
+      "title": "Language Elements",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_implicitjoins",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_implicitjoins",
+      "title": "Implicit Joins (Arrow Syntax)",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_identifiers",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_identifiers",
+      "title": "Identifiers",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_tables",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_tables",
+      "title": "Tables",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_views",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_views",
+      "title": "Views",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_foreignkeys",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_foreignkeys",
+      "title": "Foreign Keys",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_triggers",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_triggers",
+      "title": "Triggers",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_collation",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_collation",
+      "title": "Collation",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_foreigntables",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_foreigntables",
+      "title": "Foreign Tables",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_partitioned",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_partitioned",
+      "title": "Partitioned Tables",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_modify",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_modify",
+      "title": "Modifying the Database",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_queries",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_queries",
+      "title": "Querying the Database",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_procedures",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_procedures",
+      "title": "Stored Procedures",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_blobs",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_blobs",
+      "title": "BLOBs and CLOBs",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_privileges",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_privileges",
+      "title": "Privileges",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_rls",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_rls",
+      "title": "Row-Level Security",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_vecsearch",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_vecsearch",
+      "title": "Vector Search",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_options",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_options",
+      "title": "Query Options",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_import",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_import",
+      "title": "Importing SQL Code",
+      "status": "pending"
+    },
+    {
+      "doc_key": "GSQL_impexp",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_impexp",
+      "title": "Import and Export",
+      "status": "pending"
+    }
   ]
 }

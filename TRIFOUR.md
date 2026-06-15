@@ -4,6 +4,12 @@ Upstream: [tobymao/sqlglot](https://github.com/tobymao/sqlglot) (`v30.11.0` base
 
 ODS consumes this fork via `[tool.uv.sources] sqlglot` (editable `../3rdparty/sqlglot` in dev; git `rev` pin in CI).
 
+## Changes in `30.11.0+trifour.16`
+
+- **GSQL doc harvest** — seeded `gsql_pages` manifest section with all **23** GSQL reference pages (GSQL_overview through GSQL_impexp); index fixture `GSQL_overview.json` with `child_doc_keys` + curated smoke `SELECT` exercising arrow syntax and `%ID` pseudo-field.
+- **Parser** — fixed `_parse_id_var` to return `IrisPercentField` for `%ID` pseudo-fields in dotted references (`p.%ID`) instead of dropping the field name; fixed `_parse_column_ops` DOT handler to fall through to `Dot` when the right-hand-side is not a plain `Column`/`Identifier`.
+- **Harvest CLI** — `pending_keys()` and `update_manifest_harvested()` now scan `gsql_pages` section.
+
 ## Changes in `30.11.0+trifour.15`
 
 - **SQL clauses** (`RSQL_CLAUSES`): harvested all **16** child clause pages from [RSQL_CLAUSES](https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_CLAUSES); index fixture `RSQL_CLAUSES.json` with `child_doc_keys` + smoke `SELECT`.

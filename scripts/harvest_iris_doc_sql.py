@@ -163,7 +163,7 @@ def write_fixture(key: str, title: str | None = None) -> dict:
 def pending_keys() -> list[str]:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     keys: list[str] = []
-    for section in ("pages", "string_functions", "clause_pages", "dml_commands", "index_pages", "predicate_pages", "aggregate_pages", "window_pages", "function_pages", "unary_pages", "optimization_pages", "datatype_pages"):
+    for section in ("pages", "string_functions", "clause_pages", "dml_commands", "index_pages", "predicate_pages", "aggregate_pages", "window_pages", "function_pages", "unary_pages", "optimization_pages", "datatype_pages", "gsql_pages"):
         for entry in manifest.get(section, []):
             if entry.get("status") == "pending" and entry.get("doc_key"):
                 keys.append(entry["doc_key"])
@@ -172,7 +172,7 @@ def pending_keys() -> list[str]:
 
 def update_manifest_harvested(key: str) -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    for section in ("pages", "string_functions", "clause_pages", "dml_commands", "index_pages", "predicate_pages", "aggregate_pages", "window_pages", "function_pages", "unary_pages", "optimization_pages", "datatype_pages"):
+    for section in ("pages", "string_functions", "clause_pages", "dml_commands", "index_pages", "predicate_pages", "aggregate_pages", "window_pages", "function_pages", "unary_pages", "optimization_pages", "datatype_pages", "gsql_pages"):
         for entry in manifest.get(section, []):
             if entry.get("doc_key") == key:
                 entry["status"] = "harvested"
