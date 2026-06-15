@@ -4,6 +4,11 @@ Upstream: [tobymao/sqlglot](https://github.com/tobymao/sqlglot) (`v30.11.0` base
 
 ODS consumes this fork via `[tool.uv.sources] sqlglot` (editable `../3rdparty/sqlglot` in dev; git `rev` pin in CI).
 
+## Changes in `30.11.0+trifour.18`
+
+- **RSQL misc pages** — harvested + curated 9 remaining RSQL reference pages: RSQL_SYMBOL_TABLE, RSQL_REFMATERIAL, RSQL_dateconstruct, RSQL_defaultusernamepassword, RSQL_sqlcode, RSQL_fieldconstraint, RSQL_reservedwords, RSQL_cosvariables (2 auto-harvested), RSQL_COMMANDS (index fixture with child_doc_keys for 6 DML pages).
+- **Manifest** — seeded `pages` section with 8 new RSQL entries; RSQL_COMMANDS now `page_kind: index`.
+
 ## Changes in `30.11.0+trifour.17`
 
 - **GSQL doc harvest batch** — harvested **22** GSQL reference pages; curated fixtures for 6 pages with no DocBook `<pre>` SQL (GSQL_intr, GSQL_basics, GSQL_identifiers, GSQL_options, GSQL_rls, GSQL_impexp).

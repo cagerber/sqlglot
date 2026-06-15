@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_REFMATERIAL",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_REFMATERIAL",
+  "title": "SQL Reference Material",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_refmat_select",
+      "section": "Examples (curated)",
+      "sql": "SELECT TOP 10 Name, Age FROM Sample.Person ORDER BY Age DESC",
+      "roundtrip": false
+    }
+  ]
+}

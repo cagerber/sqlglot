@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_sqlcode",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_sqlcode",
+  "title": "SQLCODE",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_sqlcode_select",
+      "section": "Examples (curated)",
+      "sql": "SELECT Name FROM Sample.Person WHERE %ID = 1",
+      "roundtrip": false
+    }
+  ]
+}

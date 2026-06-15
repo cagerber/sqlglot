@@ -1,0 +1,22 @@
+{
+  "doc_key": "RSQL_fieldconstraint",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_fieldconstraint",
+  "title": "Field Constraint",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_fc_unique",
+      "section": "Examples (curated)",
+      "sql": "CREATE TABLE Sample.UniqueNames (Name VARCHAR(50) UNIQUE)",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "UNIQUE inline constraint in CREATE TABLE not fully supported"
+    },
+    {
+      "id": "ex_002_fc_notnull",
+      "section": "Examples (curated)",
+      "sql": "SELECT Name FROM Sample.Person WHERE Name IS NOT NULL",
+      "roundtrip": false
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_dateconstruct",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_dateconstruct",
+  "title": "Date Constructs",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_date_tochar",
+      "section": "Examples (curated)",
+      "sql": "SELECT TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD') AS Today FROM Sample.Person WHERE %ID = 1",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_date_literal",
+      "section": "Examples (curated)",
+      "sql": "SELECT Name, DOB FROM Sample.Person WHERE DOB > {d '2000-01-01'}",
+      "roundtrip": false
+    }
+  ]
+}

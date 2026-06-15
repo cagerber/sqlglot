@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_reservedwords",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_reservedwords",
+  "title": "Reserved Words",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_reserved_select",
+      "section": "Examples (curated)",
+      "sql": "SELECT Name, Age FROM Sample.Person ORDER BY Name",
+      "roundtrip": false
+    }
+  ]
+}

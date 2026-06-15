@@ -9,7 +9,9 @@
       "doc_key": "RSQL_COMMANDS",
       "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_COMMANDS",
       "title": "SQL Commands",
-      "page_kind": "index"
+      "page_kind": "index",
+      "status": "harvested",
+      "fixture": "RSQL_COMMANDS.json"
     },
     {
       "doc_key": "RSQL_CLAUSES",
@@ -420,7 +422,64 @@
       "status": "harvested"
     }
   ],
-  "pages": [],
+  "pages": [
+    {
+      "doc_key": "RSQL_SYMBOL_TABLE",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_SYMBOL_TABLE",
+      "title": "SQL Symbol Table",
+      "status": "harvested",
+      "fixture": "RSQL_SYMBOL_TABLE.json"
+    },
+    {
+      "doc_key": "RSQL_REFMATERIAL",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_REFMATERIAL",
+      "title": "SQL Reference Material",
+      "status": "harvested",
+      "fixture": "RSQL_REFMATERIAL.json"
+    },
+    {
+      "doc_key": "RSQL_dateconstruct",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_dateconstruct",
+      "title": "Date Constructs",
+      "status": "harvested",
+      "fixture": "RSQL_dateconstruct.json"
+    },
+    {
+      "doc_key": "RSQL_defaultusernamepassword",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_defaultusernamepassword",
+      "title": "Default Username and Password",
+      "status": "harvested",
+      "fixture": "RSQL_defaultusernamepassword.json"
+    },
+    {
+      "doc_key": "RSQL_sqlcode",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_sqlcode",
+      "title": "SQLCODE",
+      "status": "harvested",
+      "fixture": "RSQL_sqlcode.json"
+    },
+    {
+      "doc_key": "RSQL_fieldconstraint",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_fieldconstraint",
+      "title": "Field Constraint",
+      "status": "harvested",
+      "fixture": "RSQL_fieldconstraint.json"
+    },
+    {
+      "doc_key": "RSQL_reservedwords",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_reservedwords",
+      "title": "Reserved Words",
+      "status": "harvested",
+      "fixture": "RSQL_reservedwords.json"
+    },
+    {
+      "doc_key": "RSQL_cosvariables",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_cosvariables",
+      "title": "COS Variables",
+      "status": "harvested",
+      "fixture": "RSQL_cosvariables.json"
+    }
+  ],
   "function_pages": [
     {
       "doc_key": "RSQL_abs",
