@@ -141,8 +141,6 @@ metastore_db
 spark_warehouse
 
 # Version file
-sqlglot/_version.py
-
 # Emacs files
 *~
 
