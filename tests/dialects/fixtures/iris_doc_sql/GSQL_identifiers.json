@@ -1,0 +1,20 @@
+{
+  "doc_key": "GSQL_identifiers",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_identifiers",
+  "title": "Identifiers",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_ident_quoted",
+      "section": "Examples (curated)",
+      "sql": "SELECT \"Home_State\" FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_ident_schema",
+      "section": "Examples (curated)",
+      "sql": "SELECT Name FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

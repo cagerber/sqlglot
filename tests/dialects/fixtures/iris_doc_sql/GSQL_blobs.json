@@ -1,0 +1,70 @@
+{
+  "doc_key": "GSQL_blobs",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_blobs",
+  "title": "Storing and Using Stream Data (BLOBs and CLOBs) | Using SQL | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_199806ec",
+      "section": "Examples",
+      "sql": "CREATE TABLE Sample.MyTable ( Name VARCHAR(50) NOT NULL, Notes LONGVARCHAR, Photo LONGVARBINARY)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_351c0570",
+      "section": "Examples",
+      "sql": "INSERT INTO Sample.MyTable (Name,Notes) VALUES ('Fred','These are extensive notes about Fred')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_c6e37fdd",
+      "section": "Examples",
+      "sql": "SELECT Name,Photo,Notes FROM Sample.MyTable WHERE Photo IS NOT NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_d9fd7aec",
+      "section": "Examples",
+      "sql": "SELECT Name,Notes FROM Sample.MyTable WHERE Notes IS NOT NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_93dcaaea",
+      "section": "Examples",
+      "sql": "SELECT Name,Notes FROM Sample.MyTable WHERE Notes %MATCHES '*1[0-9]*GlobalChar*'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_a1b0f33a",
+      "section": "Examples",
+      "sql": "SELECT COUNT(Photo) AS PicRows,COUNT(Notes) AS NoteRows FROM Sample.MyTable",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_d85d7c79",
+      "section": "Examples",
+      "sql": "SELECT Name,DATALENGTH(Notes) AS NotesNumChars FROM Sample.MyTable WHERE Notes IS NOT NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_3bf01f82",
+      "section": "Examples",
+      "sql": "SELECT Name,SUBSTRING(Notes,1,10) AS Notes1st10Chars FROM Sample.MyTable WHERE Notes IS NOT NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_29e6ad59",
+      "section": "Examples",
+      "sql": "SELECT Name,CONVERT(VARCHAR(100),Notes) AS NotesTextAsStr FROM Sample.MyTable WHERE Notes IS NOT NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_830d7b17",
+      "section": "Examples",
+      "sql": "SELECT Name,Notes,%OBJECT(Notes) AS NotesOref FROM Sample.MyTable WHERE Notes IS NOT NULL",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 19.\n  SELECT Name,Notes,\u001b[4m%\u001b[0mOBJECT(Notes) AS NotesOref FROM Sample.MyTable WHERE Notes IS NOT NULL"
+    }
+  ]
+}

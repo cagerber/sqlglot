@@ -1,0 +1,88 @@
+{
+  "doc_key": "GSQL_tables",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_tables",
+  "title": "Defining Tables | Using SQL | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_4de26ab0",
+      "section": "Examples",
+      "sql": "SELECT * FROM Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_cd0e4de6",
+      "section": "Examples",
+      "sql": "SELECT * FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_688713b9",
+      "section": "Examples",
+      "sql": "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE NOT SCHEMA_NAME %STARTSWITH '%'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_54774d64",
+      "section": "Examples",
+      "sql": "SELECT COLUMN_NAME,AUTO_INCREMENT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'MyTable'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_9168b2f0",
+      "section": "Examples",
+      "sql": "CREATE TABLE IF NOT EXISTS Sample.Employee ( EMPNUM INT NOT NULL, NAMELAST CHAR(30) NOT NULL, NAMEFIRST CHAR(30) NOT NULL, STARTDATE TIMESTAMP, SALARY MONEY, ACCRUEDVACATION INT, ACCRUEDSICKLEAVE INT, CONSTRAINT EMPLOYEEPK PRIMARY KEY (EMPNUM) )",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_5b9ca95c",
+      "section": "Examples",
+      "sql": "CREATE TABLE IF NOT EXISTS Sample.MyTest ( NAME VARCHAR(30) NOT NULL, SSN VARCHAR(11) NOT NULL )",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_a30a7cb5",
+      "section": "Examples",
+      "sql": "SELECT Name,SSN,MyApp.Numbers() FROM MyApp.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_a2aa6fe8",
+      "section": "Examples",
+      "sql": "SELECT Table_Type,Table_Schema,Table_Name,Owner FROM INFORMATION_SCHEMA.TABLES",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_66cfc886",
+      "section": "Examples",
+      "sql": "SELECT TABLE_NAME,COLUMN_NAME,ORDINAL_POSITION,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH, COLUMN_DEFAULT,IS_NULLABLE,UNIQUE_COLUMN,PRIMARY_KEY FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Sample'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_5c8c256a",
+      "section": "Examples",
+      "sql": "SELECT Table_Schema,Table_Name,Constraint_Type,Constraint_Name FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_8f93d295",
+      "section": "Examples",
+      "sql": "SELECT Table_Schema,Table_Name,Column_Name,Constraint_Name FROM INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_013_2923194d",
+      "section": "Examples",
+      "sql": "SELECT Constraint_Table_Name,Unique_Constraint_Table,Constraint_Name,Update_Rule,Delete_Rule FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_f867f480",
+      "section": "Examples",
+      "sql": "CREATE TABLE MyApp.Person ( Name VARCHAR(50) NOT NULL, SSN VARCHAR(15) DEFAULT 'Unknown', DateOfBirth DATE, Sex VARCHAR(1) )",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    }
+  ]
+}

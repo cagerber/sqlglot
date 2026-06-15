@@ -1,0 +1,62 @@
+{
+  "doc_key": "GSQL_queries",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_queries",
+  "title": "Querying the Database | Using SQL | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_50a2522c",
+      "section": "Examples",
+      "sql": "SELECT Name,DOB FROM Sample.Person WHERE Name %STARTSWITH 'A' ORDER BY DOB",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_1ef9aede",
+      "section": "Examples",
+      "sql": "SELECT Interns FROM (SELECT Name AS Interns FROM Sample.Employee WHERE Age<21) WHERE Interns %STARTSWITH 'A'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_b9fbea5d",
+      "section": "Examples",
+      "sql": "SELECT P.Home_City,P.Home_Zip AS FakeZip,Z.ZipCode,Z.City AS ZipCity,Z.State FROM Sample.Person AS P LEFT OUTER JOIN Sample.USZipCode AS Z ON P.Home_Zip=Z.ZipCode WHERE Z.ZipCode IS NOT NULL ORDER BY P.Home_City",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_dcaac3b0",
+      "section": "Examples",
+      "sql": "CREATE QUERY Sample.AgeQuery(IN topnum INT DEFAULT 10,IN minage INT 20) PROCEDURE BEGIN SELECT TOP :topnum Name,Age FROM Sample.Person WHERE Age > :minage ORDER BY Age ; END",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_9b471f90",
+      "section": "Examples",
+      "sql": "SELECT %ID, Age, MyApp.Person_Cube(Age) FROM MyApp.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_c37974ab",
+      "section": "Examples",
+      "sql": "SELECT TOP 4 Name,Home_Street,Home_City,Home_State,Home_PostalCode FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_d81e7113",
+      "section": "Examples",
+      "sql": "SELECT TOP 4 Name,$LISTTOSTRING(Home,'^') FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_6ac44215",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE FOR SOME %ELEMENT(FavoriteColors) (%Value = 'Red')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_1c1daea4",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE FOR SOME %ELEMENT(Sample.Person.FavoriteColors) (%Value IN ('Red', 'Blue', 'Green'))",
+      "roundtrip": false
+    }
+  ]
+}

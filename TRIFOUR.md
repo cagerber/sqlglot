@@ -4,6 +4,12 @@ Upstream: [tobymao/sqlglot](https://github.com/tobymao/sqlglot) (`v30.11.0` base
 
 ODS consumes this fork via `[tool.uv.sources] sqlglot` (editable `../3rdparty/sqlglot` in dev; git `rev` pin in CI).
 
+## Changes in `30.11.0+trifour.17`
+
+- **GSQL doc harvest batch** — harvested **22** GSQL reference pages; curated fixtures for 6 pages with no DocBook `<pre>` SQL (GSQL_intr, GSQL_basics, GSQL_identifiers, GSQL_options, GSQL_rls, GSQL_impexp).
+- **GSQL fixtures** — runnable examples from GSQL_langelements (13), GSQL_implicitjoins (12), GSQL_tables (12), GSQL_views (10), GSQL_collation (8), GSQL_queries (9), GSQL_procedures (6), GSQL_blobs (9), GSQL_vecsearch (4), GSQL_foreigntables (5), GSQL_foreignkeys (2), GSQL_triggers (1), GSQL_modify (4), GSQL_partitioned (2), GSQL_privileges (1), GSQL_import (1).
+- **Known parser gaps** — `CREATE FOREIGN SERVER`, `CREATE FOREIGN TABLE`, `CREATE QUERY` parse as `Command` nodes (not skipped since they don't raise; tracked for future DDL parser work).
+
 ## Changes in `30.11.0+trifour.16`
 
 - **GSQL doc harvest** — seeded `gsql_pages` manifest section with all **23** GSQL reference pages (GSQL_overview through GSQL_impexp); index fixture `GSQL_overview.json` with `child_doc_keys` + curated smoke `SELECT` exercising arrow syntax and `%ID` pseudo-field.

@@ -1,0 +1,22 @@
+{
+  "doc_key": "GSQL_impexp",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_impexp",
+  "title": "Importing and Exporting SQL Data",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_impexp_export",
+      "section": "Examples (curated)",
+      "sql": "CALL %SYSTEM.SQL.ExportSQL('Sample.Person', 'C:\\export\\person.sql')",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "CALL/DDL export procedures not supported yet"
+    },
+    {
+      "id": "ex_002_impexp_import",
+      "section": "Examples (curated)",
+      "sql": "SELECT * FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}
