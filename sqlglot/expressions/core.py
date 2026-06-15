@@ -1890,6 +1890,18 @@ class Dot(Expression, Binary):
         return parts
 
 
+class Arrow(Expression, Binary):
+    """InterSystems IRIS implicit join navigation (``lhs -> rhs``)."""
+
+    @property
+    def name(self) -> str:
+        return self.expression.name
+
+    @property
+    def output_name(self) -> str:
+        return self.name
+
+
 class Kwarg(Expression, Binary):
     """Kwarg in special functions like func(kwarg => y)."""
 
