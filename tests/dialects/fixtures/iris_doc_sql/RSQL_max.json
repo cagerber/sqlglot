@@ -1,0 +1,40 @@
+{
+  "doc_key": "RSQL_max",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_max",
+  "title": "MAX (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_fd8eab94",
+      "section": "Examples",
+      "sql": "SELECT '$' || MAX(Salary) As TopSalary FROM Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_14506195",
+      "section": "Examples",
+      "sql": "SELECT Name,MIN(Name),MAX(Name) FROM Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_2b7066f7",
+      "section": "Examples",
+      "sql": "SELECT MAX(Salary) FROM Sample.Employee WHERE Home_State = 'VT'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_c12d3a22",
+      "section": "Examples",
+      "sql": "SELECT Home_State, COUNT(Home_State) As NumEmployees, MAX(Salary) As TopSalary FROM Sample.Employee GROUP BY Home_State ORDER BY TopSalary",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_cbaeb8f8",
+      "section": "Examples",
+      "sql": "SELECT Home_State, '$' || MAX(Salary %AFTERHAVING) AS MaxSalaryBelow25K, '$' || MIN(Salary) AS MinSalary, '$' || MAX(Salary) AS MaxSalary FROM Sample.Employee GROUP BY Home_State HAVING Salary < 25000 ORDER BY Home_State",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 38.\n  SELECT Home_State, '$' || MAX(Salary \u001b[4m%\u001b[0mAFTERHAVING) AS MaxSalaryBelow25K, '$' || MIN(Salary) AS MinSalary, '$' || MAX(Salary) AS MaxSalary "
+    }
+  ]
+}

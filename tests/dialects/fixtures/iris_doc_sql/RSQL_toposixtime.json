@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_toposixtime",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_toposixtime",
+  "title": "TO_POSIXTIME (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_cbf2bf01",
+      "section": "Examples",
+      "sql": "SELECT TO_POSIXTIME('2018:160','YYYY:DDD')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_d2d61335",
+      "section": "Examples",
+      "sql": "SELECT TO_POSIXTIME('2018-12-31-60','YYYY-MM-DD-DDD')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_b38f35ea",
+      "section": "Examples",
+      "sql": "SELECT TO_POSIXTIME('29 JUN 2018'), TO_POSIXTIME('2018 Jun 29','YYYY MON DD'), TO_POSIXTIME('JUNE 29, 2018','month dd, YYYY'), TO_POSIXTIME('2018***06***29','YYYY***MM***DD'), TO_POSIXTIME('06/29/2018','MM/DD/YYYY'), TO_POSIXTIME('29/6/2018','DD/MM/YYYY')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_bed33cab",
+      "section": "Examples",
+      "sql": "SELECT TO_POSIXTIME('201806','YYYYMM')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_0c474a36",
+      "section": "Examples",
+      "sql": "SELECT TO_POSIXTIME('11:34','HH:MI:SS.FF'), TO_POSIXTIME('11:34:22','HH:MI:SS.FF'), TO_POSIXTIME('11:34:22.00','HH:MI:SS.FF'), TO_POSIXTIME('11:34:22.7','HH:MI:SS.FF'), TO_POSIXTIME('11:34:22.7000000','HH:MI:SS.FF')",
+      "roundtrip": false
+    }
+  ]
+}

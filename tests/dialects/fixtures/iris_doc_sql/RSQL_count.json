@@ -1,0 +1,144 @@
+{
+  "doc_key": "RSQL_count",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_count",
+  "title": "COUNT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_9516e212",
+      "section": "Examples",
+      "sql": "SELECT COUNT(*) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_580c1788",
+      "section": "Examples",
+      "sql": "SELECT COUNT(Name) AS TotalNames FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_a5c36f68",
+      "section": "Examples",
+      "sql": "SELECT COUNT(DISTINCT Age) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_4c521f32",
+      "section": "Examples",
+      "sql": "SELECT COUNT(*) AS TotalPersons FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_41c76405",
+      "section": "Examples",
+      "sql": "SELECT COUNT(Name) AS People, COUNT(Spouse) AS PeopleWithSpouses, COUNT(FavoriteColors) AS PeopleWithColorPref FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_98a8296c",
+      "section": "Examples",
+      "sql": "SELECT FavoriteColors, COUNT(FavoriteColors) AS ColorPreference, COUNT(Name) AS People FROM Sample.Person GROUP BY FavoriteColors",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_6b6f992d",
+      "section": "Examples",
+      "sql": "SELECT Home_State, COUNT(*) AS AllPersons FROM Sample.Person GROUP BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_014_a381adab",
+      "section": "Examples",
+      "sql": "SELECT COUNT(FavoriteColors||Home_State) AS ColorState FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_016_64979ee3",
+      "section": "Examples",
+      "sql": "SELECT Title,COUNT(DISTINCT Notes) FROM Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_018_2d010d10",
+      "section": "Examples",
+      "sql": "SELECT COUNT(*) AS Recs, COUNT(Name) AS People, AVG(Age) AS AvgAge, MAX(Age) AS MaxAge, CURRENT_TIMESTAMP AS Now FROM Sample.Employee WHERE Name %STARTSWITH 'ZZZ'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_019_bc6271c3",
+      "section": "Examples",
+      "sql": "SELECT COUNT(*) AS Recs, COUNT(Name) AS People, $LENGTH(Name) AS NameLen FROM Sample.Employee WHERE Name %STARTSWITH 'ZZZ'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_020_fc4bf29e",
+      "section": "Examples",
+      "sql": "SELECT COUNT(*) AS Recs",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_6b943b01",
+      "section": "Examples",
+      "sql": "SELECT COUNT(DISTINCT BY(Name) FavoriteColors) FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 45.\n  SELECT COUNT(DISTINCT BY(Name) \u001b[4mFavoriteColors\u001b[0m) FROM Sample.Person"
+    },
+    {
+      "id": "ex_005_00381022",
+      "section": "Examples",
+      "sql": "SELECT Name, Home_State, COUNT(Name %FOREACH(Home_State)) AS PersonCountInState FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 37.\n  SELECT Name, Home_State, COUNT(Name \u001b[4m%\u001b[0mFOREACH(Home_State)) AS PersonCountInState FROM Sample.Person"
+    },
+    {
+      "id": "ex_006_99aada3b",
+      "section": "Examples",
+      "sql": "SELECT Home_State, COUNT(Name) AS NameCount, COUNT(Name %AFTERHAVING) AS MNameCount FROM Sample.Person GROUP BY Home_State HAVING Name LIKE 'M%'",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 57.\n  SELECT Home_State, COUNT(Name) AS NameCount, COUNT(Name \u001b[4m%\u001b[0mAFTERHAVING) AS MNameCount FROM Sample.Person GROUP BY Home_State HAVING Name LIKE 'M%'"
+    },
+    {
+      "id": "ex_009_0919cef1",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT FavoriteColors, COUNT(DISTINCT FavoriteColors) AS DistColors, COUNT(DISTINCT BY(FavoriteColors) %ID) AS DistColorPeople FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 113.\n  NCT FavoriteColors, COUNT(DISTINCT FavoriteColors) AS DistColors, COUNT(DISTINCT BY(FavoriteColors) \u001b[4m%\u001b[0mID) AS DistColorPeople FROM Sample.Person"
+    },
+    {
+      "id": "ex_012_182e9cae",
+      "section": "Examples",
+      "sql": "SELECT Home_State, COUNT(Name) AS AllPersons, COUNT(Name %AFTERHAVING) AS Seniors FROM Sample.Person GROUP BY Home_State HAVING Age > 65 ORDER BY Home_State",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 58.\n  SELECT Home_State, COUNT(Name) AS AllPersons, COUNT(Name \u001b[4m%\u001b[0mAFTERHAVING) AS Seniors FROM Sample.Person GROUP BY Home_State HAVING Age > 65 ORDER BY Home_State"
+    },
+    {
+      "id": "ex_013_c73e6e02",
+      "section": "Examples",
+      "sql": "SELECT Home_State, COUNT(Name) AS NameCount, COUNT(Name %FOREACH(Home_State)) AS StateNameCount, COUNT(Name %AFTERHAVING) AS NameCountHaving, COUNT(Name %FOREACH(Home_State) %AFTERHAVING) AS StateNameCountHaving FROM Sample.Person GROUP BY Home_State HAVING Name LIKE 'A%' OR Name LIKE 'M%' OR Name LIKE 'W%' ORDER BY Home_State",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 57.\n  SELECT Home_State, COUNT(Name) AS NameCount, COUNT(Name \u001b[4m%\u001b[0mFOREACH(Home_State)) AS StateNameCount, COUNT(Name %AFTERHAVING) AS NameCountHaving, COUNT(Name %FOR"
+    },
+    {
+      "id": "ex_015_5a7d1198",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT Title,COUNT(Notes),COUNT(Picture %FOREACH(Title)) FROM Sample.Employee",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 50.\n  SELECT DISTINCT Title,COUNT(Notes),COUNT(Picture \u001b[4m%\u001b[0mFOREACH(Title)) FROM Sample.Employee"
+    },
+    {
+      "id": "ex_017_8822b2d6",
+      "section": "Examples",
+      "sql": "SELECT Title,COUNT(Notes %FOREACH(Picture))",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 26.\n  SELECT Title,COUNT(Notes \u001b[4m%\u001b[0mFOREACH(Picture))"
+    }
+  ]
+}

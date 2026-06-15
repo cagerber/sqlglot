@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_windowfirstvalue",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_windowfirstvalue",
+  "title": "FIRST_VALUE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_bd479638",
+      "section": "Examples",
+      "sql": "SELECT FIRST_VALUE(Country) OVER (PARTITION BY City)",
+      "roundtrip": false
+    }
+  ]
+}

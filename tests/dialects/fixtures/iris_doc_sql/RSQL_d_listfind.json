@@ -1,0 +1,62 @@
+{
+  "doc_key": "RSQL_d_listfind",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_listfind",
+  "title": "$LISTFIND (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_89151cb2",
+      "section": "Examples",
+      "sql": "SELECT $LISTFIND($LISTBUILD(\"Red\",\"Blue\",\"Green\"),'Blue')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_0b175e11",
+      "section": "Examples",
+      "sql": "SELECT $LISTFIND($LISTBUILD(\"Red\",\"Blue\",\"Green\"),'Orange')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_a68957fd",
+      "section": "Examples",
+      "sql": "SELECT $LISTFIND($LISTBUILD(\"Red\",\"Blue\",\"Green\"),'Blue',2)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_ca2a401b",
+      "section": "Examples",
+      "sql": "SELECT $LISTFIND($LISTBUILD(\"Red\",\"Blue\",\"Green\"),'Red',0)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_91800073",
+      "section": "Examples",
+      "sql": "SELECT $LISTFIND($LISTBUILD(\"Red\",\"Blue\",\"Green\",\"Yellow\",\"Blue\"),'Blue',3)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_123aa42b",
+      "section": "Examples",
+      "sql": "SELECT $LISTFIND($LISTBUILD(\"ABC\",\"BCD\",\"BBB\"),'B')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_72119995",
+      "section": "Examples",
+      "sql": "SELECT $LISTFIND(\"Blue\",'Blue')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_0494ec76",
+      "section": "Examples",
+      "sql": "SELECT $LISTFIND($LISTBUILD(\"Red\",\"Blue\",\"Green\"),'Blue',-1)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_69862bb7",
+      "section": "Examples",
+      "sql": "SELECT $LISTFIND($LISTBUILD(\"Red\",\"Blue\",\"Green\"),'Blue',-3)",
+      "roundtrip": false
+    }
+  ]
+}

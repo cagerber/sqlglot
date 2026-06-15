@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_d_justify",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_justify",
+  "title": "$JUSTIFY (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_388555d3",
+      "section": "Examples",
+      "sql": "SELECT '>'||LPAD(12345,10)||'<' AS lpadplus, '>'||$JUSTIFY(12345,10)||'<' AS justifyplus, '>'||LPAD(12345,3)||'<' AS lpadminus, '>'||$JUSTIFY(12345,3)||'<' AS justifyminus",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_666e9c6b",
+      "section": "Examples",
+      "sql": "SELECT TOP 20 Age,$JUSTIFY(Name,18),DOB FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_98c49713",
+      "section": "Examples",
+      "sql": "SELECT TOP 20 $JUSTIFY(Salary,10,2) AS FullSalary, $JUSTIFY(Salary/7,10,2) AS SeventhSalary FROM Sample.Employee",
+      "roundtrip": false
+    }
+  ]
+}

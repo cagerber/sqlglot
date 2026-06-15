@@ -1,0 +1,252 @@
+{
+  "doc_key": "RSQL_select",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_select",
+  "title": "SELECT (SQL)",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_030_cd0e4de6",
+      "section": "Examples",
+      "sql": "SELECT * FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_031_54d25a07",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_032_6d393279",
+      "section": "Examples",
+      "sql": "SELECT Name,Age FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_033_a35db204",
+      "section": "Examples",
+      "sql": "SELECT SSN,Mission FROM Sample.Person,Sample.Company",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_034_21d7edf9",
+      "section": "Examples",
+      "sql": "SELECT Name,Age,Home_State FROM Sample.Person WHERE Age > 40 AND Home_State = 'MA'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_035_193acb17",
+      "section": "Examples",
+      "sql": "SELECT Home_State, COUNT(Home_State)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_037_2a8791aa",
+      "section": "Examples",
+      "sql": "SELECT Home_State, Name, Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_038_65a0b172",
+      "section": "Examples",
+      "sql": "Select Home_State AS US_State_Abbrev FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_039_0757ad63",
+      "section": "Examples",
+      "sql": "Select Name AS PersonName,Home_State AS State FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_040_def48a75",
+      "section": "Examples",
+      "sql": "SELECT P.Name, E.Name FROM Sample.Person AS P, Sample.Employee AS E",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_041_42d8e5a6",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT Home_State,Age FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_042_47397500",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (Age) Name,Age FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_043_81c1c0ce",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (Home_State,Age) Name,Age FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_044_da5d5068",
+      "section": "Examples",
+      "sql": "SELECT TOP 10 Name FROM Sample.Person ORDER BY Name ASC",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_045_71887c73",
+      "section": "Examples",
+      "sql": "SELECT Home_State FROM Sample.Person ORDER BY Home_State LIMIT 20",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_046_cfa4c74e",
+      "section": "Examples",
+      "sql": "SELECT Home_State FROM Sample.Person ORDER BY Home_State LIMIT 20 OFFSET 5",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_047_54b82d36",
+      "section": "Examples",
+      "sql": "SELECT Home_State FROM Sample.Person ORDER BY Home_State FETCH 20",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_048_c8b3fc1d",
+      "section": "Examples",
+      "sql": "SELECT Home_State FROM Sample.Person ORDER BY Home_State OFFSET 5 FETCH FIRST 20",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_049_2e90cac0",
+      "section": "Examples",
+      "sql": "SELECT Name,Picture FROM Sample.Employee WHERE Picture IS NOT NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_050_09690124",
+      "section": "Examples",
+      "sql": "SELECT Sample.Person.Name,Sample.Employee.Company FROM Sample.Person, Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_051_2113ae3a",
+      "section": "Examples",
+      "sql": "SELECT p.Name, e.Company FROM Sample.Person AS p, Sample.Employee AS e",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_052_d2ced485",
+      "section": "Examples",
+      "sql": "SELECT Age AS Decade, COUNT(Age) AS PeopleInDecade, AVG(Age) AS AvgAgeForDecade, (SELECT AVG(Age) FROM Sample.Person) AS AvgAgeAllDecades",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_053_20798bd6",
+      "section": "Examples",
+      "sql": "SELECT Name,Company->Name AS CompanyName FROM Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_054_6b7a2f58",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 * FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_055_a3c325ec",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 * FROM Sample.Company,Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_057_fb183b1f",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 E.Name AS EmpName, C.*, E.Home_State AS EmpState",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_058_312c4616",
+      "section": "Examples",
+      "sql": "SELECT Home_City,Home_Phone_AreaCode FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_059_d0c88bd0",
+      "section": "Examples",
+      "sql": "SELECT $LISTTOSTRING(Home,'^') AS HomeAddress FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_060_2960f5e8",
+      "section": "Examples",
+      "sql": "SELECT Name, Age,Age-AVG(Age) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_061_3fd0a47e",
+      "section": "Examples",
+      "sql": "SELECT Name,$LENGTH(Name) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_a45b2877",
+      "section": "Examples",
+      "sql": "SELECT * FROM table",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_002_b0cf6993",
+      "section": "Examples",
+      "sql": "SELECT selectItem FROM table",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_003_ad57cfde",
+      "section": "Examples",
+      "sql": "SELECT selectItem, selectItem2, ... FROM table",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_004_54387246",
+      "section": "Examples",
+      "sql": "SELECT ... FROM table, table2, ...",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_005_e11eae80",
+      "section": "Examples",
+      "sql": "SELECT ... FROM ... WHERE condition",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_006_b223530e",
+      "section": "Examples",
+      "sql": "SELECT ... FROM ... [WHERE condition] GROUP BY column",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_007_56fe298c",
+      "section": "Examples",
+      "sql": "SELECT ... FROM ... [WHERE condition][GROUP BY column] HAVING condition",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_008_e4339dde",
+      "section": "Examples",
+      "sql": "SELECT ... FROM ... [WHERE condition][GROUP BY column] [HAVING condition] ORDER BY itemOrder [ASC | DESC]",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_approxcountdistinct",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_approxcountdistinct",
+  "title": "APPROX_COUNT_DISTINCT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_ca427790",
+      "section": "Examples",
+      "sql": "SELECT APPROX_COUNT_DISTINCT(Age) FROM Sample.Customers",
+      "roundtrip": false
+    }
+  ]
+}

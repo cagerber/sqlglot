@@ -1,0 +1,34 @@
+{
+  "doc_key": "RSQL_curdate",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_curdate",
+  "title": "CURDATE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_341e3c48",
+      "section": "Examples",
+      "sql": "SELECT {fn CURDATE()} AS Today",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_c03bac67",
+      "section": "Examples",
+      "sql": "SELECT {fn CURDATE()} AS CurrentDate",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_d79136a8",
+      "section": "Examples",
+      "sql": "SELECT * FROM Orders WHERE ShipDate >= {fn CURDATE()}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_f2afd7ac",
+      "section": "Examples",
+      "sql": "SELECT {fn CURDATE} AS Today",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 19.\n  SELECT {fn CURDATE\u001b[4m}\u001b[0m AS Today"
+    }
+  ]
+}

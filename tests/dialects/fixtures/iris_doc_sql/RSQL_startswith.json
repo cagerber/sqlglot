@@ -1,0 +1,82 @@
+{
+  "doc_key": "RSQL_startswith",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_startswith",
+  "title": "%STARTSWITH (SQL)",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "name_startswith_m",
+      "section": "Description",
+      "sql": "SELECT Name FROM Sample.MyTest WHERE Name %STARTSWITH 'M'",
+      "roundtrip": false
+    },
+    {
+      "id": "distinct_home_state_m",
+      "section": "Select Column Data Based on Initial Characters",
+      "sql": "SELECT DISTINCT Home_State FROM Sample.Person WHERE Home_State %STARTSWITH 'M' ORDER BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "having_age_startswith_2",
+      "section": "Select Column Data Based on Initial Characters",
+      "sql": "SELECT Name, Age, AVG(Age) AS AvgAge, AVG(Age %AFTERHAVING) AS Avg20 FROM Sample.Person HAVING Age %STARTSWITH 2 ORDER BY Age",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "HAVING aggregate %AFTERHAVING qualifier — parser support pending (doc_key RSQL_startswith)"
+    },
+    {
+      "id": "dob_startswith_54",
+      "section": "Select Column Data Based on Initial Characters",
+      "sql": "SELECT Name,DOB FROM Sample.Person WHERE DOB %STARTSWITH 54 ORDER BY DOB",
+      "roundtrip": false
+    },
+    {
+      "id": "external_favorite_colors_bl",
+      "section": "Select Column Data Based on Initial Characters",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE %EXTERNAL(FavoriteColors) %STARTSWITH 'Bl'",
+      "roundtrip": false
+    },
+    {
+      "id": "listfromstring_yellow_orange",
+      "section": "Select Column Data Based on Initial Characters",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE FavoriteColors %STARTSWITH $LISTFROMSTRING('Yellow,Orange')",
+      "roundtrip": false
+    },
+    {
+      "id": "not_name_startswith_m",
+      "section": "Select Column Data Using Logical Operators",
+      "sql": "SELECT Name FROM Sample.MyTest WHERE NOT Name %STARTSWITH 'M'",
+      "roundtrip": true
+    },
+    {
+      "id": "or_name_startswith_m_n",
+      "section": "Select Column Data Using Logical Operators",
+      "sql": "SELECT Name FROM Sample.MyTest WHERE Name %STARTSWITH 'M' OR Name %STARTSWITH 'N'",
+      "roundtrip": false
+    },
+    {
+      "id": "and_first_last_startswith",
+      "section": "Select Column Data Using Logical Operators",
+      "sql": "SELECT FirstName,LastName FROM Sample.MyTest WHERE FirstName %STARTSWITH 'M' AND LastName %STARTSWITH 'N'",
+      "roundtrip": false
+    },
+    {
+      "id": "exact_home_state_startswith",
+      "section": "Manage Case-Sensitivity of Selections Based on Collation Type",
+      "sql": "SELECT DISTINCT Home_State FROM Sample.Person WHERE %EXACT(Home_State) %STARTSWITH 'M' ORDER BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "contains_operator_y",
+      "section": "Other Equivalence Comparisons",
+      "sql": "SELECT Name FROM Sample.Person WHERE Name [ 'y'",
+      "roundtrip": false
+    },
+    {
+      "id": "pattern_home_state",
+      "section": "Other Equivalence Comparisons",
+      "sql": "SELECT Name,Home_State FROM Sample.Person WHERE Home_State %PATTERN '1U1\"C\"' ORDER BY Home_State",
+      "roundtrip": false
+    }
+  ]
+}

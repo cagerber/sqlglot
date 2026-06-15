@@ -1918,6 +1918,21 @@ class Parser:
         if index != self._index:
             self._advance(index - self._index)
 
+    def _ensure_parse_progress(self, index: i64, context: str) -> None:
+        """
+        Fail fast when a parse loop iteration does not advance the token cursor.
+
+        Guards against infinite loops when a handler returns without consuming input.
+        """
+        if self._index != index:
+            return
+        token = self._curr
+        if token is SENTINEL_NONE or not token:
+            detail = "EOF"
+        else:
+            detail = f"{token.token_type.name} {token.text!r}"
+        self.raise_error(f"Parser stuck ({context}) at {detail}")
+
     def _add_comments(self, expression: exp.Expr | None) -> None:
         if expression and self._prev_comments:
             expression.add_comments(self._prev_comments)
@@ -3895,13 +3910,7 @@ class Parser:
             )
 
             distinct: exp.Expr | None = (
-                self.expression(
-                    exp.Distinct(
-                        on=self._parse_value(values=False) if self._match(TokenType.ON) else None
-                    )
-                )
-                if matched_distinct
-                else None
+                self._parse_distinct_on_select(matched_distinct) if matched_distinct else None
             )
 
             operation_modifiers = []
@@ -3914,13 +3923,7 @@ class Parser:
             if limit and not matched_distinct and not all_:
                 matched_distinct = self._match_set(self.DISTINCT_TOKENS)
                 if matched_distinct:
-                    distinct = self.expression(
-                        exp.Distinct(
-                            on=self._parse_value(values=False)
-                            if self._match(TokenType.ON)
-                            else None
-                        )
-                    )
+                    distinct = self._parse_distinct_on_select(matched_distinct)
                 else:
                     all_ = self._match(TokenType.ALL)
 
@@ -5787,6 +5790,15 @@ class Parser:
 
         return this
 
+    def _parse_distinct_on_select(self, matched_distinct: bool) -> exp.Distinct | None:
+        if not matched_distinct:
+            return None
+        return self.expression(
+            exp.Distinct(
+                on=self._parse_value(values=False) if self._match(TokenType.ON) else None
+            )
+        )
+
     def _parse_disjunction(self) -> exp.Expr | None:
         this = self._parse_conjunction()
         while self._match_set(self.DISJUNCTION):
@@ -6753,11 +6765,14 @@ class Parser:
 
     def _parse_column_ops(self, this: exp.Expr | None) -> exp.Expr | None:
         while self._curr.token_type in self.BRACKETS:
+            index = self._index
             this = self._parse_bracket(this)
+            self._ensure_parse_progress(index, "column_ops brackets")
 
         column_operators = self.COLUMN_OPERATORS
         cast_column_operators = self.CAST_COLUMN_OPERATORS
         while self._curr:
+            index = self._index
             op_token = self._curr.token_type
 
             if op_token not in column_operators:
@@ -6808,6 +6823,7 @@ class Parser:
                 t.cast(exp.Expr, this).add_comments(field.pop_comments())
 
             this = self._parse_bracket(this)
+            self._ensure_parse_progress(index, "column_ops")
 
         return this
 

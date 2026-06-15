@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_cos",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_cos",
+  "title": "COS (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_f3a00621",
+      "section": "Examples",
+      "sql": "SELECT {fn COS(0.52)} AS Cosine",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_7035654c",
+      "section": "Examples",
+      "sql": "SELECT {fn COS(-.31)} AS Cosine",
+      "roundtrip": false
+    }
+  ]
+}

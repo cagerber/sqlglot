@@ -1,0 +1,56 @@
+{
+  "doc_key": "RSQL_second",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_second",
+  "title": "SECOND (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_19259a7f",
+      "section": "Examples",
+      "sql": "SELECT {fn SECOND('2018-02-16 18:45:38')} AS ODBCSeconds",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_aea7a9e9",
+      "section": "Examples",
+      "sql": "SELECT {fn SECOND(67538)} AS HorologSeconds",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_8bf959c3",
+      "section": "Examples",
+      "sql": "SELECT {fn SECOND('2018-02-16 18:45:00.9000')} AS Seconds_Given",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_1259bdc9",
+      "section": "Examples",
+      "sql": "SELECT {fn SECOND('2018-02-16 18:45')} AS Seconds_Given",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_e70914d8",
+      "section": "Examples",
+      "sql": "SELECT {fn SECOND('2018-02-16')} AS Seconds_Given",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_940021ce",
+      "section": "Examples",
+      "sql": "SELECT {fn SECOND(CURRENT_TIME)} AS Sec_CurrentT, {fn SECOND({fn CURTIME()})} AS Sec_CurT, {fn SECOND({fn NOW()})} AS Sec_Now, {fn SECOND($HOROLOG)} AS Sec_Horolog, {fn SECOND($ZTIMESTAMP)} AS Sec_ZTS",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_d5de5eb5",
+      "section": "Examples",
+      "sql": "SELECT LENGTH({fn SECOND('2018-02-15 11:45:22')}), LENGTH({fn SECOND('2018-02-15 03:05:06')}), LENGTH({fn SECOND('2018-02-15 3:5:6')}), LENGTH({fn SECOND('2018-02-15')})",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_a5ddb921",
+      "section": "Examples",
+      "sql": "SELECT {fn SECOND('2018-02-16 18.45.38')}",
+      "roundtrip": false
+    }
+  ]
+}

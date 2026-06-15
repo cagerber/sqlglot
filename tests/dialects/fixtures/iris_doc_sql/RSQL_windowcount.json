@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_windowcount",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_windowcount",
+  "title": "COUNT (SQL Window Function) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_1032b8b8",
+      "section": "Examples",
+      "sql": "SELECT COUNT(Employee) OVER (PARTITION BY Department) FROM Company.Employee",
+      "roundtrip": false
+    }
+  ]
+}

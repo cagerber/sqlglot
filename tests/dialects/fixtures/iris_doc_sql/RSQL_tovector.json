@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_tovector",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_tovector",
+  "title": "TO_VECTOR (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_e37f190b",
+      "section": "Examples",
+      "sql": "INSERT INTO Words.Embeddings (word,embedding) VALUES ('person', TO_VECTOR('1,3,5,7,9',int))",
+      "roundtrip": false
+    }
+  ]
+}

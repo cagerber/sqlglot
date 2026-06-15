@@ -1,0 +1,22 @@
+{
+  "doc_key": "RSQL_inset",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_inset",
+  "title": "%INSET (SQL)",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "synopsis_inset",
+      "section": "Synopsis",
+      "sql": "scalar-expression %INSET valueset",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "curated_state_index",
+      "section": "Curated (doc has no runnable SELECT)",
+      "sql": "SELECT Name FROM Sample.Person WHERE Home_State %INSET Sample.Person_StateIndex",
+      "roundtrip": false
+    }
+  ]
+}

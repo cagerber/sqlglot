@@ -1,0 +1,46 @@
+{
+  "doc_key": "RSQL_characterlength",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_characterlength",
+  "title": "CHARACTER_LENGTH (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_b02dfa53",
+      "section": "Examples",
+      "sql": "SELECT CHARACTER_LENGTH(007.0000) AS NumLen, CHARACTER_LENGTH('007.0000') AS NumStringLen",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_a1d076c2",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT CHARACTER_LENGTH(Home_State) AS StateLength FROM Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_4445c9cb",
+      "section": "Examples",
+      "sql": "SELECT Name, CHARACTER_LENGTH(Name) AS NameLength FROM Sample.Employee ORDER BY NameLength",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_66a724b4",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT CHARACTER_LENGTH(Notes) AS NoteLen FROM Sample.Employee WHERE Notes IS NOT NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_1025e6c2",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT CHARACTER_LENGTH(Picture) AS PicLen FROM Sample.Employee WHERE Picture IS NOT NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_1a2dd5ac",
+      "section": "Examples",
+      "sql": "SELECT CHARACTER_LENGTH($CHAR(960)_\"FACE\")",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 35.\n  SELECT CHARACTER_LENGTH($CHAR(960)\u001b[4m_\u001b[0m\"FACE\")"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "doc_key": "RSQL_degrees",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_degrees",
+  "title": "DEGREES (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "curated_degrees",
+      "section": "DocBook synopsis (curated)",
+      "sql": "SELECT DEGREES(3.14159)"
+    }
+  ]
+}

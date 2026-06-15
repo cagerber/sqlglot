@@ -1,0 +1,1217 @@
+{
+  "schema": "iris-doc-sql-manifest-v1",
+  "doc_version": "2026.1",
+  "doc_base_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=",
+  "completeness_note": "Each harvested page has tests/dialects/fixtures/iris_doc_sql/<doc_key>.json. Index pages may use page_kind=index with child_doc_keys.",
+  "sql4_index": "../../../../docs/syntax/sql/sql4.md",
+  "index_pages": [
+    {
+      "doc_key": "RSQL_COMMANDS",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_COMMANDS",
+      "title": "SQL Commands",
+      "page_kind": "index"
+    },
+    {
+      "doc_key": "RSQL_CLAUSES",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_CLAUSES",
+      "title": "SQL Clauses and Predicate Conditions",
+      "page_kind": "index",
+      "status": "harvested",
+      "fixture": "RSQL_CLAUSES.json"
+    },
+    {
+      "doc_key": "RSQL_stringmanipulation",
+      "fixture": "RSQL_stringmanipulation.json",
+      "status": "harvested",
+      "page_kind": "index"
+    },
+    {
+      "doc_key": "RSQL_FUNCTIONS",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_FUNCTIONS",
+      "title": "SQL Functions",
+      "page_kind": "index",
+      "status": "harvested",
+      "fixture": "RSQL_FUNCTIONS.json"
+    },
+    {
+      "doc_key": "RSQL_UNARY_OPERATORS",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_UNARY_OPERATORS",
+      "title": "SQL Unary Operators",
+      "page_kind": "index",
+      "status": "harvested",
+      "fixture": "RSQL_UNARY_OPERATORS.json"
+    }
+  ],
+  "dml_commands": [
+    {
+      "doc_key": "RSQL_select",
+      "fixture": "RSQL_select.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_insert",
+      "fixture": "RSQL_insert.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_insertorupdate",
+      "fixture": "RSQL_insertorupdate.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_update",
+      "fixture": "RSQL_update.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_delete",
+      "fixture": "RSQL_delete.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_truncatetable",
+      "fixture": "RSQL_truncatetable.json",
+      "status": "harvested"
+    }
+  ],
+  "clause_pages": [
+    {
+      "doc_key": "RSQL_from",
+      "fixture": "RSQL_from.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_where",
+      "fixture": "RSQL_where.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_groupby",
+      "fixture": "RSQL_groupby.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_having",
+      "fixture": "RSQL_having.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_order",
+      "fixture": "RSQL_order.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_top",
+      "fixture": "RSQL_top.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_distinct",
+      "fixture": "RSQL_distinct.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_limit",
+      "fixture": "RSQL_limit.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_union",
+      "fixture": "RSQL_union.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_intersect",
+      "fixture": "RSQL_intersect.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_except",
+      "fixture": "RSQL_except.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_with",
+      "fixture": "RSQL_with.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_into",
+      "fixture": "RSQL_into.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_values",
+      "fixture": "RSQL_values.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_wherecurrentof",
+      "fixture": "RSQL_wherecurrentof.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_ansi",
+      "fixture": "RSQL_ansi.json",
+      "status": "harvested"
+    }
+  ],
+  "predicate_pages": [
+    {
+      "doc_key": "RSQL_PREDICATE_CONDITONS",
+      "fixture": "RSQL_PREDICATE_CONDITONS.json",
+      "status": "harvested",
+      "page_kind": "index"
+    },
+    {
+      "doc_key": "RSQL_all",
+      "fixture": "RSQL_all.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_any",
+      "fixture": "RSQL_any.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_some",
+      "fixture": "RSQL_some.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_between",
+      "fixture": "RSQL_between.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_exists",
+      "fixture": "RSQL_exists.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_find",
+      "fixture": "RSQL_find.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_forsome",
+      "fixture": "RSQL_forsome.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_forsomeelement",
+      "fixture": "RSQL_forsomeelement.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_in",
+      "fixture": "RSQL_in.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_inlist",
+      "fixture": "RSQL_inlist.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_inset",
+      "fixture": "RSQL_inset.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_json",
+      "fixture": "RSQL_json.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_like",
+      "fixture": "RSQL_like.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_matches",
+      "fixture": "RSQL_matches.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_null",
+      "fixture": "RSQL_null.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_pattern",
+      "fixture": "RSQL_pattern.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_predicates",
+      "fixture": "RSQL_predicates.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_startswith",
+      "fixture": "RSQL_startswith.json",
+      "status": "harvested"
+    }
+  ],
+  "aggregate_pages": [
+    {
+      "doc_key": "RSQL_AGGREGATE_FUNCTIONS",
+      "fixture": "RSQL_AGGREGATE_FUNCTIONS.json",
+      "status": "harvested",
+      "page_kind": "index"
+    },
+    {
+      "doc_key": "RSQL_aggregatefunctions",
+      "fixture": "RSQL_aggregatefunctions.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_approxcountdistinct",
+      "fixture": "RSQL_approxcountdistinct.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_avg",
+      "fixture": "RSQL_avg.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_count",
+      "fixture": "RSQL_count.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_dlist",
+      "fixture": "RSQL_dlist.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_jsonarrayagg",
+      "fixture": "RSQL_jsonarrayagg.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_list",
+      "fixture": "RSQL_list.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_max",
+      "fixture": "RSQL_max.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_min",
+      "fixture": "RSQL_min.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_stddev",
+      "fixture": "RSQL_stddev.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_sum",
+      "fixture": "RSQL_sum.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_variance",
+      "fixture": "RSQL_variance.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_xmlagg",
+      "fixture": "RSQL_xmlagg.json",
+      "status": "harvested"
+    }
+  ],
+  "window_pages": [
+    {
+      "doc_key": "RSQL_WINDOW_FUNCTIONS",
+      "fixture": "RSQL_WINDOW_FUNCTIONS.json",
+      "status": "harvested",
+      "page_kind": "index"
+    },
+    {
+      "doc_key": "RSQL_windowfunctions",
+      "fixture": "RSQL_windowfunctions.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowavg",
+      "fixture": "RSQL_windowavg.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowcount",
+      "fixture": "RSQL_windowcount.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowcumedist",
+      "fixture": "RSQL_windowcumedist.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowdenserank",
+      "fixture": "RSQL_windowdenserank.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowfirstvalue",
+      "fixture": "RSQL_windowfirstvalue.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowlag",
+      "fixture": "RSQL_windowlag.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowlastvalue",
+      "fixture": "RSQL_windowlastvalue.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowlead",
+      "fixture": "RSQL_windowlead.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowmax",
+      "fixture": "RSQL_windowmax.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowmin",
+      "fixture": "RSQL_windowmin.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windownthvalue",
+      "fixture": "RSQL_windownthvalue.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowntile",
+      "fixture": "RSQL_windowntile.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowpercentrank",
+      "fixture": "RSQL_windowpercentrank.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowrank",
+      "fixture": "RSQL_windowrank.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowrownumber",
+      "fixture": "RSQL_windowrownumber.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_windowsum",
+      "fixture": "RSQL_windowsum.json",
+      "status": "harvested"
+    }
+  ],
+  "pages": [],
+  "function_pages": [
+    {
+      "doc_key": "RSQL_abs",
+      "fixture": "RSQL_abs.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_acos",
+      "fixture": "RSQL_acos.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_ascii",
+      "fixture": "RSQL_ascii.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_asin",
+      "fixture": "RSQL_asin.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_atan",
+      "fixture": "RSQL_atan.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_atan2",
+      "fixture": "RSQL_atan2.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_cast",
+      "fixture": "RSQL_cast.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_ceiling",
+      "fixture": "RSQL_ceiling.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_char",
+      "fixture": "RSQL_char.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_characterlength",
+      "fixture": "RSQL_characterlength.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_charindex",
+      "fixture": "RSQL_charindex.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_charlength",
+      "fixture": "RSQL_charlength.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_coalesce",
+      "fixture": "RSQL_coalesce.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_concat",
+      "fixture": "RSQL_concat.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_convert",
+      "fixture": "RSQL_convert.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_cos",
+      "fixture": "RSQL_cos.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_cot",
+      "fixture": "RSQL_cot.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_curdate",
+      "fixture": "RSQL_curdate.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_currentdate",
+      "fixture": "RSQL_currentdate.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_currenttime",
+      "fixture": "RSQL_currenttime.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_currenttimestamp",
+      "fixture": "RSQL_currenttimestamp.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_curtime",
+      "fixture": "RSQL_curtime.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_extract",
+      "fixture": "RSQL_d_extract.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_find",
+      "fixture": "RSQL_d_find.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_justify",
+      "fixture": "RSQL_d_justify.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_length",
+      "fixture": "RSQL_d_length.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_list",
+      "fixture": "RSQL_d_list.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_listbuild",
+      "fixture": "RSQL_d_listbuild.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_listdata",
+      "fixture": "RSQL_d_listdata.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_listfind",
+      "fixture": "RSQL_d_listfind.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_listfromstring",
+      "fixture": "RSQL_d_listfromstring.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_listget",
+      "fixture": "RSQL_d_listget.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_listlength",
+      "fixture": "RSQL_d_listlength.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_listsame",
+      "fixture": "RSQL_d_listsame.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_listtostring",
+      "fixture": "RSQL_d_listtostring.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_piece",
+      "fixture": "RSQL_d_piece.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_d_translate",
+      "fixture": "RSQL_d_translate.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_database",
+      "fixture": "RSQL_database.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_datalength",
+      "fixture": "RSQL_datalength.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_date",
+      "fixture": "RSQL_date.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_dateadd",
+      "fixture": "RSQL_dateadd.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_datediff",
+      "fixture": "RSQL_datediff.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_datename",
+      "fixture": "RSQL_datename.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_datepart",
+      "fixture": "RSQL_datepart.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_datetrunc",
+      "fixture": "RSQL_datetrunc.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_day",
+      "fixture": "RSQL_day.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_dayname",
+      "fixture": "RSQL_dayname.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_dayofmonth",
+      "fixture": "RSQL_dayofmonth.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_dayofweek",
+      "fixture": "RSQL_dayofweek.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_dayofyear",
+      "fixture": "RSQL_dayofyear.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_decode",
+      "fixture": "RSQL_decode.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_defaultschema",
+      "fixture": "RSQL_defaultschema.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_degrees",
+      "fixture": "RSQL_degrees.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_embedding",
+      "fixture": "RSQL_embedding.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_exact",
+      "fixture": "RSQL_exact.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_exp",
+      "fixture": "RSQL_exp.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_external",
+      "fixture": "RSQL_external.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_floor",
+      "fixture": "RSQL_floor.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_getdate",
+      "fixture": "RSQL_getdate.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_getutcdate",
+      "fixture": "RSQL_getutcdate.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_greatest",
+      "fixture": "RSQL_greatest.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_hashbytes",
+      "fixture": "RSQL_hashbytes.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_hour",
+      "fixture": "RSQL_hour.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_ifnull",
+      "fixture": "RSQL_ifnull.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_instr",
+      "fixture": "RSQL_instr.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_internal",
+      "fixture": "RSQL_internal.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_isnull",
+      "fixture": "RSQL_isnull.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_isnumeric",
+      "fixture": "RSQL_isnumeric.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_jsonarray",
+      "fixture": "RSQL_jsonarray.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_jsonobject",
+      "fixture": "RSQL_jsonobject.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_jsontable",
+      "fixture": "RSQL_jsontable.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_last_identity",
+      "fixture": "RSQL_last_identity.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_lastday",
+      "fixture": "RSQL_lastday.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_lcase",
+      "fixture": "RSQL_lcase.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_least",
+      "fixture": "RSQL_least.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_left",
+      "fixture": "RSQL_left.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_len",
+      "fixture": "RSQL_len.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_length",
+      "fixture": "RSQL_length.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_log",
+      "fixture": "RSQL_log.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_log10",
+      "fixture": "RSQL_log10.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_lower",
+      "fixture": "RSQL_lower.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_lpad",
+      "fixture": "RSQL_lpad.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_ltrim",
+      "fixture": "RSQL_ltrim.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_minus_pct",
+      "fixture": "RSQL_minus_pct.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_minute",
+      "fixture": "RSQL_minute.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_mod",
+      "fixture": "RSQL_mod.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_month",
+      "fixture": "RSQL_month.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_monthname",
+      "fixture": "RSQL_monthname.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_now",
+      "fixture": "RSQL_now.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_nullif",
+      "fixture": "RSQL_nullif.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_nvl",
+      "fixture": "RSQL_nvl.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_object",
+      "fixture": "RSQL_object.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_odbcin",
+      "fixture": "RSQL_odbcin.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_odbcout",
+      "fixture": "RSQL_odbcout.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_oid",
+      "fixture": "RSQL_oid.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_pi",
+      "fixture": "RSQL_pi.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_plus_pct",
+      "fixture": "RSQL_plus_pct.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_position",
+      "fixture": "RSQL_position.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_power",
+      "fixture": "RSQL_power.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_predict",
+      "fixture": "RSQL_predict.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_probability",
+      "fixture": "RSQL_probability.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_quarter",
+      "fixture": "RSQL_quarter.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_radians",
+      "fixture": "RSQL_radians.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_repeat",
+      "fixture": "RSQL_repeat.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_replace",
+      "fixture": "RSQL_replace.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_replicate",
+      "fixture": "RSQL_replicate.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_reverse",
+      "fixture": "RSQL_reverse.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_right",
+      "fixture": "RSQL_right.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_round",
+      "fixture": "RSQL_round.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_rpad",
+      "fixture": "RSQL_rpad.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_rtrim",
+      "fixture": "RSQL_rtrim.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_searchindex",
+      "fixture": "RSQL_searchindex.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_second",
+      "fixture": "RSQL_second.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_sign",
+      "fixture": "RSQL_sign.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_sin",
+      "fixture": "RSQL_sin.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_space",
+      "fixture": "RSQL_space.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_sqlstring",
+      "fixture": "RSQL_sqlstring.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_sqlupper",
+      "fixture": "RSQL_sqlupper.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_sqrt",
+      "fixture": "RSQL_sqrt.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_square",
+      "fixture": "RSQL_square.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_str",
+      "fixture": "RSQL_str.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_string",
+      "fixture": "RSQL_string.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_stuff",
+      "fixture": "RSQL_stuff.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_substr",
+      "fixture": "RSQL_substr.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_substring",
+      "fixture": "RSQL_substring.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_sysdate",
+      "fixture": "RSQL_sysdate.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_tan",
+      "fixture": "RSQL_tan.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_timestampadd",
+      "fixture": "RSQL_timestampadd.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_timestampdiff",
+      "fixture": "RSQL_timestampdiff.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_tochar",
+      "fixture": "RSQL_tochar.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_todate",
+      "fixture": "RSQL_todate.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_tonumber",
+      "fixture": "RSQL_tonumber.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_toposixtime",
+      "fixture": "RSQL_toposixtime.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_totimestamp",
+      "fixture": "RSQL_totimestamp.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_tovector",
+      "fixture": "RSQL_tovector.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_trim",
+      "fixture": "RSQL_trim.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_truncate",
+      "fixture": "RSQL_truncate.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_truncate_pct",
+      "fixture": "RSQL_truncate_pct.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_tsqlnewid",
+      "fixture": "RSQL_tsqlnewid.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_ucase",
+      "fixture": "RSQL_ucase.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_unixtimestamp",
+      "fixture": "RSQL_unixtimestamp.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_upper",
+      "fixture": "RSQL_upper.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_userfunction",
+      "fixture": "RSQL_userfunction.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_vectorcosine",
+      "fixture": "RSQL_vectorcosine.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_vectordotproduct",
+      "fixture": "RSQL_vectordotproduct.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_week",
+      "fixture": "RSQL_week.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_xmlconcat",
+      "fixture": "RSQL_xmlconcat.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_xmlelement",
+      "fixture": "RSQL_xmlelement.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_xmlforest",
+      "fixture": "RSQL_xmlforest.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_year",
+      "fixture": "RSQL_year.json",
+      "status": "harvested"
+    }
+  ],
+  "unary_pages": [
+    {
+      "doc_key": "RSQL_UNARY_OPERATORS",
+      "fixture": "RSQL_UNARY_OPERATORS.json",
+      "status": "harvested",
+      "page_kind": "index"
+    },
+    {
+      "doc_key": "RSQL_negative",
+      "fixture": "RSQL_negative.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_not",
+      "fixture": "RSQL_not.json",
+      "status": "harvested"
+    },
+    {
+      "doc_key": "RSQL_positive",
+      "fixture": "RSQL_positive.json",
+      "status": "harvested"
+    }
+  ],
+  "optimization_pages": [
+    {
+      "doc_key": "GSOC_hints",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSOC_hints",
+      "title": "Specify Optimization Hints in Queries",
+      "fixture": "GSOC_hints.json",
+      "status": "harvested"
+    }
+  ],
+  "datatype_pages": [
+    {
+      "doc_key": "RSQL_datatype",
+      "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_datatype",
+      "title": "Data Types (SQL)",
+      "fixture": "RSQL_datatype.json",
+      "status": "harvested"
+    }
+  ]
+}

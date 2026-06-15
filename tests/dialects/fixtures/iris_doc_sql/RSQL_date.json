@@ -1,0 +1,70 @@
+{
+  "doc_key": "RSQL_date",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_date",
+  "title": "DATE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_9770ec98",
+      "section": "Examples",
+      "sql": "SELECT DATE('2000-01-01 00:00:00') AS StringToDate -- Display Mode: 01/01/2000",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_7035c938",
+      "section": "Examples",
+      "sql": "SELECT DATE($HOROLOG), -- Returns 0 (12/31/1840) DATE($ZTIMESTAMP) -- Returns 0 (12/31/1840)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_b6d862c2",
+      "section": "Examples",
+      "sql": "SELECT DATE(+$HOROLOG), -- Returns the current date DATE(+$ZTIMESTAMP) -- Returns the current date",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_bc5f9c97",
+      "section": "Examples",
+      "sql": "SELECT CURRENT_TIMESTAMP AS TSCol, DATE(CURRENT_TIMESTAMP) AS DateCol",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_f423098b",
+      "section": "Examples",
+      "sql": "SELECT GETDATE() AS GetDateCol, DATE(GETDATE()) AS DateCol",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_ab21a7b1",
+      "section": "Examples",
+      "sql": "SELECT '2022-05-22 13:14:23' AS DateStrCol, DATE('2022-05-22 13:14:23') AS DateCol",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_27dcf605",
+      "section": "Examples",
+      "sql": "SELECT TO_POSIXTIME('2022-05-22','YYYY-MM-DD') AS PosixCol, DATE(TO_POSIXTIME('2022-05-22','YYYY-MM-DD')) AS DateCol",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_09406403",
+      "section": "Examples",
+      "sql": "SELECT $H AS HoroCol, DATE(+$H) AS DateCol",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_d8cdd1fa",
+      "section": "Examples",
+      "sql": "SELECT $ZTIMESTAMP AS TSCol, DATE(+$ZTIMESTAMP) AS DateCol",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_68cd32a7",
+      "section": "Examples",
+      "sql": "SELECT {fn NOW} AS NowCol, DATE({fn NOW}) AS DateCol",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 15.\n  SELECT {fn NOW\u001b[4m}\u001b[0m AS NowCol, DATE({fn NOW}) AS DateCol"
+    }
+  ]
+}

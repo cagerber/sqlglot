@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_currentdate",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_currentdate",
+  "title": "CURRENT_DATE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_138869ce",
+      "section": "Examples",
+      "sql": "SELECT CURRENT_DATE AS Today",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_7eeecbaf",
+      "section": "Examples",
+      "sql": "SELECT CURRENT_DATE",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_f2ca24c3",
+      "section": "Examples",
+      "sql": "SELECT Name, DOB, Age FROM Sample.Person WHERE DOB > CURRENT_DATE - 1000",
+      "roundtrip": false
+    }
+  ]
+}

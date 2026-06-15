@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_str",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_str",
+  "title": "STR (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_1ac772c4",
+      "section": "Examples",
+      "sql": "SELECT STR(123), STR(123,4), STR(+00123.45,3), STR(+00123.45,3,1), STR(+00123.45,5,1)",
+      "roundtrip": false
+    }
+  ]
+}

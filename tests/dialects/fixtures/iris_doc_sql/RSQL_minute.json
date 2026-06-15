@@ -1,0 +1,44 @@
+{
+  "doc_key": "RSQL_minute",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_minute",
+  "title": "MINUTE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_2780d158",
+      "section": "Examples",
+      "sql": "SELECT {fn MINUTE('2018-02-16 18:45:38')} AS ODBCMinutes",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_c9ef526c",
+      "section": "Examples",
+      "sql": "SELECT {fn MINUTE(67538)} AS HorologMinutes",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_08a00f07",
+      "section": "Examples",
+      "sql": "SELECT {fn MINUTE('2018-02-16 18:45')} AS Minutes_Given",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_2268aff3",
+      "section": "Examples",
+      "sql": "SELECT {fn MINUTE('2018-02-16')} AS Minutes_Given",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_432bda56",
+      "section": "Examples",
+      "sql": "SELECT {fn MINUTE(CURRENT_TIME)} AS Min_CurrentT, {fn MINUTE({fn CURTIME()})} AS Min_CurT, {fn MINUTE({fn NOW()})} AS Min_Now, {fn MINUTE($HOROLOG)} AS Min_Horolog, {fn MINUTE($ZTIMESTAMP)} AS Min_ZTS",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_c9efd0b1",
+      "section": "Examples",
+      "sql": "SELECT LENGTH({fn MINUTE('2018-02-22 11:45:00')}), LENGTH({fn MINUTE('2018-02-22 03:05:00')}), LENGTH({fn MINUTE('2018-02-22 3:5:0')}), LENGTH({fn MINUTE('2018-02-22')})",
+      "roundtrip": false
+    }
+  ]
+}

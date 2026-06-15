@@ -1,0 +1,13 @@
+{
+  "doc_key": "RSQL_positive",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_positive",
+  "title": "+ (Positive) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "curated_positive",
+      "section": "Unary + (curated)",
+      "sql": "SELECT +Age FROM Sample.Person"
+    }
+  ]
+}

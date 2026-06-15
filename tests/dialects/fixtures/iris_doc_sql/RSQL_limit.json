@@ -1,0 +1,28 @@
+{
+  "doc_key": "RSQL_limit",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_limit",
+  "title": "LIMIT (SQL Clause) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_71887c73",
+      "section": "Examples",
+      "sql": "SELECT Home_State FROM Sample.Person ORDER BY Home_State LIMIT 20",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_cfa4c74e",
+      "section": "Examples",
+      "sql": "SELECT Home_State FROM Sample.Person ORDER BY Home_State LIMIT 20 OFFSET 5",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_c0600d1c",
+      "section": "Examples",
+      "sql": "SELECT ... FROM ... [ ORDER BY ... ] LIMIT [ ALL ] count [ OFFSET start [ ROW | ROWS ] ]",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    }
+  ]
+}

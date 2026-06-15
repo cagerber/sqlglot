@@ -1,0 +1,32 @@
+{
+  "doc_key": "RSQL_dayname",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_dayname",
+  "title": "DAYNAME (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_4cad5b7a",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYNAME('2018-02-21 12:35:46')} AS Weekday",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_f188630d",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYNAME(64700)} AS Weekday",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_d46bfa53",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYNAME({fn NOW()})} AS Wd_Now, {fn DAYNAME(CURRENT_DATE)} AS Wd_CurrDate, {fn DAYNAME(CURRENT_TIMESTAMP)} AS Wd_CurrTstamp, {fn DAYNAME($ZTIMESTAMP)} AS Wd_ZTstamp, {fn DAYNAME($HOROLOG)} AS Wd_Horolog",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_ff522aac",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYNAME(\"2017-02-29\")}",
+      "roundtrip": false
+    }
+  ]
+}

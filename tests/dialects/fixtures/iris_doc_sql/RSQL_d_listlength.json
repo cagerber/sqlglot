@@ -1,0 +1,68 @@
+{
+  "doc_key": "RSQL_d_listlength",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_listlength",
+  "title": "$LISTLENGTH (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_90985ad1",
+      "section": "Examples",
+      "sql": "SELECT $LISTLENGTH($LISTBUILD(\"Red\",\"Blue\",\"Green\"))",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_01b52257",
+      "section": "Examples",
+      "sql": "SELECT $LISTLENGTH($LISTBUILD('Red','Blue','Green'))",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_7b113fe2",
+      "section": "Examples",
+      "sql": "SELECT $LISTLENGTH($LISTBUILD(\"Red\",,\"Green\"))",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_b3eac750",
+      "section": "Examples",
+      "sql": "SELECT $LISTLENGTH($LISTBUILD('Red','','Green')), $LISTLENGTH($LISTBUILD('Red',NULL,'Green')), $LISTLENGTH($LISTBUILD('Red',,'Green'))",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_ccd438ec",
+      "section": "Examples",
+      "sql": "SELECT $LISTLENGTH(\"fred\")",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_8f9dd9b1",
+      "section": "Examples",
+      "sql": "SELECT $LISTLENGTH($LISTBUILD(\"\"))",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_10cdb4a6",
+      "section": "Examples",
+      "sql": "SELECT $LISTLENGTH(\"\")",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_3f213b89",
+      "section": "Examples",
+      "sql": "SELECT $LISTLENGTH(NULL)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_bd903c45",
+      "section": "Examples",
+      "sql": "SELECT $LISTLENGTH('')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_cdf66453",
+      "section": "Examples",
+      "sql": "SELECT $LISTLENGTH($LISTBUILD(\"Apple\",\"Pear\",$LISTBUILD(\"Walnut\",\"Pecan\")))",
+      "roundtrip": false
+    }
+  ]
+}

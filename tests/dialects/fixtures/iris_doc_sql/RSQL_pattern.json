@@ -1,0 +1,28 @@
+{
+  "doc_key": "RSQL_pattern",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_pattern",
+  "title": "%PATTERN (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_1f1bedf3",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_State FROM Sample.Person WHERE Home_State %PATTERN '1U1\"C\"'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_d904d02b",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE Name %PATTERN '1U1L.E'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_50e67715",
+      "section": "Examples",
+      "sql": "SELECT Name, COUNT(Name) AS TotRecs, COUNT(Name %AFTERHAVING) AS JoRecs FROM Sample.Person HAVING Name %PATTERN '1U.L1\",\"1\"Jo\".E'",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 49.\n  SELECT Name, COUNT(Name) AS TotRecs, COUNT(Name \u001b[4m%\u001b[0mAFTERHAVING) AS JoRecs FROM Sample.Person HAVING Name %PATTERN '1U.L1\",\"1\"Jo\".E'"
+    }
+  ]
+}

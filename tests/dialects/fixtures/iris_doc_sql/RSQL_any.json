@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_any",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_any",
+  "title": "ANY (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_b6e7b335",
+      "section": "Examples",
+      "sql": "SELECT Name,Salary,Home_State FROM Sample.Employee WHERE Salary > 75000 AND Home_State = ANY (SELECT State FROM Sample.USZipCode WHERE Longitude < -93) ORDER BY Home_State",
+      "roundtrip": false
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "doc_key": "RSQL_d_listget",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_listget",
+  "title": "$LISTGET (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_49ed8a8e",
+      "section": "Examples",
+      "sql": "SELECT Name,$LISTGET(Home,3) AS HomeState FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_fa453de5",
+      "section": "Examples",
+      "sql": "SELECT $LISTGET($LISTBUILD(\"Red\",\"Blue\",\"Green\")), $LISTGET($LISTBUILD(\"Red\",\"Blue\",\"Green\"),1)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_e1cd0517",
+      "section": "Examples",
+      "sql": "SELECT $LISTGET($LISTBUILD(\"Red\",\"Blue\",\"Green\"),3), $LISTGET($LISTBUILD(\"Red\",\"Blue\",\"Green\"),-1)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_41a73212",
+      "section": "Examples",
+      "sql": "SELECT $LISTGET($LISTBUILD(\"Red\",,\"Green\"),2,'?'), $LISTGET($LISTBUILD(\"Red\",,\"Green\"),2)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_13f1b71a",
+      "section": "Examples",
+      "sql": "SELECT $LISTGET($LISTBUILD(\"Red\",\"Blue\",\"Green\"),4), $LISTGET($LISTBUILD(\"Red\",\"Blue\",\"Green\"),4,'ERR')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_2ae5bf90",
+      "section": "Examples",
+      "sql": "SELECT $LISTGET($LISTBUILD(\"Red\",\"Blue\",\"Green\"),0), $LISTGET(NULL)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_adec1e69",
+      "section": "Examples",
+      "sql": "SELECT $LISTGET('fred',1,'failsafe')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_1549a22a",
+      "section": "Examples",
+      "sql": "SELECT $LISTGET($LISTBUILD(\"Red\",\"Blue\",\"Green\"),-3,'failsafe')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_1a25632e",
+      "section": "Examples",
+      "sql": "SELECT $LISTGET($LISTBUILD(\"Red\",\"Blue\",\"Green\"),'g','failsafe')",
+      "roundtrip": false
+    }
+  ]
+}

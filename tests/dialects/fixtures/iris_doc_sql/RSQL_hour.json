@@ -1,0 +1,50 @@
+{
+  "doc_key": "RSQL_hour",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_hour",
+  "title": "HOUR (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_5e32ac4d",
+      "section": "Examples",
+      "sql": "SELECT {fn HOUR('2017-02-16 18:45:38')} AS ODBCHour",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_ecd5ea17",
+      "section": "Examples",
+      "sql": "SELECT {fn HOUR(67538)} AS HorologHour",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_f32703a5",
+      "section": "Examples",
+      "sql": "SELECT {fn HOUR('2017-02-16 18:45')} AS Hour_Given",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_1e18d566",
+      "section": "Examples",
+      "sql": "SELECT {fn HOUR('2017-02-16')} AS Hour_Given",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_30b3973e",
+      "section": "Examples",
+      "sql": "SELECT {fn HOUR(CURRENT_TIME)} AS H_CurrentT, {fn HOUR({fn CURTIME()})} AS H_CurT, {fn HOUR({fn NOW()})} AS H_Now, {fn HOUR($HOROLOG)} AS H_Horolog, {fn HOUR($ZTIMESTAMP)} AS H_ZTS",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_c87ee6db",
+      "section": "Examples",
+      "sql": "SELECT LENGTH({fn HOUR('2018-02-15 11:45')}), LENGTH({fn HOUR('2018-02-15 03:45')}), LENGTH({fn HOUR('2018-02-15 3:45')}), LENGTH({fn HOUR('2018-02-15')})",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_f14efbe9",
+      "section": "Examples",
+      "sql": "SELECT {fn HOUR('2018-02-16 18.45.38')}",
+      "roundtrip": false
+    }
+  ]
+}

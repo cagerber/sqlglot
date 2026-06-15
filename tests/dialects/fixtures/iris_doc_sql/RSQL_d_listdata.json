@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_d_listdata",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_listdata",
+  "title": "$LISTDATA (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_60aa9cd5",
+      "section": "Examples",
+      "sql": "SELECT $LISTDATA($LISTBUILD(\"Red\",,Y,\"\",\"Green\")), $LISTDATA($LISTBUILD(\"Red\",,Y,\"\",\"Green\"),1), $LISTDATA($LISTBUILD(\"Red\",,Y,\"\",\"Green\"),4), $LISTDATA($LISTBUILD(\"Red\",,Y,\"\",\"Green\"),5), $LISTDATA($LISTBUILD(\"Red\",,Y,\"\",\"Green\"),-1)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_38894290",
+      "section": "Examples",
+      "sql": "SELECT $LISTDATA($LISTBUILD(\"Red\",,Y,\"\",\"Green\"),2), $LISTDATA($LISTBUILD(\"Red\",,Y,\"\",\"Green\"),3), $LISTDATA($LISTBUILD(\"Red\",,Y,\"\",\"Green\"),0), $LISTDATA($LISTBUILD(\"Red\",,Y,\"\",\"Green\"),6)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_c0ff615d",
+      "section": "Examples",
+      "sql": "SELECT $LISTDATA('fred')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_bdd0a22e",
+      "section": "Examples",
+      "sql": "SELECT $LISTDATA($LISTBUILD(\"Red\",\"Blue\",\"Green\"),-3)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_64d7a2e3",
+      "section": "Examples",
+      "sql": "SELECT $LISTDATA($LISTBUILD(\"Red\",\"Blue\",\"Green\"),'g')",
+      "roundtrip": false
+    }
+  ]
+}

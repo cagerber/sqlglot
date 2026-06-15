@@ -1,0 +1,32 @@
+{
+  "doc_key": "RSQL_CLAUSES",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_CLAUSES",
+  "title": "SQL Clauses and Predicate Conditions",
+  "doc_version": "2026.1",
+  "page_kind": "index",
+  "child_doc_keys": [
+    "RSQL_from",
+    "RSQL_where",
+    "RSQL_groupby",
+    "RSQL_having",
+    "RSQL_order",
+    "RSQL_top",
+    "RSQL_distinct",
+    "RSQL_limit",
+    "RSQL_union",
+    "RSQL_intersect",
+    "RSQL_except",
+    "RSQL_with",
+    "RSQL_into",
+    "RSQL_values",
+    "RSQL_wherecurrentof",
+    "RSQL_ansi"
+  ],
+  "examples": [
+    {
+      "id": "index_clauses_smoke",
+      "section": "Cross-reference smoke (curated)",
+      "sql": "SELECT DISTINCT TOP 10 Name FROM Sample.Person WHERE Age > 30 GROUP BY Name HAVING COUNT(*) > 1 ORDER BY Name"
+    }
+  ]
+}

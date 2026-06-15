@@ -1,0 +1,32 @@
+{
+  "doc_key": "RSQL_replace",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_replace",
+  "title": "REPLACE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_70206a0c",
+      "section": "Examples",
+      "sql": "SELECT REPLACE('PING PONG','P','K')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_a136abd2",
+      "section": "Examples",
+      "sql": "SELECT REPLACE('KANSAS, ARKANSAS, NEBRASKA','KANSAS','NEBRASKA')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_8415c647",
+      "section": "Examples",
+      "sql": "SELECT REPLACE('','','Nothing'), REPLACE('PING PONG','','K'), REPLACE('PING PONG','P','')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_2357960b",
+      "section": "Examples",
+      "sql": "SELECT REPLACE(NULL,'K','P'), REPLACE(NULL,NULL,'P'), REPLACE('PING PONG',NULL,'K'), REPLACE('PING PONG','P',NULL), REPLACE('PING PONG','Z',NULL)",
+      "roundtrip": false
+    }
+  ]
+}

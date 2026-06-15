@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_timestampadd",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_timestampadd",
+  "title": "TIMESTAMPADD (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_19865621",
+      "section": "Examples",
+      "sql": "SELECT {fn TIMESTAMPADD(SQL_TSI_WEEK,1,'2017-12-20 12:00:00')}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_0b6452ac",
+      "section": "Examples",
+      "sql": "SELECT {fn TIMESTAMPADD(SQL_TSI_MONTH,5,'2017-12-20 12:00:00')}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_8ac21e27",
+      "section": "Examples",
+      "sql": "SELECT {fn TIMESTAMPADD(SQL_TSI_MONTH,5,'2018-01-31 12:00:00')}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_68da4934",
+      "section": "Examples",
+      "sql": "SELECT {fn TIMESTAMPADD(SQL_TSI_MINUTE,45,'2017-12-20 00:00:00')}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_f8907232",
+      "section": "Examples",
+      "sql": "SELECT {fn TIMESTAMPADD(SQL_TSI_MINUTE,-45,'2017-12-20 00:00:00')}",
+      "roundtrip": false
+    }
+  ]
+}

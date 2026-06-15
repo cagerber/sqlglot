@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_windowlead",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_windowlead",
+  "title": "LEAD (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_c33555d6",
+      "section": "Examples",
+      "sql": "SELECT LEAD(Salary) OVER (PARTITION BY Department ORDER BY Salary) FROM Company.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_6bfb1a3b",
+      "section": "Examples",
+      "sql": "SELECT LEAD(Salary, 1, 0) OVER (PARTITION BY Department ORDER BY Salary) FROM Company.Employee",
+      "roundtrip": false
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "doc_key": "RSQL_trim",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_trim",
+  "title": "TRIM (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_4d5da0ed",
+      "section": "Examples",
+      "sql": "SELECT '^'||' abc '||'^' AS UnTrimmed,'^'||TRIM(' abc ')||'^' AS Trimmed",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_b2844131",
+      "section": "Examples",
+      "sql": "SELECT TRIM(LEADING ' abc '),TRIM(LEADING FROM ' def '),TRIM(LEADING ' ' FROM ' ghi ')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_c43e2e5a",
+      "section": "Examples",
+      "sql": "SELECT TRIM(LEADING 'x' FROM 'xxxabcxxx') AS Trimmed",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_7f3b1c7d",
+      "section": "Examples",
+      "sql": "SELECT TRIM(BOTH 'x' FROM 'xxxabcxxx') AS Trimmed",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_99e7b286",
+      "section": "Examples",
+      "sql": "SELECT TRIM('x' FROM 'xxxabcxxx') AS Trimmed",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_dc24b58d",
+      "section": "Examples",
+      "sql": "SELECT TRIM(TRAILING 'xyz' FROM 'abcxzzxyyyyz') AS Trimmed",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_8dce5125",
+      "section": "Examples",
+      "sql": "SELECT TRIM(LEADING FirstName FROM FullName) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_7add976a",
+      "section": "Examples",
+      "sql": "SELECT TOP 15 Name,FavoriteColors, TRIM(LEADING 'BR' FROM $LISTTOSTRING(FavoriteColors)) AS Trimmed FROM Sample.Person WHERE FavoriteColors IS NOT NULL",
+      "roundtrip": false
+    }
+  ]
+}

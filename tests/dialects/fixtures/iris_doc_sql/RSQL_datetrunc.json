@@ -1,0 +1,44 @@
+{
+  "doc_key": "RSQL_datetrunc",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_datetrunc",
+  "title": "DATE_TRUNC (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_4152d84e",
+      "section": "Examples",
+      "sql": "SELECT DATE_TRUNC('month', CURRENT_DATE)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_52f91288",
+      "section": "Examples",
+      "sql": "SELECT DATE_TRUNC('hh','12/22/2021 8:15:23')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_08cad12a",
+      "section": "Examples",
+      "sql": "SELECT DATEADD('hh',1,'12/22/2021 8:15:23')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_ebccc910",
+      "section": "Examples",
+      "sql": "SELECT DATE_TRUNC('ss','66716,256.467')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_aa7b5c02",
+      "section": "Examples",
+      "sql": "SELECT DATE_TRUNC('yy','11.25.80')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_9b550bdb",
+      "section": "Examples",
+      "sql": "SELECT DATE_TRUNC('dd', CURRENT_DATE)",
+      "roundtrip": false
+    }
+  ]
+}

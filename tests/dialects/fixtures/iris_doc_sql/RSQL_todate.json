@@ -1,0 +1,116 @@
+{
+  "doc_key": "RSQL_todate",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_todate",
+  "title": "TO_DATE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_9d5a2a1c",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('22 FEB 2022')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_43655d5f",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('2-22-22','M-DD-YY')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_e168b815",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('29 September 2018'), TO_DATE('29 SEP 2018')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_1c3ed8c8",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('29 September 06'), TO_DATE('29 SEP 06')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_530710f7",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('2018 Feb 22','YYYY MON DD'), TO_DATE('FEBRUARY 22, 2018','month dd, YYYY'), TO_DATE('2018***02***22','YYYY***MM***DD'), TO_DATE('02/22/2018','MM/DD/YYYY')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_ebe1708e",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('02222018','MMDDYYYY'), TO_DATE('22022018','DDMMYYYY'), TO_DATE('20182202','YYYYDDMM'), TO_DATE('20180222','YYYYMMDD')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_5c5a4e30",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('201806','YYYYMM')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_0d91c262",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('24','DD')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_2cf427a0",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('300','DDD')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_b665e374",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('8','MM')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_96e747df",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('2022','YYYY')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_a0bc8e81",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('29 September 00','DD MONTH RR'), -- 09/29/2000 TO_DATE('29 September 18','DD MONTH RR'), -- 09/29/2018 TO_DATE('29 September 49','DD MONTH RR'), -- 09/29/2049 TO_DATE('29 September 50','DD MONTH RR'), -- 09/29/1950 TO_DATE('29 September 77','DD MONTH RR') -- 09/29/1977",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_013_46083713",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('29 September 00','DD MONTH RR'), -- 09/29/2000 TO_DATE('29 September 21','DD MONTH RR'), -- 09/29/2021 TO_DATE('29 September 49','DD MONTH RR'), -- 09/29/2049 TO_DATE('29 September 50','DD MONTH RR'), -- 09/29/2050 TO_DATE('29 September 77','DD MONTH RR') -- 09/29/2077",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_014_672e2acc",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('29 September 2021','DD MONTH RRRR'), -- 09/29/2021 TO_DATE('29 September 21','DD MONTH RRRR'), -- 09/29/2021 TO_DATE('29 September 1949','DD MONTH RRRR'), -- 09/29/1949 TO_DATE('29 September 49','DD MONTH RRRR'), -- 09/29/2049 TO_DATE('29 September 1950','DD MONTH RRRR'), -- 09/29/1950 TO_DATE('29 September 50','DD MONTH RRRR') -- 09/29/1950",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_015_5be1e7af",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('2022:60','YYYY:DDD') -- 03/01/2022",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_016_6ea2932a",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE('2020-12-31-60','YYYY-MM-DD-DDD')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_017_794e3bdd",
+      "section": "Examples",
+      "sql": "SELECT TO_DATE(2300000,'J')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_018_f77fe123",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR('1776-07-04','J') AS JulianCount, -- 2369916 TO_DATE(2369916,'J') AS JulianDate -- 1776-07-04",
+      "roundtrip": false
+    }
+  ]
+}

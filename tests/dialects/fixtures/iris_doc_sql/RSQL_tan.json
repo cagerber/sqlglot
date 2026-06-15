@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_tan",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_tan",
+  "title": "TAN (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_eace878a",
+      "section": "Examples",
+      "sql": "SELECT {fn TAN(0.52)} AS Tangent",
+      "roundtrip": false
+    }
+  ]
+}

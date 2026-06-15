@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_xmlconcat",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_xmlconcat",
+  "title": "XMLCONCAT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_05a364fa",
+      "section": "Examples",
+      "sql": "SELECT Name,XMLCONCAT(XMLELEMENT(\"Para\",Name), XMLELEMENT(\"Para\",Home_City)) AS ExportString FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_2724cf0e",
+      "section": "Examples",
+      "sql": "SELECT XMLELEMENT(\"Item\",Name, XMLCONCAT( XMLELEMENT(\"Para\",Home_City,' ',Home_State), XMLELEMENT(\"Para\",'is residence'))) AS ExportString FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

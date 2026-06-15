@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_isnull",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_isnull",
+  "title": "ISNULL (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_284f2c49",
+      "section": "Examples",
+      "sql": "SELECT ISNULL(NULL,99) AS IsNullT,ISNULL(33,99) AS IsNullF",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_8ed079a0",
+      "section": "Examples",
+      "sql": "SELECT Name, ISNULL(FavoriteColors,'No Preference') AS ColorChoice FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_aacfaaad",
+      "section": "Examples",
+      "sql": "SELECT Name, IFNULL(FavoriteColors,'No Preference') AS ColorChoice FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "doc_key": "RSQL_datepart",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_datepart",
+  "title": "DATEPART (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_006_a6d5b019",
+      "section": "Examples",
+      "sql": "SELECT DATEPART(sqltimestamp,'2/25/2018') AS DTStamp",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_7d22a343",
+      "section": "Examples",
+      "sql": "SELECT DATEPART(sqltimestamp,'64701,23456') AS DTStamp",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_4d10c4e4",
+      "section": "Examples",
+      "sql": "SELECT DATEPART('yy','2018-02-22 12:00:00') AS YearDTS, DATEPART('year','2018-02-22') AS YearDS, DATEPART(YYYY,'02/22/2018') AS YearD, DATEPART(YEAR,64701) AS YearHD, DATEPART('Year','64701,23456') AS YearHDT",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'this' missing for <class 'sqlglot.expressions.temporal.Extract'>. Line 1, Col: 20.\n  SELECT DATEPART(\u001b[4m'yy'\u001b[0m,'2018-02-22 12:00:00') AS YearDTS, DATEPART('year','2018-02-22') AS"
+    },
+    {
+      "id": "ex_002_33a43f80",
+      "section": "Examples",
+      "sql": "SELECT DATEPART('yyyy',$HOROLOG) AS Year,DATEPART('q',$HOROLOG) AS Quarter",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'this' missing for <class 'sqlglot.expressions.temporal.Extract'>. Line 1, Col: 22.\n  SELECT DATEPART(\u001b[4m'yyyy'\u001b[0m,$HOROLOG) AS Year,DATEPART('q',$HOROLOG) AS Quarter"
+    },
+    {
+      "id": "ex_003_b9fc0a08",
+      "section": "Examples",
+      "sql": "SELECT Name,DOB,DATEPART('weekday',DOB) AS bday FROM Sample.Person ORDER BY bday,DOB",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'this' missing for <class 'sqlglot.expressions.temporal.Extract'>. Line 1, Col: 34.\n  SELECT Name,DOB,DATEPART(\u001b[4m'weekday'\u001b[0m,DOB) AS bday FROM Sample.Person ORDER BY bday,DOB"
+    },
+    {
+      "id": "ex_004_b5045adc",
+      "section": "Examples",
+      "sql": "SELECT DATEPART('mi','2018-2-20 12:20:07') AS Minutes, DATEPART('n','2018-02-20 10:20:') AS Minutes, DATEPART(MINUTE,'2018-02-20 10:20') AS Minutes",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'this' missing for <class 'sqlglot.expressions.temporal.Extract'>. Line 1, Col: 20.\n  SELECT DATEPART(\u001b[4m'mi'\u001b[0m,'2018-2-20 12:20:07') AS Minutes, DATEPART('n','2018-02-20 10:20:')"
+    },
+    {
+      "id": "ex_005_eed74788",
+      "section": "Examples",
+      "sql": "SELECT DATEPART('ss','2018-02-20 03:20:') AS Seconds, DATEPART('S','2018-02-20 03:20') AS Seconds, DATEPART('Second','2018-02-20') AS Seconds",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'this' missing for <class 'sqlglot.expressions.temporal.Extract'>. Line 1, Col: 20.\n  SELECT DATEPART(\u001b[4m'ss'\u001b[0m,'2018-02-20 03:20:') AS Seconds, DATEPART('S','2018-02-20 03:20') A"
+    },
+    {
+      "id": "ex_008_cca73459",
+      "section": "Examples",
+      "sql": "SELECT Name,DOB FROM (SELECT Name,DOB,DATEPART('dd',DOB) AS DayNum,DATEPART('mm',DOB) AS Month FROM Sample.Person) WHERE Month=2 AND DayNum=29",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'this' missing for <class 'sqlglot.expressions.temporal.Extract'>. Line 1, Col: 51.\n  SELECT Name,DOB FROM (SELECT Name,DOB,DATEPART(\u001b[4m'dd'\u001b[0m,DOB) AS DayNum,DATEPART('mm',DOB) AS"
+    }
+  ]
+}

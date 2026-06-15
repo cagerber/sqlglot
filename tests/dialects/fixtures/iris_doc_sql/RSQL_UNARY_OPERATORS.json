@@ -1,0 +1,19 @@
+{
+  "doc_key": "RSQL_UNARY_OPERATORS",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_UNARY_OPERATORS",
+  "title": "SQL Unary Operators",
+  "doc_version": "2026.1",
+  "page_kind": "index",
+  "child_doc_keys": [
+    "RSQL_negative",
+    "RSQL_not",
+    "RSQL_positive"
+  ],
+  "examples": [
+    {
+      "id": "index_unary_smoke",
+      "section": "Cross-reference smoke (curated)",
+      "sql": "SELECT +Age, -Age, NOT (Age > 30) FROM Sample.Person"
+    }
+  ]
+}

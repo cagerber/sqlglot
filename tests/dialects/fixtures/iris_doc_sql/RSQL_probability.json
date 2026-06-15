@@ -1,0 +1,46 @@
+{
+  "doc_key": "RSQL_probability",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_probability",
+  "title": "PROBABILITY (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_2f7b1463",
+      "section": "Examples",
+      "sql": "SELECT PROBABILITY(IsSpam) FROM email_data",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_390eaaeb",
+      "section": "Examples",
+      "sql": "SELECT * FROM flower_dataset WHERE PROBABILITY(iris_flower FOR 'iris-setosa') > 0.6",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 62.\n  SELECT * FROM flower_dataset WHERE PROBABILITY(iris_flower \u001b[4mFOR\u001b[0m 'iris-setosa') > 0.6"
+    },
+    {
+      "id": "ex_003_4652495e",
+      "section": "Examples",
+      "sql": "SELECT PROBABILITY(IsSpam FOR 1) FROM email_data",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 29.\n  SELECT PROBABILITY(IsSpam \u001b[4mFOR\u001b[0m 1) FROM email_data"
+    },
+    {
+      "id": "ex_004_496a1475",
+      "section": "Examples",
+      "sql": "SELECT PROBABILITY(iris_flower FOR 'iris-setosa' WITH petal_length = length_petal) FROM flower_dataset",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 34.\n  SELECT PROBABILITY(iris_flower \u001b[4mFOR\u001b[0m 'iris-setosa' WITH petal_length = length_petal) FROM flower_dataset"
+    },
+    {
+      "id": "ex_005_be04d803",
+      "section": "Examples",
+      "sql": "SELECT * FROM new_patient_data WHERE PROBABILITY( PatientReadmission FOR 1) > 0.8",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 72.\n  SELECT * FROM new_patient_data WHERE PROBABILITY( PatientReadmission \u001b[4mFOR\u001b[0m 1) > 0.8"
+    }
+  ]
+}

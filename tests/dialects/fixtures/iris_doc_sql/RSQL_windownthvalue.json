@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_windownthvalue",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_windownthvalue",
+  "title": "NTH_VALUE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_17f57ca7",
+      "section": "Examples",
+      "sql": "SELECT NTH_VALUE(Salary, 2) OVER (PARTITION BY Department ORDER BY Salary) FROM Company.Employee",
+      "roundtrip": false
+    }
+  ]
+}

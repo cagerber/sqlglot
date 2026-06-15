@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_lower",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_lower",
+  "title": "LOWER (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_6b1972d1",
+      "section": "Examples",
+      "sql": "SELECT Name,LOWER(Name) AS LowName FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_1f4bf336",
+      "section": "Examples",
+      "sql": "SELECT LOWER($CHAR(920,913,923,913,931,931,913)) FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

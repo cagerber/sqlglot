@@ -1,0 +1,13 @@
+{
+  "doc_key": "RSQL_defaultschema",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_defaultschema",
+  "title": "%SYSTEM_SQL.DefaultSchema() | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "curated_defaultschema",
+      "section": "DocBook synopsis (curated)",
+      "sql": "SELECT DEFAULT_SCHEMA()"
+    }
+  ]
+}

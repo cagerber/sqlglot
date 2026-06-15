@@ -1,0 +1,31 @@
+{
+  "doc_key": "RSQL_stringmanipulation",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_stringmanipulation",
+  "title": "String Manipulation (SQL)",
+  "doc_version": "2026.1",
+  "page_kind": "index",
+  "child_doc_keys": [
+    "RSQL_concat",
+    "RSQL_string",
+    "RSQL_substring",
+    "RSQL_replace",
+    "RSQL_position",
+    "RSQL_trim",
+    "RSQL_startswith",
+    "RSQL_charindex",
+    "RSQL_length",
+    "RSQL_ltrim",
+    "RSQL_rtrim",
+    "RSQL_stuff",
+    "RSQL_sqlupper",
+    "RSQL_pattern"
+  ],
+  "examples": [
+    {
+      "id": "index_composite_string_ops",
+      "section": "Cross-reference smoke (curated)",
+      "sql": "SELECT Name, SUBSTRING(Name,1,4), REPLACE(Name,'Mr.',''), TRIM(LEADING ' ' FROM Name) FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

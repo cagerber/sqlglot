@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_quarter",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_quarter",
+  "title": "QUARTER (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_eac06519",
+      "section": "Examples",
+      "sql": "SELECT {fn QUARTER('2018-02-22')} AS ODBCDateQ",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_7fed0d15",
+      "section": "Examples",
+      "sql": "SELECT {fn QUARTER(64701)} AS HorologDateQ",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_9ab617d8",
+      "section": "Examples",
+      "sql": "SELECT {fn QUARTER({fn NOW()})} AS Q_Now, {fn QUARTER(CURRENT_DATE)} AS Q_CurrD, {fn QUARTER(CURRENT_TIMESTAMP)} AS Q_CurrTstamp, {fn QUARTER($ZTIMESTAMP)} AS Q_ZTstamp, {fn QUARTER($HOROLOG)} AS Q_Horolog",
+      "roundtrip": false
+    }
+  ]
+}

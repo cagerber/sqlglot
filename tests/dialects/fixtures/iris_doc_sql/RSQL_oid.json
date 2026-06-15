@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_oid",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_oid",
+  "title": "%OID (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_44ef0479",
+      "section": "Examples",
+      "sql": "SELECT Name, Spouse, %OID(Spouse) FROM Sample.Person WHERE Spouse IS NOT NULL",
+      "roundtrip": false
+    }
+  ]
+}

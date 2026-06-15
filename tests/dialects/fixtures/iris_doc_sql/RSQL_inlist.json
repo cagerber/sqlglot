@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_inlist",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_inlist",
+  "title": "%INLIST (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_adc13a44",
+      "section": "Examples",
+      "sql": "SELECT Name, Home_State FROM Sample.Person WHERE Home_State %INLIST $LISTBUILD('VT','NH','ME')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_74b90ac2",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_State FROM Sample.Person WHERE Home_State IN('VT','NH','ME')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_9de7fce1",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_State FROM Sample.Person WHERE Home_State %INLIST $LISTBUILD(\"VT\",\"nH\",\"ME\")",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_3768199d",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_State FROM Sample.Person WHERE %EXACT(Home_State) %INLIST $LISTBUILD(\"VT\",\"nH\",\"ME\")",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_0f3714d1",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_State FROM Sample.Person WHERE Home_State %INLIST $LISTBUILD(\"VT\",\"NH\",\"ME\") SIZE ((10))",
+      "roundtrip": false
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "doc_key": "RSQL_monthname",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_monthname",
+  "title": "MONTHNAME (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_97a145ec",
+      "section": "Examples",
+      "sql": "SELECT {fn MONTHNAME('2018-02-22')} AS NameOfMonth",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_009a78eb",
+      "section": "Examples",
+      "sql": "SELECT {fn MONTHNAME(64701)} AS NameOfMonth",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_7e903ea3",
+      "section": "Examples",
+      "sql": "SELECT {fn MONTHNAME({fn NOW()})} AS MnameNow, {fn MONTHNAME(CURRENT_DATE)} AS MNameCurrDate, {fn MONTHNAME(CURRENT_TIMESTAMP)} AS MNameCurrTS, {fn MONTHNAME($HOROLOG)} AS MNameHorolog, {fn MONTHNAME($ZTIMESTAMP)} AS MNameZTS",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_34d28253",
+      "section": "Examples",
+      "sql": "SELECT {fn MONTHNAME(\"2017-02-29\")}",
+      "roundtrip": false
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "doc_key": "RSQL_floor",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_floor",
+  "title": "FLOOR (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_5a5468c5",
+      "section": "Examples",
+      "sql": "SELECT FLOOR(167.111) AS FloorNum1, FLOOR('167.456') AS FloorNum2, FLOOR(167.999) AS FloorNum3, FLOOR(167.0) AS FloorNum4",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_ed17719f",
+      "section": "Examples",
+      "sql": "SELECT FLOOR(-167.111) AS FloorNum1, FLOOR(-167.456) AS FloorNum2, FLOOR(-167.999) AS FloorNum3, FLOOR(-168.0) AS FloorNum4",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_af2a1868",
+      "section": "Examples",
+      "sql": "SELECT City,State,FLOOR(Latitude) AS FloorLatitude FROM (SELECT City,State,Latitude,FLOOR(Latitude) AS FloorNum FROM Sample.USZipCode) GROUP BY FloorNum ORDER BY FloorNum DESC",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_15ba66f8",
+      "section": "Examples",
+      "sql": "SELECT FLOOR(10E-1) // returns 1 SELECT FLOOR('-14E-4') // returns -1 SELECT FLOOR('-10E-1') // returns -1",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expression' missing for <class 'sqlglot.expressions.core.Div'>. Line 1, Col: 22.\n  SELECT FLOOR(10E-1) /\u001b[4m/\u001b[0m returns 1 SELECT FLOOR('-14E-4') // returns -1 SELECT FLOOR('-10E-1"
+    }
+  ]
+}

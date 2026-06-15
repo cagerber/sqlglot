@@ -1,0 +1,32 @@
+{
+  "doc_key": "RSQL_timestampdiff",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_timestampdiff",
+  "title": "TIMESTAMPDIFF (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_5d3cd0b5",
+      "section": "Examples",
+      "sql": "SELECT {fn TIMESTAMPDIFF(SQL_TSI_DAY,'2022-4-1','2022-4-13')}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_910bfdbf",
+      "section": "Examples",
+      "sql": "SELECT {fn TIMESTAMPDIFF(SQL_TSI_MONTH, '2021-5-19 00:00:00','2021-12-20 12:00:00')}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_60ea8df9",
+      "section": "Examples",
+      "sql": "SELECT {fn TIMESTAMPDIFF(SQL_TSI_MINUTE,'02:34:12','12:00:00')}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_39c2cfc4",
+      "section": "Examples",
+      "sql": "SELECT {fn TIMESTAMPDIFF(SQL_TSI_MINUTE,'2021-12-06','2021-12-05')}",
+      "roundtrip": false
+    }
+  ]
+}

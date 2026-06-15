@@ -1,0 +1,72 @@
+{
+  "doc_key": "RSQL_d_list",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_list",
+  "title": "$LIST (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_157a5dc9",
+      "section": "Examples",
+      "sql": "SELECT $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\"),-1)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_08ad6b7a",
+      "section": "Examples",
+      "sql": "SELECT $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\"),2,3)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_68aa17e5",
+      "section": "Examples",
+      "sql": "SELECT $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\"),2)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_5336d003",
+      "section": "Examples",
+      "sql": "SELECT $LIST(\"the quick brown fox\",1)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_a25767c5",
+      "section": "Examples",
+      "sql": "SELECT $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\"),-2,3)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_b1698922",
+      "section": "Examples",
+      "sql": "SELECT $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\"),7)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_c9691297",
+      "section": "Examples",
+      "sql": "SELECT $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\"),7,-1)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_979139ba",
+      "section": "Examples",
+      "sql": "SELECT $LIST($LISTBUILD(\"Red\",,\"Green\"),2)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_fa8038fe",
+      "section": "Examples",
+      "sql": "SELECT $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\")) SELECT $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\"),1)",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 53.\n  SELECT $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\")) \u001b[4mSELECT\u001b[0m $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\"),1)"
+    },
+    {
+      "id": "ex_005_7f817fd5",
+      "section": "Examples",
+      "sql": "SELECT $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\"),-1) SELECT $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\"),$LISTLENGTH($LISTBUILD(\"Red\",\"Blue\",\"Green\")),-1)",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 56.\n  SELECT $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\"),-1) \u001b[4mSELECT\u001b[0m $LIST($LISTBUILD(\"Red\",\"Blue\",\"Green\"),$LISTLENGTH($LISTBUILD(\"Red\",\"Blue\",\"G"
+    }
+  ]
+}

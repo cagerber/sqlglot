@@ -1,0 +1,28 @@
+{
+  "doc_key": "RSQL_curtime",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_curtime",
+  "title": "CURTIME (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_48a2a838",
+      "section": "Examples",
+      "sql": "SELECT {fn CURTIME()} AS TimeNow",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_2094fc17",
+      "section": "Examples",
+      "sql": "UPDATE Contacts Set LastCall = {fn CURTIME()} WHERE Contacts.ItemNumber=:item",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_ff33c017",
+      "section": "Examples",
+      "sql": "SELECT {fn CURTIME} AS TimeNow",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 19.\n  SELECT {fn CURTIME\u001b[4m}\u001b[0m AS TimeNow"
+    }
+  ]
+}

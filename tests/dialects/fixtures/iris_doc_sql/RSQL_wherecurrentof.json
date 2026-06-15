@@ -1,0 +1,23 @@
+{
+  "doc_key": "RSQL_wherecurrentof",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_wherecurrentof",
+  "title": "WHERE CURRENT OF (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "curated_delete_current_of",
+      "section": "Examples (curated from DocBook)",
+      "sql": "DELETE FROM Sample.Employees WHERE CURRENT OF EmployeeCursor"
+    },
+    {
+      "id": "curated_update_current_of",
+      "section": "Examples (curated from DocBook)",
+      "sql": "UPDATE SQLUser.WordPairs SET Lang = 'Es' WHERE CURRENT OF WPCursor"
+    },
+    {
+      "id": "curated_delete_wordpairs",
+      "section": "Examples (curated from DocBook)",
+      "sql": "DELETE FROM SQLUser.WordPairs WHERE CURRENT OF WPCursor"
+    }
+  ]
+}

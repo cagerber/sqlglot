@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_ucase",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_ucase",
+  "title": "UCASE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_246d039b",
+      "section": "Examples",
+      "sql": "SELECT Name,{fn UCASE(Name)} AS CapName FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_fd6e1a62",
+      "section": "Examples",
+      "sql": "SELECT UCASE($CHAR(950,949,965,963))",
+      "roundtrip": false
+    }
+  ]
+}

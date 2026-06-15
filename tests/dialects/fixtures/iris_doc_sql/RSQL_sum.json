@@ -1,0 +1,40 @@
+{
+  "doc_key": "RSQL_sum",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_sum",
+  "title": "SUM (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_82e09500",
+      "section": "Examples",
+      "sql": "SELECT '$' || SUM(Salary) AS Total_Payroll FROM Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_0e20a8d1",
+      "section": "Examples",
+      "sql": "SELECT Title, '$' || SUM(Salary) AS Total, '$' || AVG(Salary) AS Average FROM Sample.Employee GROUP BY Title ORDER BY Average",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_ce232168",
+      "section": "Examples",
+      "sql": "SELECT Title, '$' || SUM(Salary) AS BeforeRaises, '$' || SUM(Salary * 1.1) AS AfterRaises FROM Sample.Employee GROUP BY Title ORDER BY Title",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_c92728e6",
+      "section": "Examples",
+      "sql": "SELECT COUNT(Salary) As AllPaid, SUM(CASE WHEN (Salary >= 90000) THEN 1 ELSE 0 END) As TopPaid FROM Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_36a2e044",
+      "section": "Examples",
+      "sql": "SELECT Home_State, '$' || SUM(Salary) AS Total_Payroll, '$' || SUM(Salary %AFTERHAVING) AS Exec_Payroll FROM Sample.Employee GROUP BY Home_State HAVING Salary > 80000 ORDER BY Home_State",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 75.\n  SELECT Home_State, '$' || SUM(Salary) AS Total_Payroll, '$' || SUM(Salary \u001b[4m%\u001b[0mAFTERHAVING) AS Exec_Payroll FROM Sample.Employee GROUP BY Home_State HAVING Salary >"
+    }
+  ]
+}

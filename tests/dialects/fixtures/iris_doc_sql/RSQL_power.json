@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_power",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_power",
+  "title": "POWER (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_29e07ab8",
+      "section": "Examples",
+      "sql": "SELECT POWER(5,3) AS Cubed",
+      "roundtrip": false
+    }
+  ]
+}

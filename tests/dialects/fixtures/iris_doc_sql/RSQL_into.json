@@ -1,0 +1,28 @@
+{
+  "doc_key": "RSQL_into",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_into",
+  "title": "INTO (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "curated_hostvar_single",
+      "section": "Examples (curated)",
+      "sql": "SELECT Name INTO :name FROM Sample.Person WHERE ID = 1"
+    },
+    {
+      "id": "curated_hostvar_row",
+      "section": "Examples (curated)",
+      "sql": "SELECT Name, Age INTO :row FROM Sample.Person WHERE ID = 1"
+    },
+    {
+      "id": "curated_hostvar_aggregate",
+      "section": "Examples (curated)",
+      "sql": "SELECT COUNT(*) INTO :cnt FROM Sample.Person"
+    },
+    {
+      "id": "curated_table_copy",
+      "section": "Examples (curated)",
+      "sql": "SELECT * INTO newtable FROM Sample.Person"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "doc_key": "RSQL_exact",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_exact",
+  "title": "%EXACT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_4b4b6ad8",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE %EXACT(Name) > 'Smith'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_bec9b150",
+      "section": "Examples",
+      "sql": "SELECT Name,Street FROM Sample.Person ORDER BY %EXACT Street",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 60.\n  SELECT Name,Street FROM Sample.Person ORDER BY %EXACT \u001b[4mStreet\u001b[0m"
+    },
+    {
+      "id": "ex_003_75799a0a",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE %EXACT Name > 'Smith'",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 48.\n  SELECT Name FROM Sample.Person WHERE %EXACT \u001b[4mName\u001b[0m > 'Smith'"
+    }
+  ]
+}

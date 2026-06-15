@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_cot",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_cot",
+  "title": "COT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_0f808dd9",
+      "section": "Examples",
+      "sql": "SELECT {fn COT(0.52)} AS Cotangent",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_852a2afe",
+      "section": "Examples",
+      "sql": "SELECT {fn COT(124.1332)} AS Cotangent",
+      "roundtrip": false
+    }
+  ]
+}

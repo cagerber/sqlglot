@@ -1,0 +1,52 @@
+{
+  "doc_key": "RSQL_dlist",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_dlist",
+  "title": "%DLIST (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_579902e9",
+      "section": "Examples",
+      "sql": "SELECT %DLIST(Home_State) FROM Sample.Person WHERE Home_State %STARTSWITH 'A'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_bcf8c16a",
+      "section": "Examples",
+      "sql": "SELECT Home_State, %DLIST(Home_City) AS AllCities, COUNT(Home_City) AS CityCount FROM Sample.Person GROUP BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_edf73a61",
+      "section": "Examples",
+      "sql": "SELECT %DLIST(DISTINCT Home_State) FROM Sample.Person WHERE Home_State %STARTSWITH 'A'",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 22.\n  SELECT %DLIST(\u001b[4mDISTINCT\u001b[0m Home_State) FROM Sample.Person WHERE Home_State %STARTSWITH 'A'"
+    },
+    {
+      "id": "ex_004_f89382c7",
+      "section": "Examples",
+      "sql": "SELECT Home_State, %DLIST(DISTINCT Home_City) AS CitiesList, COUNT(DISTINCT Home_City) AS DistinctCities, COUNT(Home_City) AS TotalCities FROM Sample.Person GROUP BY Home_State",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 34.\n  SELECT Home_State, %DLIST(\u001b[4mDISTINCT\u001b[0m Home_City) AS CitiesList, COUNT(DISTINCT Home_City) AS DistinctCities, COUNT(Home_City) AS TotalCit"
+    },
+    {
+      "id": "ex_005_7fbde5cd",
+      "section": "Examples",
+      "sql": "SELECT %DLIST(DISTINCT Home_State) AS DistStates, %DLIST(DISTINCT BY(Home_City) Home_State) AS DistCityStates, %DLIST(Home_State) AS AllStates FROM Sample.Person WHERE Home_State %STARTSWITH 'A'",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 22.\n  SELECT %DLIST(\u001b[4mDISTINCT\u001b[0m Home_State) AS DistStates, %DLIST(DISTINCT BY(Home_City) Home_State) AS DistCityStates, %DLIST(Home"
+    },
+    {
+      "id": "ex_006_c8979b5d",
+      "section": "Examples",
+      "sql": "SELECT Home_State, %DLIST(Name) AS AllNames, %DLIST(Name %AFTERHAVING) AS HaveClauseNames FROM Sample.Person GROUP BY Home_State HAVING Name LIKE 'M%' ORDER BY Home_state",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 58.\n  SELECT Home_State, %DLIST(Name) AS AllNames, %DLIST(Name \u001b[4m%\u001b[0mAFTERHAVING) AS HaveClauseNames FROM Sample.Person GROUP BY Home_State HAVING Name LIKE 'M%' ORDER B"
+    }
+  ]
+}

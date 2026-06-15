@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_acos",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_acos",
+  "title": "ACOS (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_a14b65b5",
+      "section": "Examples",
+      "sql": "SELECT {fn ACOS(0.52)} AS ArcCosine",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_474a610d",
+      "section": "Examples",
+      "sql": "SELECT {fn ACOS(-1)} AS ArcCosine",
+      "roundtrip": false
+    }
+  ]
+}

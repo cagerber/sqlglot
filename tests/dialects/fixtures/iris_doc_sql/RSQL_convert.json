@@ -1,0 +1,128 @@
+{
+  "doc_key": "RSQL_convert",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_convert",
+  "title": "CONVERT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_83ee0aae",
+      "section": "Examples",
+      "sql": "SELECT CONVERT(CHAR(4),3.14159) -- '3.14'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_11587084",
+      "section": "Examples",
+      "sql": "SELECT CONVERT(TIMESTAMP,'1/1/99',103) -- '01/01/1999 00:00:00'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_faf073ea",
+      "section": "Examples",
+      "sql": "SELECT {fn CONVERT(3.14159,SQL_VARCHAR) } -- '3.14159'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_12f77b6e",
+      "section": "Examples",
+      "sql": "SELECT CONVERT(VARCHAR,TO_DATE('22 FEB 2022'),1) -- '02/22/22'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_e53267a5",
+      "section": "Examples",
+      "sql": "SELECT CONVERT(DATE,'22 FEB 2022',106) -- '02/22/2022'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_791257fe",
+      "section": "Examples",
+      "sql": "SELECT CONVERT(DECIMAL,-123456789.0000123456789) AS DecimalVal, -- -123456789.0000123457 CONVERT(DOUBLE,-123456789.0000123456789) AS DoubleVal -- -123456789.00001235306",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_d549a7ff",
+      "section": "Examples",
+      "sql": "SELECT {fn CONVERT(-123456789.0000123456789,SQL_DOUBLE) } AS DecimalVal -- -123456789.00001235306",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_d12a1902",
+      "section": "Examples",
+      "sql": "SELECT CONVERT(VARCHAR(5),'Hello, World') As TruncatedValue -- 'Hello'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_6edb4062",
+      "section": "Examples",
+      "sql": "SELECT CONVERT(VARCHAR,'This string is more than 30 characters.') --This string is more than 30 ch",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_ca50aa3b",
+      "section": "Examples",
+      "sql": "SELECT {fn CONVERT('This string is more than 30 characters.',SQL_VARCHAR) } --This string is more than 30 ch",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_343b8010",
+      "section": "Examples",
+      "sql": "SELECT Notes,CONVERT(VARCHAR(80),Notes) AS NoteText,CHAR_LENGTH(Notes) AS TextLen FROM Sample.Employee WHERE Notes IS NOT NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_e33bd370",
+      "section": "Examples",
+      "sql": "SELECT DOB,CONVERT(VARCHAR,DOB) AS DOBtoVChar FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_013_0fe9788c",
+      "section": "Examples",
+      "sql": "SELECT DOB,{fn CONVERT(DOB,SQL_VARCHAR)} AS DOBtoVChar FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_014_346f9e52",
+      "section": "Examples",
+      "sql": "SELECT DOB, CONVERT(VARCHAR(20),DOB) AS DOBDefault, -- Mar 20 1983 12:00AM CONVERT(VARCHAR(20),DOB,100) AS DOB100, -- Mar 20 1983 12:00AM CONVERT(VARCHAR(20),DOB,107) AS DOB107, -- Mar 20, 1983 CONVERT(VARCHAR(20),DOB,114) AS DOB114, -- 00:00:00.000 CONVERT(VARCHAR(20),DOB,126) AS DOB126 -- 1983-03-20T00:00:00: FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_015_8acd6498",
+      "section": "Examples",
+      "sql": "SELECT CONVERT(INTEGER,'007 James Bond') -- 7",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_016_4e89dc0f",
+      "section": "Examples",
+      "sql": "SELECT {fn CONVERT('007 James Bond',SQL_INTEGER)} -- 7",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_017_f7cf163b",
+      "section": "Examples",
+      "sql": "SELECT DOB,CONVERT(TIMESTAMP,DOB) AS DOBtoTstamp FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_018_0596dd41",
+      "section": "Examples",
+      "sql": "SELECT DOB,{fn CONVERT(DOB,SQL_TIMESTAMP)} AS DOBtoTstamp FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_019_f3377d51",
+      "section": "Examples",
+      "sql": "SELECT DOB,CONVERT(INTEGER,DOB) AS DOBtoInt FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_020_cde2d467",
+      "section": "Examples",
+      "sql": "SELECT DOB,{fn CONVERT(DOB,SQL_INTEGER)} AS DOBtoInt FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

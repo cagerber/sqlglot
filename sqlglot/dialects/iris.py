@@ -12,9 +12,14 @@ class Iris(TSQL):
     class Tokenizer(TSQL.Tokenizer):
         # IRIS uses double quotes for delimited identifiers; ``[...]`` is contains-predicate syntax.
         IDENTIFIERS = ['"']
+        # LONGVARCHAR is an IRIS/ODBC type name (not TEXT / VARCHAR(MAX) on output).
         KEYWORDS = {
-            **TSQL.Tokenizer.KEYWORDS,
-            "TIMESTAMP": TokenType.TIMESTAMP,
+            k: v
+            for k, v in {
+                **TSQL.Tokenizer.KEYWORDS,
+                "TIMESTAMP": TokenType.TIMESTAMP,
+            }.items()
+            if k != "LONGVARCHAR"
         }
 
     Parser = IrisParser

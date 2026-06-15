@@ -1,0 +1,62 @@
+{
+  "doc_key": "RSQL_d_listbuild",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_listbuild",
+  "title": "$LISTBUILD (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_1fe64422",
+      "section": "Examples",
+      "sql": "SELECT $LISTBUILD(\"Red\",\"White\",\"Blue\")",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_c84e07e8",
+      "section": "Examples",
+      "sql": "SELECT $LISTBUILD(\"Red\",,\"Blue\"), $LISTBUILD(\"Red\",'',\"Blue\")",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_e88bcd76",
+      "section": "Examples",
+      "sql": "SELECT $LISTBUILD('Red',:z)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_a01a5adb",
+      "section": "Examples",
+      "sql": "SELECT $LISTBUILD('Red',)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_60c82f19",
+      "section": "Examples",
+      "sql": "SELECT $LISTBUILD(), $LISTBUILD(NULL)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_ec9995d5",
+      "section": "Examples",
+      "sql": "SELECT $LISTBUILD(''), $LISTBUILD(CHAR(0))",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_a91a9c72",
+      "section": "Examples",
+      "sql": "SELECT $LISTBUILD('Apple','Pear',$LISTBUILD('Walnut','Pecan'))",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_78611efb",
+      "section": "Examples",
+      "sql": "SELECT $LISTBUILD('A','B','C') AS List, $LISTBUILD('A','B')||$LISTBUILD('C') AS CatList",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_de22b5e0",
+      "section": "Examples",
+      "sql": "SELECT $LISTBUILD('A','B') AS List, $LISTBUILD('A','B')||'' AS CatEStr, $LISTBUILD('A','B')||NULL AS CatNull, $LISTBUILD('A','B')||$LISTBUILD('') AS CatEList, $LISTBUILD('A','B')||$LISTBUILD(NULL) AS CatNList",
+      "roundtrip": false
+    }
+  ]
+}

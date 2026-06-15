@@ -1,0 +1,64 @@
+{
+  "doc_key": "RSQL_d_find",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_find",
+  "title": "$FIND (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_dff6a2f1",
+      "section": "Examples",
+      "sql": "SELECT POSITION('br' IN 'The broken brown briefcase') AS Position, CHARINDEX('br','The broken brown briefcase',6) AS Charindex, $FIND('The broken brown briefcase','br',6) AS Find, INSTR('The broken brown briefcase','br',6,2) AS Inst",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_1451d555",
+      "section": "Examples",
+      "sql": "SELECT $FIND('ABCDEG','BCD') AS SubPoint",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_51c2445c",
+      "section": "Examples",
+      "sql": "SELECT $FIND(987654321,7) AS SubPoint",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_9e3498b6",
+      "section": "Examples",
+      "sql": "SELECT $FIND('AAAAAA','AA') AS SubPoint",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_672c62d8",
+      "section": "Examples",
+      "sql": "SELECT $FIND('AABBCCDD','AC') AS SubPoint",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_6e0091e3",
+      "section": "Examples",
+      "sql": "SELECT $FIND('EVERGREEN FOREST','R',7) AS SubPoint",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_37a6f211",
+      "section": "Examples",
+      "sql": "SELECT $FIND('ABCDEFG','G',10) AS SubPoint",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_0151470e",
+      "section": "Examples",
+      "sql": "SELECT $FIND(\"ABCDEFG\",\"F\"), $FIND(\"ABCDEFG\",\"F\",1), $FIND(\"ABCDEFG\",\"F\",0), $FIND(\"ABCDEFG\",\"F\",-35)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_cc88a837",
+      "section": "Examples",
+      "sql": "SELECT $FIND(\"QT \"_$CHAR(960)_\" HONEY \"_$CHAR(960),$CHAR(960)), $FIND(\"QT \"_$CHAR(960)_\" HONEY \"_$CHAR(960),$CHAR(960),4), $FIND(\"QT \"_$CHAR(960)_\" HONEY \"_$CHAR(960),$CHAR(960),5)",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 24.\n  SELECT $FIND(\"QT \"\u001b[4m_$CHAR\u001b[0m(960)_\" HONEY \"_$CHAR(960),$CHAR(960)), $FIND(\"QT \"_$CHAR(960)_\" HONEY \"_$CHAR(960),$CHAR(960),4), $"
+    }
+  ]
+}

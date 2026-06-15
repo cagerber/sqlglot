@@ -1902,6 +1902,90 @@ class Arrow(Expression, Binary):
         return self.name
 
 
+class OdbcOut(Expression):
+    """InterSystems IRIS ``%ODBCOUT(expr)`` ODBC type wrapper."""
+
+    arg_types = {"this": True}
+
+
+class IrisPercentField(Expression):
+    """InterSystems IRIS ``%Field`` / ``%%Field`` pseudo-field reference."""
+
+    arg_types = {"this": True, "double": False}
+
+
+class ContainsFollows(Expression, Binary):
+    """InterSystems IRIS ``[`` contains / ``]`` follows predicate operators."""
+
+    arg_types = {"this": True, "expression": True, "op": True}
+
+
+class IrisStartswith(Expression, Binary):
+    """InterSystems IRIS ``column %STARTSWITH substring`` predicate."""
+
+    arg_types = {"this": True, "expression": True}
+
+
+class IrisPattern(Expression, Binary):
+    """InterSystems IRIS ``column %PATTERN pattern`` predicate."""
+
+    arg_types = {"this": True, "expression": True}
+
+
+class IrisFind(Expression, Binary):
+    """InterSystems IRIS ``column %FIND valueset`` predicate."""
+
+    arg_types = {"this": True, "expression": True}
+
+
+class IrisInset(Expression, Binary):
+    """InterSystems IRIS ``column %INSET valueset`` predicate."""
+
+    arg_types = {"this": True, "expression": True}
+
+
+class IrisInlist(Expression):
+    """InterSystems IRIS ``column %INLIST list [SIZE ((nn))]`` predicate."""
+
+    arg_types = {"this": True, "expression": True, "size": False}
+
+
+class IrisMatches(Expression, Binary):
+    """InterSystems IRIS ``column %MATCHES pattern`` predicate."""
+
+    arg_types = {"this": True, "expression": True}
+
+
+class IrisForSomeElement(Expression):
+    """InterSystems IRIS ``FOR SOME %ELEMENT(collection) [(alias)] (predicate)``."""
+
+    arg_types = {"collection": True, "predicate": True, "alias": False}
+
+
+class IrisForSome(Expression):
+    """InterSystems IRIS ``FOR SOME (table [, ...]) (predicate)`` correlated subquery form."""
+
+    arg_types = {"tables": True, "predicate": True}
+
+
+class IrisOptimizationHint(Expression):
+    """InterSystems IRIS query optimizer hint (``%DORUNTIME``, ``%INORDER``, ``%NOINDEX``, …)."""
+
+    arg_types = {"this": True, "table": False}
+
+
+class IrisOptimizedExpression(Expression):
+    """WHERE-clause expression prefixed with an optimizer hint (``%NOINDEX expr``)."""
+
+    arg_types = {"hint": True, "this": True}
+
+
+class IrisCurrentOf(Expression):
+    """InterSystems IRIS ``WHERE CURRENT OF cursor`` (embedded SQL UPDATE/DELETE)."""
+
+    arg_types = {"this": True}
+
+
 class Kwarg(Expression, Binary):
     """Kwarg in special functions like func(kwarg => y)."""
 
@@ -2287,7 +2371,7 @@ class Between(Expression, Predicate):
 
 
 class Distinct(Expression):
-    arg_types = {"expressions": False, "on": False}
+    arg_types = {"expressions": False, "on": False, "by": False}
 
 
 class In(Expression, Predicate):

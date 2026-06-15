@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_rtrim",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_rtrim",
+  "title": "RTRIM (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_adb615fb",
+      "section": "Examples",
+      "sql": "SELECT {fn RTRIM(\" Test string with 5 leading and 5 trailing spaces. \")}",
+      "roundtrip": false
+    }
+  ]
+}

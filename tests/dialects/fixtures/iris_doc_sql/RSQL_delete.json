@@ -1,0 +1,150 @@
+{
+  "doc_key": "RSQL_delete",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_delete",
+  "title": "DELETE (SQL)",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_013_ed60c7ac",
+      "section": "Examples",
+      "sql": "DELETE FROM TempEmployees",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_014_9d712c2e",
+      "section": "Examples",
+      "sql": "DELETE TempEmployees",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_015_68c9f124",
+      "section": "Examples",
+      "sql": "DELETE FROM Employees WHERE EmpId = 234",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_016_7f6e3021",
+      "section": "Examples",
+      "sql": "DELETE FROM ActiveEmployees WHERE CurStatus = 'Retired'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_017_a5d6fce7",
+      "section": "Examples",
+      "sql": "DELETE FROM (SELECT Name,Age FROM Sample.Person WHERE Age > 65)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_018_b0498fe3",
+      "section": "Examples",
+      "sql": "INSERT INTO WordPairs (Lang,Firstword,Lastword) VALUES ('En','hello','goodbye')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_019_3fb221a5",
+      "section": "Examples",
+      "sql": "INSERT INTO WordPairs (Lang,Firstword,Lastword) VALUES ('Fr','bonjour','au revoir')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_020_accfbf09",
+      "section": "Examples",
+      "sql": "INSERT INTO WordPairs (Lang,Firstword,Lastword) VALUES ('It','pronto','ciao')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_021_1e58c0bb",
+      "section": "Examples",
+      "sql": "INSERT INTO WordPairs (Lang,Firstword,Lastword) VALUES ('Fr','oui','non')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_022_db4a1713",
+      "section": "Examples",
+      "sql": "INSERT INTO WordPairs (Lang,Firstword,Lastword) VALUES ('En','howdy','see ya')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_023_c1b43222",
+      "section": "Examples",
+      "sql": "INSERT INTO WordPairs (Lang,Firstword,Lastword) VALUES ('Es','hola','adios')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_024_583fe63c",
+      "section": "Examples",
+      "sql": "DELETE FROM WordPairs WHERE Lang='Fr'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_025_a319c589",
+      "section": "Examples",
+      "sql": "SELECT %ID,* FROM SQLUser.WordPairs",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_5f8096ba",
+      "section": "Examples",
+      "sql": "DELETE [%keyword] [FROM] table-ref [[AS] t-alias] [FROM [optimize-option] select-table [[AS] t-alias] {,select-table2 [[AS] t-alias]} ] [WHERE condition-expression]",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_002_7bb154c1",
+      "section": "Examples",
+      "sql": "DELETE [%keyword] [FROM] table-ref [[AS] t-alias] [WHERE CURRENT OF cursor]",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_003_30ad04c6",
+      "section": "Examples",
+      "sql": "DELETE FROM tablename",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_004_4a817206",
+      "section": "Examples",
+      "sql": "DELETE tablename",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_005_a4970528",
+      "section": "Examples",
+      "sql": "DELETE FROM table WHERE ... DELETE table WHERE ... DELETE",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_006_192b27b8",
+      "section": "Examples",
+      "sql": "DELETE FROM Employees AS Emp FROM Retirees AS Rt WHERE Emp.EmpId = Rt.EmpId",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 33.\n  DELETE FROM Employees AS Emp \u001b[4mFROM\u001b[0m Retirees AS Rt WHERE Emp.EmpId = Rt.EmpId"
+    },
+    {
+      "id": "ex_007_5f7b41a8",
+      "section": "Examples",
+      "sql": "DELETE FROM table1 FROM table1,table2 /* join of 2 tables */",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 23.\n  DELETE FROM table1 \u001b[4mFROM\u001b[0m table1,table2 /* join of 2 tables */"
+    },
+    {
+      "id": "ex_008_7890b83b",
+      "section": "Examples",
+      "sql": "DELETE FROM table1 AS x FROM table1 AS x,table2 /* join of 2 tables */",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 28.\n  DELETE FROM table1 AS x \u001b[4mFROM\u001b[0m table1 AS x,table2 /* join of 2 tables */"
+    }
+  ]
+}

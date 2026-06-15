@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_atan",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_atan",
+  "title": "ATAN (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_47a73037",
+      "section": "Examples",
+      "sql": "SELECT {fn ATAN(0.52)} AS ArcTangent",
+      "roundtrip": false
+    }
+  ]
+}

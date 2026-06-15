@@ -1,0 +1,68 @@
+{
+  "doc_key": "RSQL_xmlagg",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_xmlagg",
+  "title": "XMLAGG (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_7f0d2f0e",
+      "section": "Examples",
+      "sql": "SELECT XMLAGG(Home_State) AS All_State_Values FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_fbd6372f",
+      "section": "Examples",
+      "sql": "SELECT XMLAGG(ALL Home_State) AS ALL_State_Values FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_58ee1641",
+      "section": "Examples",
+      "sql": "SELECT XMLAGG(XMLELEMENT(\"para\",Home_State)) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_b82dd3ae",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors, XMLAGG(DISTINCT FavoriteColors) AS All_Colors_In_Table FROM Sample.Person ORDER BY FavoriteColors",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_c2742883",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT Name, XMLAGG(Make) AS String_Of_Makes FROM AutoClub WHERE Name = 'Smith,Joe'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_bd968c7b",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT Name, XMLAGG(DISTINCT Make) AS String_Of_Makes FROM AutoClub WHERE Name = 'Smith,Joe'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_e631bfef",
+      "section": "Examples",
+      "sql": "SELECT XMLAGG(DISTINCT Home_State) AS DistStates, XMLAGG(DISTINCT BY(Home_City) Home_State) AS DistCityStates, XMLAGG(Home_State) AS AllStates FROM Sample.Person WHERE Home_State %STARTSWITH 'A'",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 90.\n  SELECT XMLAGG(DISTINCT Home_State) AS DistStates, XMLAGG(DISTINCT BY(Home_City) \u001b[4mHome_State\u001b[0m) AS DistCityStates, XMLAGG(Home_State) AS AllStates FROM Sample.Perso"
+    },
+    {
+      "id": "ex_006_4a0c553f",
+      "section": "Examples",
+      "sql": "SELECT Home_State, Home_City, XMLAGG(DISTINCT Home_City %FOREACH(Home_State)) AS All_Cities_In_State FROM Sample.Person ORDER BY Home_State",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 57.\n  SELECT Home_State, Home_City, XMLAGG(DISTINCT Home_City \u001b[4m%\u001b[0mFOREACH(Home_State)) AS All_Cities_In_State FROM Sample.Person ORDER BY Home_State"
+    },
+    {
+      "id": "ex_007_e4f60e7e",
+      "section": "Examples",
+      "sql": "SELECT Home_State, XMLAGG(Name) AS AllNames, XMLAGG(Name %AFTERHAVING) AS HaveClauseNames FROM Sample.Person GROUP BY Home_State HAVING Name LIKE 'C%' OR Name LIKE 'K%' ORDER BY Home_state",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 58.\n  SELECT Home_State, XMLAGG(Name) AS AllNames, XMLAGG(Name \u001b[4m%\u001b[0mAFTERHAVING) AS HaveClauseNames FROM Sample.Person GROUP BY Home_State HAVING Name LIKE 'C%' OR Name"
+    }
+  ]
+}

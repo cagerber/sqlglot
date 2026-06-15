@@ -1,0 +1,50 @@
+{
+  "doc_key": "RSQL_datename",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_datename",
+  "title": "DATENAME (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_419037a1",
+      "section": "Examples",
+      "sql": "SELECT DATENAME('dw','2018-02-21') AS DayName, DATENAME(dw,'02/21/2018') AS DayName, DATENAME('DW',64700) AS DayName",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_b7b0cea6",
+      "section": "Examples",
+      "sql": "SELECT DATENAME('mm','2018-12-20 12:00:00') AS MonthName",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_a2ecf91f",
+      "section": "Examples",
+      "sql": "SELECT DATENAME('yy','2018-12-20 12:00:00') AS Year",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_f7e0fd39",
+      "section": "Examples",
+      "sql": "SELECT DATENAME('year','2018-12-20 12:00:00') AS Year",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_4899f60e",
+      "section": "Examples",
+      "sql": "SELECT DATENAME('Q',$HOROLOG) AS Q, DATENAME('WK',$HOROLOG) AS WkCnt, DATENAME('DY',$HOROLOG) AS DayCnt",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_98384093",
+      "section": "Examples",
+      "sql": "SELECT DATENAME(\"year\",$HOROLOG)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_242a5f13",
+      "section": "Examples",
+      "sql": "SELECT Name AS WednesdaysChild,DOB FROM (SELECT Name,DOB,DATENAME('dw',DOB) AS Wkday FROM Sample.Person) WHERE Wkday='Wednesday' ORDER BY DOB",
+      "roundtrip": false
+    }
+  ]
+}

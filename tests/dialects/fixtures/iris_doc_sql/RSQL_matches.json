@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_matches",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_matches",
+  "title": "%MATCHES (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_d48baa7a",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE Name %MATCHES 'A*'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_c0dfbe2e",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE Name %MATCHES '*,A*'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_8e832e99",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE Name %MATCHES '*A*'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_46c77d1e",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE Name NOT %MATCHES '*[AaEe]*'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_b8b77fd4",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE Name %MATCHES '?????,[A-D]*'",
+      "roundtrip": false
+    }
+  ]
+}

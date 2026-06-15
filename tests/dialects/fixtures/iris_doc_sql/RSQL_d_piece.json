@@ -1,0 +1,104 @@
+{
+  "doc_key": "RSQL_d_piece",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_piece",
+  "title": "$PIECE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_bdedf4dc",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('Red,Green,Blue,Yellow,Orange,Black',',')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_0a1fe77b",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('Red,Green,Blue,Yellow,Orange,Black',',',3)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_62595e79",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('Red,Green,Blue,Yellow,Orange,Black',',',3,5)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_b17bfd79",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('123#456#789','#') AS TwoArg",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_92b00058",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('123#456#789','#',1) AS ThreeArg",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_2029a7e6",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('1#2-3#-#45##6#-#789','#-#',3)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_8774e854",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('JAN;FEB;MAR;APR;MAY;JUN',';',3,5)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_371a67b1",
+      "section": "Examples",
+      "sql": "SELECT E.Name,V.Contact FROM Sample.Employee AS E INNER JOIN Sample.Vendor AS V ON $PIECE(E.Name,',')=$PIECE(V.Contact,',')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_94bad229",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('Red,Green,Blue,Yellow,Orange,Black',',',7)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_4c4b575e",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('Red,Green,Blue,Yellow,Orange,Black,',',',7)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_ea70c908",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('Red,Green,,Blue,Yellow,Orange,Black,',',',3)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_342db960",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('Red,Green,,Blue,Yellow,Orange,Black,',',',0)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_013_d43b3143",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('Red,Green,,Blue,Yellow,Orange,Black,',',',8,20)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_014_7d70be09",
+      "section": "Examples",
+      "sql": "SELECT $PIECE('Red,Green,Blue,Yellow,Orange,Black,','#')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_015_a03c87f8",
+      "section": "Examples",
+      "sql": "SELECT $PIECE($PIECE('John Jones/29 River St./Boston MA 02095','/',3),' ',2)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_016_29631691",
+      "section": "Examples",
+      "sql": "SELECT $PIECE($PIECE('1,2,3^A,B,C^@#!','^',2),',',1,2)",
+      "roundtrip": false
+    }
+  ]
+}

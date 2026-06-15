@@ -1,0 +1,28 @@
+{
+  "doc_key": "RSQL_upper",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_upper",
+  "title": "UPPER (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_896e8211",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE UPPER(Name) %STARTSWITH UPPER('JO')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_62515ee0",
+      "section": "Examples",
+      "sql": "SELECT UPPER(Name) AS CapName FROM Sample.Person WHERE Name %STARTSWITH UPPER('JO')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_a779080c",
+      "section": "Examples",
+      "sql": "SELECT UPPER {fn CHAR(948)},{fn CHAR(948)} FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expected }. Line 1, Col: 21.\n  SELECT UPPER {fn \u001b[4mCHAR\u001b[0m(948)},{fn CHAR(948)} FROM Sample.Person"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "doc_key": "RSQL_top",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_top",
+  "title": "TOP (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_0694f0c4",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 AVG(Age),CURRENT_TIMESTAMP(3) FROM Sample.Person /* returns 1 row */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_a16ae6e1",
+      "section": "Examples",
+      "sql": "SELECT TOP 1 AVG(Age),CURRENT_TIMESTAMP(3) FROM Sample.Person ORDER BY Age /* returns 1 row */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_d76d4d9a",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 ROUND(678.987,2),CURRENT_TIMESTAMP(3) FROM Sample.Person /* returns 5 identical rows */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_4bcb1c92",
+      "section": "Examples",
+      "sql": "SELECT TOP 300 CURRENT_TIMESTAMP(3) FROM Sample.Person /* returns either the number of rows in Sample.Person or 300 rows, whichever is smaller */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_703f7f23",
+      "section": "Examples",
+      "sql": "SELECT TOP 300 CURRENT_TIMESTAMP(3) FROM Sample.Person WHERE Home_State = 'MA' /* returns either the number of rows in Sample.Person where Home_State = 'MA' or 300 rows, whichever is smaller */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_01d5514e",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 ROUND(678.987,2),CURRENT_TIMESTAMP(3) /* returns 1 row */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_0f72efb0",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT TOP 15 CURRENT_TIMESTAMP(3) FROM Sample.Person /* returns 1 row */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_4e0aaeb1",
+      "section": "Examples",
+      "sql": "SELECT TOP 20 Home_State,Name FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_cf5edd4e",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT TOP 20 Home_State FROM Sample.Person ORDER BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_3ce02d95",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT TOP 40 FavoriteColors FROM Sample.Person ORDER BY FavoriteColors DESC",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_d9b445ce",
+      "section": "Examples",
+      "sql": "SELECT [DISTINCT clause] [TOP {int | ALL}] select-item{,select-item}",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    }
+  ]
+}

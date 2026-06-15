@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_abs",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_abs",
+  "title": "ABS (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_51c4100c",
+      "section": "Examples",
+      "sql": "SELECT ABS(-99) AS AbsGen,{fn ABS(-99)} AS AbsODBC",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_1754a8ed",
+      "section": "Examples",
+      "sql": "SELECT ABS(007) AS AbsoluteValue",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_9386297b",
+      "section": "Examples",
+      "sql": "SELECT ABS(-0.000) AS AbsoluteValue",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_18f0b992",
+      "section": "Examples",
+      "sql": "SELECT ABS(-99E4) AS AbsoluteValue",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_160956ca",
+      "section": "Examples",
+      "sql": "SELECT ABS(-99E-4) AS AbsoluteValue",
+      "roundtrip": false
+    }
+  ]
+}

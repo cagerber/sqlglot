@@ -1,0 +1,18 @@
+{
+  "doc_key": "RSQL_not",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_not",
+  "title": "NOT | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "curated_not_exists",
+      "section": "NOT EXISTS (curated)",
+      "sql": "SELECT * FROM Sample.Person WHERE NOT EXISTS (SELECT * FROM Sample.Company)"
+    },
+    {
+      "id": "curated_not_is_null",
+      "section": "NOT IS NULL (curated)",
+      "sql": "SELECT * FROM Sample.Person WHERE NOT Name IS NULL"
+    }
+  ]
+}

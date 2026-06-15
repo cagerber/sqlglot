@@ -1,0 +1,53 @@
+{
+  "doc_key": "RSQL_truncate_pct",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_truncate_pct",
+  "title": "%TRUNCATE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_7dba7836",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 Name,%TRUNCATE(Name,4) AS ShortName FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 19.\n  SELECT TOP 5 Name,\u001b[4m%\u001b[0mTRUNCATE(Name,4) AS ShortName FROM Sample.Person"
+    },
+    {
+      "id": "ex_002_5fba58d9",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 Name, %TRUNCATE((SELECT Name FROM Sample.Company),10) AS Company FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 20.\n  SELECT TOP 5 Name, \u001b[4m%\u001b[0mTRUNCATE((SELECT Name FROM Sample.Company),10) AS Company FROM Sample.Person"
+    },
+    {
+      "id": "ex_003_a8b674d6",
+      "section": "Examples",
+      "sql": "SELECT Name AS FirstLetter,COUNT(Name) AS NameCount FROM Sample.Person GROUP BY %TRUNCATE(Name,1) ORDER BY Name",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 81.\n  SELECT Name AS FirstLetter,COUNT(Name) AS NameCount FROM Sample.Person GROUP BY \u001b[4m%\u001b[0mTRUNCATE(Name,1) ORDER BY Name"
+    },
+    {
+      "id": "ex_004_665016a0",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_Street FROM Sample.Person ORDER BY %TRUNCATE(Home_Street,2)",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expressions' missing for <class 'sqlglot.expressions.query.Order'>. Line 1, Col: 53.\n  SELECT Name,Home_Street FROM Sample.Person ORDER BY \u001b[4m%\u001b[0mTRUNCATE(Home_Street,2)"
+    },
+    {
+      "id": "ex_005_c2e55f8d",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_Street FROM Sample.Person ORDER BY %TRUNCATE(Home_Street,4)",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expressions' missing for <class 'sqlglot.expressions.query.Order'>. Line 1, Col: 53.\n  SELECT Name,Home_Street FROM Sample.Person ORDER BY \u001b[4m%\u001b[0mTRUNCATE(Home_Street,4)"
+    },
+    {
+      "id": "curated_truncate",
+      "section": "TRUNCATE() numeric (curated)",
+      "sql": "SELECT TRUNCATE(123.456, 2)"
+    }
+  ]
+}

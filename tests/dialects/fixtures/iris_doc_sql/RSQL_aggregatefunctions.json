@@ -1,0 +1,76 @@
+{
+  "doc_key": "RSQL_aggregatefunctions",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_aggregatefunctions",
+  "title": "Overview of Aggregate Functions | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_c44f2f96",
+      "section": "Examples",
+      "sql": "SELECT Name,Age,AvgAge FROM (SELECT Name,Age,AVG(Age) AS AvgAge FROM Sample.Person) WHERE Age < AvgAge ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_1a5a83dd",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 COUNT(*),Name,AVG(Age) FROM Sample.Person ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_8435d3ee",
+      "section": "Examples",
+      "sql": "SELECT TOP 7 AVG(Age),LIST(Age) FROM Sample.Person WHERE Age > 75",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_dd24ccf1",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT Age,AVG(Age),LIST(Age) FROM Sample.Person WHERE Age > 75",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_8ee7249c",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 Home_State,COUNT(*),Name,Age,AVG(Age) FROM Sample.Person ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_906719b1",
+      "section": "Examples",
+      "sql": "SELECT COUNT(*) AS PersonCount FROM Sample.Person,Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_76573e7a",
+      "section": "Examples",
+      "sql": "SELECT Name,Age, AVG(Age) AS AvgAge, ABS(Age - AVG(Age)) AS RelAge FROM Sample.Person ORDER BY RelAge",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_06481783",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT COUNT(*) AS PersonCounts FROM Sample.Person GROUP BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_64d057d4",
+      "section": "Examples",
+      "sql": "SELECT COUNT(*) AS PersonCounts FROM Sample.Person GROUP BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_0e8a6f2d",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT * FROM (SELECT COUNT(*) AS PersonCounts FROM Sample.Person GROUP BY Home_State)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_f625ae84",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT FavoriteColors, COUNT(DISTINCT FavoriteColors), COUNT(DISTINCT BY(FavoriteColors) %ID) FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 99.\n  SELECT DISTINCT FavoriteColors, COUNT(DISTINCT FavoriteColors), COUNT(DISTINCT BY(FavoriteColors) \u001b[4m%\u001b[0mID) FROM Sample.Person"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "doc_key": "RSQL_null",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_null",
+  "title": "IS NULL (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_9192644c",
+      "section": "Examples",
+      "sql": "SELECT Name, FavoriteColors FROM Sample.Person WHERE FavoriteColors IS NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_b1dd3ac6",
+      "section": "Examples",
+      "sql": "SELECT Name, FavoriteColors FROM Sample.Person WHERE FavoriteColors IS NOT NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_e4105929",
+      "section": "Examples",
+      "sql": "SELECT Title,%OBJECT(Picture) AS PhotoOref FROM Sample.Employee WHERE Picture IS NOT NULL",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 14.\n  SELECT Title,\u001b[4m%\u001b[0mOBJECT(Picture) AS PhotoOref FROM Sample.Employee WHERE Picture IS NOT NULL"
+    }
+  ]
+}

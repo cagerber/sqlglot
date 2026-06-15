@@ -1,0 +1,18 @@
+{
+  "doc_key": "RSQL_database",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_database",
+  "title": "DATABASE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "curated_database",
+      "section": "DocBook synopsis (curated)",
+      "sql": "SELECT DATABASE()"
+    },
+    {
+      "id": "curated_database_odbc",
+      "section": "ODBC escape (curated)",
+      "sql": "SELECT {fn DATABASE()}"
+    }
+  ]
+}

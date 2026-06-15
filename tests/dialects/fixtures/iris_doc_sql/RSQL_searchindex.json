@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_searchindex",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_searchindex",
+  "title": "SEARCH_INDEX (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_71b53863",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person AS P WHERE P.Name %FIND SEARCH_INDEX(Sample.Person.NameIDX)",
+      "roundtrip": false
+    }
+  ]
+}

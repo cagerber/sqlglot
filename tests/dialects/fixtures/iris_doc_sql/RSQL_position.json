@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_position",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_position",
+  "title": "POSITION (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_dff6a2f1",
+      "section": "Examples",
+      "sql": "SELECT POSITION('br' IN 'The broken brown briefcase') AS Position, CHARINDEX('br','The broken brown briefcase',6) AS Charindex, $FIND('The broken brown briefcase','br',6) AS Find, INSTR('The broken brown briefcase','br',6,2) AS Inst",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_ee9d34cb",
+      "section": "Examples",
+      "sql": "SELECT POSITION('b' IN 'The quick brown fox') AS PosInt",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_3ad536db",
+      "section": "Examples",
+      "sql": "SELECT Name,",
+      "roundtrip": false
+    }
+  ]
+}

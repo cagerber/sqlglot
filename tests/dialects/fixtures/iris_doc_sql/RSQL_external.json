@@ -1,0 +1,34 @@
+{
+  "doc_key": "RSQL_external",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_external",
+  "title": "%EXTERNAL (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_61133fa6",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 DOB,%EXTERNAL(DOB) AS ExtDOB FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_d0ff20dc",
+      "section": "Examples",
+      "sql": "SELECT TOP 10 %EXTERNAL(FavoriteColors) AS ExtColors, %INTERNAL(FavoriteColors) AS IntColors, %ODBCOUT(FavoriteColors) AS ODBCColors FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_7504e8d6",
+      "section": "Examples",
+      "sql": "SELECT %EXTERNAL(DOB) AS DOB, %INTERNAL(ROUND(DOB,-3)) AS DOBGroup, %EXTERNAL(ROUND(DOB,-3)) AS RoundedDOB FROM Sample.Person GROUP BY (ROUND(DOB,-3)) ORDER BY DOBGroup",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_2625cf95",
+      "section": "Examples",
+      "sql": "SELECT TOP 10 %EXTERNAL FavoriteColors AS ExtColors, %INTERNAL FavoriteColors AS IntColors, %ODBCOUT FavoriteColors AS ODBCColors FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 41.\n  SELECT TOP 10 %EXTERNAL FavoriteColors \u001b[4mAS\u001b[0m ExtColors, %INTERNAL FavoriteColors AS IntColors, %ODBCOUT FavoriteColors AS ODBCColors FROM"
+    }
+  ]
+}

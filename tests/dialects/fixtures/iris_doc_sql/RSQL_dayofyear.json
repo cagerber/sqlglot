@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_dayofyear",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_dayofyear",
+  "title": "DAYOFYEAR (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_5c522471",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFYEAR(-306)} AS LastDayFeb, /* February 29, 1840 */ {fn DAYOFYEAR(-305)} AS FirstDayMar /* March 1, 1840 */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_aeb8c7aa",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFYEAR('2016-03-04 12:45:37')} AS DayCount",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_13deb088",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFYEAR(63981)} AS DayCount",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_976e1b12",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFYEAR({fn NOW()})} AS DNumNow, {fn DAYOFYEAR(CURRENT_DATE)} AS DNumCurrD, {fn DAYOFYEAR(CURRENT_TIMESTAMP)} AS DNumCurrTS, {fn DAYOFYEAR($HOROLOG)} AS DNumHorolog, {fn DAYOFYEAR($ZTIMESTAMP)} AS DNumZTS",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_9eb2dc92",
+      "section": "Examples",
+      "sql": "SELECT Name,DOB FROM (SELECT Name,DOB,{fn DAYOFYEAR(DOB)} AS BDay FROM Sample.Employee) ORDER BY BDay",
+      "roundtrip": false
+    }
+  ]
+}

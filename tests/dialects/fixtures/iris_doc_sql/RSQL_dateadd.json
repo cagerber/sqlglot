@@ -1,0 +1,74 @@
+{
+  "doc_key": "RSQL_dateadd",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_dateadd",
+  "title": "DATEADD (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_ec1938d7",
+      "section": "Examples",
+      "sql": "SELECT DATEADD('month',5,CURRENT_DATE)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_08cad12a",
+      "section": "Examples",
+      "sql": "SELECT DATEADD('hh',1,'12/22/2021 8:15:23')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_7a3f627f",
+      "section": "Examples",
+      "sql": "SELECT DATEADD('week',1,'2022-02-26') AS NewDate",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_b1c5d267",
+      "section": "Examples",
+      "sql": "SELECT DATEADD(MM,5,'2021-11-26 12:00:00') AS NewDate",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_9a55f562",
+      "section": "Examples",
+      "sql": "SELECT DATEADD('mm',5,'2021-01-31 12:00:00') AS NewDate",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_de85aa65",
+      "section": "Examples",
+      "sql": "SELECT DATEADD(MI,45,'2022-02-26 12:00:00') AS NewTime",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_edb23d19",
+      "section": "Examples",
+      "sql": "SELECT DATEADD('mi',45,'2022-02-28 23:30:00') AS NewTime",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_a87d9efe",
+      "section": "Examples",
+      "sql": "SELECT DATEADD(N,-45,'2022-01-01 00:10:00') AS NewTime",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_2b035120",
+      "section": "Examples",
+      "sql": "SELECT DATEADD(D,60,CURRENT_DATE) AS NewDate",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_ebe0ecff",
+      "section": "Examples",
+      "sql": "SELECT DATEADD('dd',92,'2021-12-20') AS NewDateD, DATEADD('qq',1,'2021-12-20') AS NewDateQ",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_97277744",
+      "section": "Examples",
+      "sql": "SELECT DATEADD('day',92,'2021-12-20') AS NewDate",
+      "roundtrip": false
+    }
+  ]
+}
