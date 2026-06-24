@@ -1,8 +1,10 @@
 # Trifour fork delta (sqlglot)
 
-Upstream: [tobymao/sqlglot](https://github.com/tobymao/sqlglot) (`v30.11.0` baseline).
+**Public repo.** Changelog here is **package-level only** — dialect/parser deltas and generic harvest-fixture notes. Private consumer wiring and sprint backlogs stay in the consuming repo.
 
-ODS consumes this fork via `[tool.uv.sources] sqlglot` (editable `../3rdparty/sqlglot` in dev; git `rev` pin in CI).
+Upstream: [tobymao/sqlglot](https://github.com/tobymao/sqlglot) (`main` branch).
+
+Consumers pin via `[tool.uv.sources] sqlglot` (git `rev` or local editable checkout).
 
 ## Changes in `30.11.0+trifour.18`
 
@@ -72,7 +74,6 @@ ODS consumes this fork via `[tool.uv.sources] sqlglot` (editable `../3rdparty/sq
 - **String function doc fixtures** — `RSQL_substring`, `RSQL_replace`, `RSQL_position`, `RSQL_trim`, `RSQL_stringmanipulation` (index + composite smoke).
 - **Harvest CLI** — `scripts/harvest_iris_doc_sql.py` (`--all-pending` driven by `_manifest.json`).
 - **Manifest** — `string_functions` and `clause_pages` sections; `test_string_functions_manifest_harvested`.
-- **ODS BMAD** — `tools/bi_utils/scripts/generate_iris_sql_doc_stories.py` + `iris-sql-doc-harvest-registry.yaml` (one story per sql4.md page).
 
 ## Changes in `30.11.0+trifour.6`
 
@@ -98,8 +99,6 @@ ODS consumes this fork via `[tool.uv.sources] sqlglot` (editable `../3rdparty/sq
 - **Expressions** — `Arrow`, `OdbcOut`, `InsertOrUpdate`, `IrisPercentField`, `ContainsFollows`; `Distinct.by`.
 - **Packaging** — explicit `sqlglot/_version.py` via `scripts/write_trifour_version.py` (no setuptools-scm on shallow git clones).
 
-## ODS integration
+## Consumer integration (private repos)
 
-- Native parse/format: `tools/shared/iris_sql_parse.py` (`parse_iris_sql`, default `read=iris`).
-- Legacy masks: `read=tsql` / `iris_ods` via `tools/shared/iris_sqlglot_dialect.py`.
-- Corpus harness: `tools/bi_utils/lineage/dw_sql/iris_sql_corpus.py` (dual-path A/B parse rates).
+Dialect extensions and corpus harnesses typically live in the consumer (entry points, preprocessors, A/B parse tests). This fork ships the **`iris`** read dialect and InterSystems doc SQL fixtures under `tests/dialects/fixtures/iris_doc_sql/`.
