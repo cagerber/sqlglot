@@ -949,6 +949,21 @@ ARRAY<STRING>;
 MINUTE('2024-01-01 12:30:00');
 INT;
 
+# dialect: hive, spark, databricks
+TYPEOF(tbl.int_col);
+VARCHAR;
+
+# dialect: hive, spark, databricks
+TYPEOF(tbl.double_col);
+VARCHAR;
+
+# dialect: hive, spark, databricks
+TYPEOF(tbl.str_col);
+VARCHAR;
+
+TYPEOF(foo);
+VARCHAR;
+
 --------------------------------------
 -- BigQuery
 --------------------------------------
@@ -6080,6 +6095,10 @@ VARCHAR;
 # dialect: mysql
 CURRENT_TIMESTAMP();
 DATETIME;
+
+# dialect: mysql
+REPLACE(tbl.str_col, tbl.str_col, tbl.str_col);
+VARCHAR;
 
 --------------------------------------
 -- DuckDB

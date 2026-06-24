@@ -9,6 +9,7 @@ from functools import reduce, wraps
 from sqlglot import exp
 from sqlglot.errors import ErrorLevel, UnsupportedError, concat_messages
 from sqlglot.expressions import apply_index_offset
+from sqlglot.expressions.core import maybe_parse
 from sqlglot.helper import csv, name_sequence, seq_get
 from sqlglot.jsonpath import ALL_JSON_PATH_PARTS, JSON_PATH_PART_TRANSFORMS
 from sqlglot.time import format_time
@@ -139,6 +140,7 @@ class Generator:
         ),
         exp.AnalyzeColumns: lambda self, e: self.sql(e, "this"),
         exp.AnalyzeWith: lambda self, e: self.expressions(e, prefix="WITH ", sep=" "),
+        exp.ArrayContainedBy: lambda self, e: self.binary(e, "<@"),
         exp.ArrayContainsAll: lambda self, e: self.binary(e, "@>"),
         exp.ArrayOverlaps: lambda self, e: self.binary(e, "&&"),
         exp.AssumeColumnConstraint: lambda self, e: f"ASSUME ({self.sql(e, 'this')})",
@@ -203,6 +205,7 @@ class Generator:
         exp.JSONBContainsAnyTopKeys: lambda self, e: self.binary(e, "?|"),
         exp.JSONBContainsAllTopKeys: lambda self, e: self.binary(e, "?&"),
         exp.JSONBDeleteAtPath: lambda self, e: self.binary(e, "#-"),
+        exp.JSONBPathExists: lambda self, e: self.binary(e, "@?"),
         exp.JSONObject: lambda self, e: self._jsonobject_sql(e),
         exp.JSONObjectAgg: lambda self, e: self._jsonobject_sql(e),
         exp.LanguageProperty: lambda self, e: self.naked_property(e),
@@ -488,6 +491,12 @@ class Generator:
 
     # Whether to escape keys using single quotes in JSON paths
     JSON_PATH_SINGLE_QUOTE_ESCAPE = False
+
+    # Whether a quoted JSON path key (e.g. from a quoted identifier or ['key'] bracket) must be
+    # rendered in bracket form to preserve its case-sensitivity, even if it would otherwise match
+    # SAFE_JSON_PATH_KEY_RE and render as a bare dotted key. Needed for dialects like Databricks
+    # where a bare colon key is case-insensitive but a bracketed key is case-sensitive.
+    JSON_PATH_KEY_QUOTED_FORCES_BRACKETS = False
 
     # The JSONPathPart expressions supported by this dialect
     SUPPORTED_JSON_PATH_PARTS: t.ClassVar = ALL_JSON_PATH_PARTS.copy()
@@ -1007,23 +1016,24 @@ class Generator:
         if not comments or isinstance(expression, self.EXCLUDE_COMMENTS):
             return sql
 
-        comments_sql = " ".join(
-            f"/*{self.sanitize_comment(comment)}*/" for comment in comments if comment
-        )
+        comments_list = [
+            f"/*{self._replace_line_breaks(self.sanitize_comment(comment))}*/"
+            for comment in comments
+            if comment
+        ]
 
-        if not comments_sql:
+        if not comments_list:
             return sql
 
-        comments_sql = self._replace_line_breaks(comments_sql)
-
         if separated or isinstance(expression, self.WITH_SEPARATED_COMMENTS):
+            comments_sql = self.sep().join(comments_list)
             return (
                 f"{self.sep()}{comments_sql}{sql}"
                 if not sql or sql[0].isspace()
                 else f"{comments_sql}{self.sep()}{sql}"
             )
 
-        return f"{sql} {comments_sql}"
+        return f"{sql} {' '.join(comments_list)}"
 
     def wrap(self, expression: exp.Expr | str) -> str:
         this_sql = (
@@ -1945,6 +1955,13 @@ class Generator:
         params = self.sql(expression, "params")
         return f"{unique}{primary}{amp}{index}{name}{table}{params}"
 
+    def dynamicidentifier_sql(self, expression: exp.DynamicIdentifier) -> str:
+        this = expression.this
+        if this and this.is_string:
+            return maybe_parse(this.name).sql(self.dialect)
+        self.unsupported("IDENTIFIER() with non-literal arguments is not supported")
+        return self.func("IDENTIFIER", this)
+
     def identifier_sql(self, expression: exp.Identifier) -> str:
         text = expression.name
         lower = text.lower()
@@ -2393,10 +2410,12 @@ class Generator:
         laterals = self.expressions(expression, key="laterals", sep="")
 
         file_format = self.sql(expression, "format")
+        pattern = self.sql(expression, "pattern")
         if file_format:
-            pattern = self.sql(expression, "pattern")
             pattern = f", PATTERN => {pattern}" if pattern else ""
             file_format = f" (FILE_FORMAT => {file_format}{pattern})"
+        elif pattern:
+            file_format = f" (PATTERN => {pattern})"
 
         ordinality = expression.args.get("ordinality") or ""
         if ordinality:
@@ -3721,9 +3740,6 @@ class Generator:
     def jsonpath_sql(self, expression: exp.JSONPath) -> str:
         path = self.expressions(expression, sep="", flat=True).lstrip(".")
 
-        if expression.args.get("escape"):
-            path = self.escape_str(path)
-
         if self.QUOTE_JSON_PATH:
             path = f"{self.dialect.QUOTE_START}{path}{self.dialect.QUOTE_END}"
 
@@ -3976,6 +3992,12 @@ class Generator:
         this = self.sql(expression, "this")
         zone = self.sql(expression, "zone")
         return f"{this} AT TIME ZONE {zone} AT TIME ZONE 'UTC'"
+
+    def fromiso8601date_sql(self, expression: exp.FromISO8601Date) -> str:
+        return self.sql(exp.cast(expression.this, exp.DType.DATE))
+
+    def fromiso8601timestamp_sql(self, expression: exp.FromISO8601Timestamp) -> str:
+        return self.sql(exp.cast(expression.this, exp.DType.TIMESTAMPTZ))
 
     def add_sql(self, expression: exp.Add) -> str:
         return self.binary(expression, "+")
@@ -5238,10 +5260,20 @@ class Generator:
             this = self.json_path_part(this)
             return f".{this}" if this else ""
 
-        if self.SAFE_JSON_PATH_KEY_RE.match(this):
+        quoted = expression.args.get("quoted")
+        if not (
+            quoted and self.JSON_PATH_KEY_QUOTED_FORCES_BRACKETS
+        ) and self.SAFE_JSON_PATH_KEY_RE.match(this):
             return f".{this}"
 
         this = self.json_path_part(this)
+
+        if quoted and self.QUOTE_JSON_PATH:
+            # The whole path is rendered as a single quoted string literal, so the bracketed key
+            # (which may itself contain backslash-escaped quotes, e.g. ["x \"y\"z"]) must be
+            # escaped again for the outer string literal (-> ["x \\"y\\"z"]).
+            this = self.escape_str(this)
+
         return (
             f"[{this}]"
             if self._quote_json_path_key_using_brackets and self.JSON_PATH_BRACKETED_KEY_SUPPORTED

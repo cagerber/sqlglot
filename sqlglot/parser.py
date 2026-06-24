@@ -1192,7 +1192,7 @@ class Parser:
         TokenType.IRLIKE: binary_range_parser(exp.RegexpILike),
         TokenType.IS: lambda self, this: self._parse_is(this),
         TokenType.LIKE: binary_range_parser(exp.Like),
-        TokenType.LT_AT: binary_range_parser(exp.ArrayContainsAll, reverse_args=True),
+        TokenType.LT_AT: binary_range_parser(exp.ArrayContainedBy),
         TokenType.OVERLAPS: binary_range_parser(exp.Overlaps),
         TokenType.RLIKE: binary_range_parser(exp.RegexpLike),
         TokenType.SIMILAR_TO: binary_range_parser(exp.SimilarTo),
@@ -1200,6 +1200,7 @@ class Parser:
         TokenType.QMARK_AMP: binary_range_parser(exp.JSONBContainsAllTopKeys),
         TokenType.QMARK_PIPE: binary_range_parser(exp.JSONBContainsAnyTopKeys),
         TokenType.HASH_DASH: binary_range_parser(exp.JSONBDeleteAtPath),
+        TokenType.AT_QMARK: binary_range_parser(exp.JSONBPathExists),
         TokenType.ADJACENT: binary_range_parser(exp.Adjacent),
         TokenType.OPERATOR: lambda self, this: self._parse_operator(this),
         TokenType.AMP_LT: binary_range_parser(exp.ExtendsLeft),
@@ -1845,6 +1846,10 @@ class Parser:
     # Whether INTERVAL spans with literal format '\d+ hh:[mm:[ss[.ff]]]'
     # can omit the span unit `DAY TO MINUTE` or `DAY TO SECOND`
     SUPPORTS_OMITTED_INTERVAL_SPAN_UNIT: t.ClassVar = False
+
+    # Whether adjacent string literals like 'foo' 'bar' require a whitespace or comment between them
+    # to be considered valid syntactically. Such expressions evaluate to the strings' concatenation.
+    ADJACENT_STRINGS_CANNOT_BE_CONNECTED: t.ClassVar = False
 
     SHOW_TRIE: t.ClassVar[dict] = new_trie(key.split(" ") for key in SHOW_PARSERS)
     SET_TRIE: t.ClassVar[dict] = new_trie(key.split(" ") for key in SET_PARSERS)
@@ -3559,7 +3564,7 @@ class Parser:
             if self._match_text_seq("ON", "CONSTRAINT"):
                 constraint = self._parse_id_var()
             elif self._match(TokenType.L_PAREN):
-                conflict_keys = self._parse_csv(self._parse_id_var)
+                conflict_keys = self._parse_csv(self._parse_indexed_column)
                 self._match_r_paren()
 
         index_predicate = self._parse_where()
@@ -6681,13 +6686,12 @@ class Parser:
         self,
         this: exp.Expr | None,
         path_parts: list[exp.JSONPathPart],
-        escape: bool | None,
     ) -> tuple[exp.Expr | None, list[exp.JSONPathPart]]:
         if len(path_parts) > 1:
             this = self.expression(
                 exp.JSONExtract(
                     this=this,
-                    expression=exp.JSONPath(expressions=path_parts, escape=escape),
+                    expression=exp.JSONPath(expressions=path_parts),
                     variant_extract=True,
                     requires_json=self.JSON_EXTRACT_REQUIRES_JSON_EXPRESSION,
                 )
@@ -6698,28 +6702,24 @@ class Parser:
 
     def _parse_colon_as_variant_extract(self, this: exp.Expr | None) -> exp.Expr | None:
         path_parts: list[exp.JSONPathPart] = [exp.JSONPathRoot()]
-        escape = None
 
         while self._match(TokenType.COLON):
             if not self.COLON_CHAIN_IS_SINGLE_EXTRACT:
-                this, path_parts = self._build_json_extract(this, path_parts, escape)
-                escape = None
+                this, path_parts = self._build_json_extract(this, path_parts)
 
             key = self._parse_id_var(any_token=True, tokens=(TokenType.SELECT,))
 
             if key:
-                if isinstance(key, exp.Identifier) and key.quoted:
-                    escape = True
-                path_parts.append(exp.JSONPathKey(this=key.name))
+                quoted = isinstance(key, exp.Identifier) and key.quoted
+                path_parts.append(exp.JSONPathKey(this=key.name, quoted=quoted))
 
             while True:
                 if self._match(TokenType.DOT):
                     next_key = self._parse_id_var(any_token=True, tokens=(TokenType.SELECT,))
 
                     if next_key:
-                        if isinstance(next_key, exp.Identifier) and next_key.quoted:
-                            escape = True
-                        path_parts.append(exp.JSONPathKey(this=next_key.name))
+                        quoted = isinstance(next_key, exp.Identifier) and next_key.quoted
+                        path_parts.append(exp.JSONPathKey(this=next_key.name, quoted=quoted))
                 elif self._match(TokenType.L_BRACKET):
                     bracket_expr = self._parse_bracket_key_value()
 
@@ -6728,15 +6728,13 @@ class Parser:
 
                     if bracket_expr:
                         if bracket_expr.is_string:
-                            path_parts.append(exp.JSONPathKey(this=bracket_expr.name))
-                            escape = True
+                            path_parts.append(exp.JSONPathKey(this=bracket_expr.name, quoted=True))
                         elif bracket_expr.is_star:
                             path_parts.append(exp.JSONPathSubscript(this=exp.JSONPathWildcard()))
                         elif bracket_expr.is_number:
                             path_parts.append(exp.JSONPathSubscript(this=bracket_expr.to_py()))
                         else:
-                            this, path_parts = self._build_json_extract(this, path_parts, escape)
-                            escape = None
+                            this, path_parts = self._build_json_extract(this, path_parts)
 
                             this = self.expression(
                                 exp.Bracket(
@@ -6745,8 +6743,7 @@ class Parser:
                             )
 
                 elif self._match(TokenType.DCOLON):
-                    this, path_parts = self._build_json_extract(this, path_parts, escape)
-                    escape = None
+                    this, path_parts = self._build_json_extract(this, path_parts)
 
                     cast_type = self._parse_types()
                     if cast_type:
@@ -6756,7 +6753,7 @@ class Parser:
                 else:
                     break
 
-        this, _ = self._build_json_extract(this, path_parts, escape)
+        this, _ = self._build_json_extract(this, path_parts)
 
         return this
 
@@ -6872,7 +6869,13 @@ class Parser:
 
             if token_type == TokenType.STRING:
                 expressions = [primary]
-                while self._match(TokenType.STRING):
+                while self._match(TokenType.STRING, advance=False):
+                    if self._is_connected() and self.ADJACENT_STRINGS_CANNOT_BE_CONNECTED:
+                        self.raise_error(
+                            "Adjacent string literals need to be separated by whitespace or comments"
+                        )
+
+                    self._advance()
                     expressions.append(exp.Literal.string(self._prev.text))
 
                 if len(expressions) > 1:
@@ -9510,8 +9513,11 @@ class Parser:
             )
         )
 
+    def _parse_indexed_column(self) -> exp.Expr | None:
+        return self._parse_ordered(self._parse_opclass)
+
     def _parse_with_operator(self) -> exp.Expr | None:
-        this = self._parse_ordered(self._parse_opclass)
+        this = self._parse_indexed_column()
 
         if not self._match(TokenType.WITH):
             return this
