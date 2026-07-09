@@ -383,6 +383,7 @@ class TokenType(IntEnum):
     PRIMARY_KEY = auto()
     PROCEDURE = auto()
     PROPERTIES = auto()
+    PROJECTION = auto()
     PSEUDO_TYPE = auto()
     PUT = auto()
     QUALIFY = auto()

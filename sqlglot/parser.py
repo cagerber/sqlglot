@@ -4,7 +4,9 @@ import itertools
 import logging
 import re
 import typing as t
+from builtins import type as Type
 from collections import defaultdict
+from collections.abc import Sequence
 
 from sqlglot import exp
 from sqlglot.errors import (
@@ -17,19 +19,16 @@ from sqlglot.errors import (
 )
 from sqlglot.expressions import apply_index_offset
 from sqlglot.helper import ensure_list, i64, seq_get
-from sqlglot.trie import new_trie
 from sqlglot.time import format_time
 from sqlglot.tokens import Token, Tokenizer, TokenType
-from sqlglot.trie import TrieResult, in_trie
-from collections.abc import Sequence
-from builtins import type as Type
+from sqlglot.trie import TrieResult, in_trie, new_trie
 
 if t.TYPE_CHECKING:
-    from sqlglot.expressions import ExpOrStr
-    from sqlglot._typing import E, BuilderArgs
-    from sqlglot.dialects.dialect import Dialect, DialectType
-
     from re import Pattern
+
+    from sqlglot._typing import BuilderArgs, E
+    from sqlglot.dialects.dialect import Dialect, DialectType
+    from sqlglot.expressions import ExpOrStr
 
     T = t.TypeVar("T")
     TCeilFloor = t.TypeVar("TCeilFloor", exp.Ceil, exp.Floor)
@@ -37,6 +36,10 @@ if t.TYPE_CHECKING:
 logger = logging.getLogger("sqlglot")
 
 OPTIONS_TYPE = dict[str, Sequence[t.Union[Sequence[str], str]]]
+
+# Excludes bare strings, which are also collections of strings, so that a single keyword
+# can't accidentally be matched with substring semantics (e.g. _match_texts("FOO"))
+TEXTS_TYPE = t.Union[tuple[str, ...], list[str], t.AbstractSet[str], t.Mapping[str, t.Any]]
 
 # Used to detect alphabetical characters and +/- in timestamp literals
 TIME_ZONE_RE: Pattern[str] = re.compile(r":.*?[a-zA-Z\+\-]")
@@ -616,6 +619,22 @@ class Parser:
         TokenType.SELECT,
     } - {TokenType.IDENTIFIER}
 
+    # Tokens whose text is extracted from delimited source text (e.g. quoted identifiers,
+    # string literals), so they must never be treated as keywords when matching by text
+    TEXT_MATCH_EXCLUDED_TOKENS: t.ClassVar[frozenset] = frozenset(
+        {
+            TokenType.BIT_STRING,
+            TokenType.BYTE_STRING,
+            TokenType.HEREDOC_STRING,
+            TokenType.HEX_STRING,
+            TokenType.IDENTIFIER,
+            TokenType.NATIONAL_STRING,
+            TokenType.RAW_STRING,
+            TokenType.STRING,
+            TokenType.UNICODE_STRING,
+        }
+    )
+
     DB_CREATABLES: t.ClassVar = {
         TokenType.DATABASE,
         TokenType.DICTIONARY,
@@ -728,6 +747,7 @@ class Parser:
         TokenType.PARTITION,
         TokenType.PERCENT,
         TokenType.PIVOT,
+        TokenType.PROJECTION,
         TokenType.PRAGMA,
         TokenType.PUT,
         TokenType.RANGE,
@@ -1236,6 +1256,7 @@ class Parser:
             exp.BackupProperty(this=self._parse_var(any_token=True))
         ),
         "BLOCKCOMPRESSION": lambda self: self._parse_blockcompression(),
+        "CALLED": lambda self: self._parse_called_on_null_input_property(),
         "CHARSET": lambda self, **kwargs: self._parse_character_set(**kwargs),
         "CHARACTER SET": lambda self, **kwargs: self._parse_character_set(**kwargs),
         "CHECKSUM": lambda self: self._parse_checksum(),
@@ -1969,8 +1990,11 @@ class Parser:
             return True
         return False
 
-    def _match_texts(self, texts: t.Collection[str], advance: bool = True) -> bool:
-        if self._curr.token_type != TokenType.STRING and self._curr.text.upper() in texts:
+    def _match_texts(self, texts: TEXTS_TYPE, advance: bool = True) -> bool:
+        if (
+            self._curr.token_type not in self.TEXT_MATCH_EXCLUDED_TOKENS
+            and self._curr.text.upper() in texts
+        ):
             if advance:
                 self._advance()
             return True
@@ -1978,9 +2002,9 @@ class Parser:
 
     def _match_text_seq(self, *texts: str, advance: bool = True) -> bool:
         index = self._index
-        string_type = TokenType.STRING
+        excluded_tokens = self.TEXT_MATCH_EXCLUDED_TOKENS
         for text in texts:
-            if self._curr.token_type != string_type and self._curr.text.upper() == text:
+            if self._curr.token_type not in excluded_tokens and self._curr.text.upper() == text:
                 self._advance()
             else:
                 self._retreat(index)
@@ -2827,6 +2851,12 @@ class Parser:
             return seq_props
 
         self._retreat(index)
+        return self._parse_key_value_property()
+
+    def _parse_key_value_property(
+        self, parse_value: t.Callable[[], exp.Expr | None] | None = None
+    ) -> exp.Property | None:
+        index = self._index
         key = self._parse_column()
 
         if not self._match(TokenType.EQ):
@@ -2837,7 +2867,11 @@ class Parser:
         if isinstance(key, exp.Column):
             key = key.to_dot() if len(key.parts) > 1 else exp.var(key.name)
 
-        value = self._parse_bitwise() or self._parse_var(any_token=True)
+        value = (
+            parse_value()
+            if parse_value
+            else self._parse_bitwise() or self._parse_var(any_token=True)
+        )
 
         # Transform the value to exp.Var if it was parsed as exp.Column(exp.Identifier())
         if isinstance(value, exp.Column):
@@ -2914,6 +2948,13 @@ class Parser:
         return self.expression(
             exp.SettingsProperty(expressions=self._parse_csv(self._parse_assignment))
         )
+
+    def _parse_called_on_null_input_property(self) -> exp.CalledOnNullInputProperty | None:
+        if not self._match_text_seq("ON", "NULL", "INPUT"):
+            self._retreat(self._index - 1)
+            return None
+
+        return self.expression(exp.CalledOnNullInputProperty())
 
     def _parse_volatile_property(self) -> exp.VolatileProperty | exp.StabilityProperty:
         if self._index >= 2:
@@ -5852,28 +5893,34 @@ class Parser:
 
     def _parse_range(self, this: exp.Expr | None = None) -> exp.Expr | None:
         this = this or self._parse_bitwise()
-        negate = self._match(TokenType.NOT)
 
-        if self._match_set(self.RANGE_PARSERS):
-            expression = self.RANGE_PARSERS[self._prev.token_type](self, this)
-            if not expression:
-                return this
+        while True:
+            negate = self._match(TokenType.NOT)
+            if self._match_set(self.RANGE_PARSERS):
+                expression = self.RANGE_PARSERS[self._prev.token_type](self, this)
+                if not expression:
+                    return this
 
-            this = expression
-        elif self._match(TokenType.ISNULL) or (negate and self._match(TokenType.NULL)):
-            this = self.expression(exp.Is(this=this, expression=exp.Null()))
+                this = expression
+            elif self._match(TokenType.ISNULL) or (negate and self._match(TokenType.NULL)):
+                this = self.expression(exp.Is(this=this, expression=exp.Null()))
+            elif self._match(TokenType.NOTNULL):
+                # Postgres supports ISNULL and NOTNULL for conditions.
+                # https://blog.andreiavram.ro/postgresql-null-composite-type/
+                this = self.expression(exp.Is(this=this, expression=exp.Null()))
+                this = self.expression(exp.Not(this=this))
+            else:
+                if negate:
+                    self._retreat(self._index - 1)
+                break
 
-        # Postgres supports ISNULL and NOTNULL for conditions.
-        # https://blog.andreiavram.ro/postgresql-null-composite-type/
-        if self._match(TokenType.NOTNULL):
-            this = self.expression(exp.Is(this=this, expression=exp.Null()))
-            this = self.expression(exp.Not(this=this))
-
-        if negate:
-            this = self._negate_range(this)
-
-        if self._match(TokenType.IS):
-            this = self._parse_is(this)
+            if negate:
+                this = self._negate_range(this)
+                if self._curr and (
+                    self._curr.token_type == TokenType.NOT
+                    or self._curr.token_type in self.RANGE_PARSERS
+                ):
+                    this = self.expression(exp.Paren(this=this))
 
         return this
 
@@ -6786,7 +6833,15 @@ class Parser:
                 if isinstance(field, exp.Column) and self._match(TokenType.DOT, advance=False):
                     field = self._parse_column_ops(field)
             else:
+                dot = self._is_connected() and self._prev.token_type == TokenType.DOT
                 field = self._parse_field(any_token=True, anonymous_func=True)
+
+                # In t.true, t.null we should produce an Identifier node
+                if dot and isinstance(field, (exp.Null, exp.Boolean)):
+                    field = self.expression(
+                        exp.Identifier(this=self._prev.text),
+                        comments=field.comments,
+                    )
 
             # Function calls can be qualified, e.g., x.y.FOO()
             # This converts the final AST to a series of Dots leading to the function call
@@ -6840,6 +6895,8 @@ class Parser:
 
         if not this and self._match(TokenType.R_PAREN, advance=False):
             this = self.expression(exp.Tuple())
+        elif len(expressions) > 1 or self._prev.token_type == TokenType.COMMA:
+            this = self.expression(exp.Tuple(expressions=expressions))
         elif isinstance(this, exp.UNWRAPPED_QUERIES):
             this = self._parse_subquery(this=this, parse_alias=False)
         elif isinstance(this, (exp.Subquery, exp.Values)):
@@ -6847,8 +6904,6 @@ class Parser:
                 this=self._parse_query_modifiers(self._parse_set_operations(this)),
                 parse_alias=False,
             )
-        elif len(expressions) > 1 or self._prev.token_type == TokenType.COMMA:
-            this = self.expression(exp.Tuple(expressions=expressions))
         else:
             this = self.expression(exp.Paren(this=this))
 
@@ -7476,9 +7531,7 @@ class Parser:
 
         return constraints
 
-    def _parse_unnamed_constraint(
-        self, constraints: t.Collection[str] | None = None
-    ) -> exp.Expr | None:
+    def _parse_unnamed_constraint(self, constraints: TEXTS_TYPE | None = None) -> exp.Expr | None:
         index = self._index
 
         if self._match(TokenType.IDENTIFIER, advance=False) or not self._match_texts(
@@ -9051,7 +9104,7 @@ class Parser:
         elif self._match(TokenType.FOR):
             if self._match_text_seq("ALL", "COLUMNS"):
                 this = "FOR ALL COLUMNS"
-            if self._match_texts("COLUMNS"):
+            if self._match_text_seq("COLUMNS"):
                 this = "FOR COLUMNS"
                 expressions = self._parse_csv(self._parse_column_reference)
         elif self._match_text_seq("SAMPLE"):
@@ -9281,7 +9334,9 @@ class Parser:
             return None
 
         option = start.text.upper()
-        continuations = options.get(option)
+        continuations = (
+            None if start.token_type in self.TEXT_MATCH_EXCLUDED_TOKENS else options.get(option)
+        )
 
         index = self._index
         self._advance()

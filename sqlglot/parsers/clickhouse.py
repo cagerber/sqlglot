@@ -251,6 +251,14 @@ class ClickHouseParser(parser.Parser):
             for k, v in parser.Parser.FUNCTIONS.items()
             if k not in ("TRANSFORM", "APPROX_TOP_SUM")
         },
+        **{
+            regexp_extract: lambda args: exp.RegexpExtract(
+                this=seq_get(args, 0),
+                expression=seq_get(args, 1),
+                group=seq_get(args, 2),
+            )
+            for regexp_extract in ("REGEXPEXTRACT", "REGEXP_EXTRACT", "REGEXP_SUBSTR")
+        },
         **{f"TOSTARTOF{unit}": _build_timestamp_trunc(unit=unit) for unit in TIMESTAMP_TRUNC_UNITS},
         "ANY": exp.AnyValue.from_arg_list,
         "ARRAYCOMPACT": exp.ArrayCompact.from_arg_list,
@@ -262,6 +270,10 @@ class ClickHouseParser(parser.Parser):
         "ARRAYMIN": exp.ArrayMin.from_arg_list,
         "ARRAYREVERSE": exp.ArrayReverse.from_arg_list,
         "ARRAYSLICE": exp.ArraySlice.from_arg_list,
+        "ARRAYFILTER": lambda args: exp.ArrayFilter(
+            this=seq_get(args, 1), expression=seq_get(args, 0)
+        ),
+        "ARRAYMAP": lambda args: exp.Transform(this=seq_get(args, 1), expression=seq_get(args, 0)),
         "CURRENTDATABASE": exp.CurrentDatabase.from_arg_list,
         "CURRENTSCHEMAS": exp.CurrentSchemas.from_arg_list,
         "COUNTIF": _build_count_if,
@@ -853,7 +865,7 @@ class ClickHouseParser(parser.Parser):
         return exp.DefinerProperty(this=self._parse_string())
 
     def _parse_projection_def(self) -> exp.ProjectionDef | None:
-        if not self._match_text_seq("PROJECTION"):
+        if not self._match(TokenType.PROJECTION):
             return None
 
         return self.expression(

@@ -6,6 +6,12 @@ Upstream: [tobymao/sqlglot](https://github.com/tobymao/sqlglot) (`main` branch).
 
 Consumers pin via `[tool.uv.sources] sqlglot` (git `rev` or local editable checkout).
 
+## Changes in `30.11.0+trifour.20`
+
+- **Upstream merge** — merged `tobymao/sqlglot` `main` @ `93d16591` (57 commits past `17f7870b`; still on `v30.11.0` baseline).
+- **Notable upstream** — general parser fix for delimited text in `_match_texts` / `_match_text_seq` (#7843); optimizer/typing for MySQL, BigQuery, ClickHouse, T-SQL, Databricks, Hive.
+- **Fork policy** — `sqlglot-integration-tests` submodule remains removed (uv/git consumers).
+
 ## Changes in `30.11.0+trifour.18`
 
 - **RSQL misc pages** — harvested + curated 9 remaining RSQL reference pages: RSQL_SYMBOL_TABLE, RSQL_REFMATERIAL, RSQL_dateconstruct, RSQL_defaultusernamepassword, RSQL_sqlcode, RSQL_fieldconstraint, RSQL_reservedwords, RSQL_cosvariables (2 auto-harvested), RSQL_COMMANDS (index fixture with child_doc_keys for 6 DML pages).

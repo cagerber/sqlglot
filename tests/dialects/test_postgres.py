@@ -22,6 +22,8 @@ class TestPostgres(Validator):
         expected_sql = "ARRAY[\n  x" + (",\n  x" * 27) + "\n]"
         self.validate_identity(sql, expected_sql, pretty=True)
 
+        self.validate_identity('WITH t AS (SELECT 1 AS "null") SELECT t.null FROM t')
+        self.validate_identity('WITH t AS (SELECT 1 AS "true") SELECT t.true FROM t')
         self.validate_identity("""CAST('a' AS TEXT COLLATE "de_DE")""")
         self.validate_identity("SELECT '%' SIMILAR TO '^%' ESCAPE '^'")
         self.validate_identity("SELECT GET_BIT(CAST(44 AS BIT(10)), 6)")
@@ -1292,8 +1294,8 @@ FROM json_data, field_ids""",
         )
         self.validate_identity(
             "CREATE FUNCTION add(integer, integer) RETURNS integer AS 'select $1 + $2;' LANGUAGE SQL IMMUTABLE CALLED ON NULL INPUT",
-            check_command_warning=True,
-        )
+            "CREATE FUNCTION add(integer, integer) RETURNS INT LANGUAGE SQL IMMUTABLE CALLED ON NULL INPUT AS 'select $1 + $2;'",
+        ).assert_is(exp.Create)
         self.validate_identity(
             "CREATE CONSTRAINT TRIGGER my_trigger AFTER INSERT OR DELETE OR UPDATE OF col_a, col_b ON public.my_table DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION DO_STH()"
         )

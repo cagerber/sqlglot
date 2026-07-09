@@ -92,9 +92,16 @@ def _build_levenshtein(args: list) -> exp.Levenshtein:
     )
 
 
+def _build_parse_date(args: list, dialect: Dialect) -> exp.StrToDate:
+    this = build_formatted_time(exp.StrToDate)([seq_get(args, 1), seq_get(args, 0)], dialect)
+    this.set("default_year", exp.Literal.number(1970))
+    return this
+
+
 def _build_parse_timestamp(args: list, dialect: Dialect) -> exp.StrToTime:
     this = build_formatted_time(exp.StrToTime)([seq_get(args, 1), seq_get(args, 0)], dialect)
     this.set("zone", seq_get(args, 2))
+    this.set("default_year", exp.Literal.number(1970))
     return this
 
 
@@ -248,9 +255,7 @@ class BigQueryParser(parser.Parser):
         ),
         "OCTET_LENGTH": exp.ByteLength.from_arg_list,
         "TO_HEX": _build_to_hex,
-        "PARSE_DATE": lambda args, dialect: build_formatted_time(exp.StrToDate)(
-            [seq_get(args, 1), seq_get(args, 0)], dialect
-        ),
+        "PARSE_DATE": _build_parse_date,
         "PARSE_TIME": lambda args, dialect: build_formatted_time(exp.ParseTime)(
             [seq_get(args, 1), seq_get(args, 0)], dialect
         ),
@@ -265,7 +270,9 @@ class BigQueryParser(parser.Parser):
         "SHA256": lambda args: exp.SHA2Digest(
             this=seq_get(args, 0), length=exp.Literal.number(256)
         ),
-        "SHA512": lambda args: exp.SHA2(this=seq_get(args, 0), length=exp.Literal.number(512)),
+        "SHA512": lambda args: exp.SHA2Digest(
+            this=seq_get(args, 0), length=exp.Literal.number(512)
+        ),
         "SIMILARITY": exp.AISimilarity.from_arg_list,
         "SPLIT": lambda args: exp.Split(
             # https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#split
@@ -501,13 +508,14 @@ class BigQueryParser(parser.Parser):
         if isinstance(column, exp.Column):
             parts = column.parts
             if any("." in p.name for p in parts):
-                catalog, db, table, this, *rest = (
+                catalog, db, table, this_id, *rest = (
                     exp.to_identifier(p, quoted=True)
                     for p in _split_qualified_name(".".join(p.name for p in parts), 4)
                 )
 
+                this: exp.Expr | None = this_id
                 if rest and this:
-                    this = exp.Dot.build([this, *rest])  # type: ignore
+                    this = exp.Dot.build([this, *rest])  # type: ignore[list-item]
 
                 column = exp.Column(this=this, table=table, db=db, catalog=catalog)
                 column.meta["quoted_column"] = True

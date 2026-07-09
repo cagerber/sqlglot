@@ -384,6 +384,7 @@ class TestOptimizer(unittest.TestCase):
             ).sql(dialect="bigquery"),
             "SELECT `teams`.`name` AS `name`, count(*) AS `_col_1` FROM `raw`.`TeamMemberships` AS `teammemberships` JOIN `raw`.`Teams` AS `teams` ON `teams`.`id` = `teammemberships`.`teamid` GROUP BY `teams`.`name`",
         )
+
         self.assertEqual(
             optimizer.qualify.qualify(
                 parse_one(
@@ -393,6 +394,54 @@ class TestOptimizer(unittest.TestCase):
                 dialect="bigquery",
             ).sql(dialect="bigquery"),
             "SELECT `my_table`.`my_column` AS `my_column` FROM `my_db.my_table` AS `my_table`",
+        )
+
+        self.assertEqual(
+            optimizer.qualify.qualify(
+                parse_one(
+                    "SELECT pos, val FROM t CROSS JOIN LATERAL (SELECT pos - 1 AS pos, val FROM UNNEST(t.arr) WITH ORDINALITY AS _t0(val, pos))",
+                    read="duckdb",
+                ),
+                schema={"t": {"arr": "ARRAY<VARCHAR>"}},
+                dialect="duckdb",
+            ).sql(dialect="duckdb"),
+            'SELECT "_0"."pos" AS "pos", "_0"."val" AS "val" FROM "t" AS "t" CROSS JOIN LATERAL (SELECT "_t0"."pos" - 1 AS "pos", "_t0"."val" AS "val" FROM UNNEST("t"."arr") WITH ORDINALITY AS "_t0"("val", pos)) AS "_0"',
+        )
+
+        self.assertEqual(
+            optimizer.qualify.qualify(
+                parse_one(
+                    "SELECT * FROM t CROSS JOIN LATERAL (SELECT 1 AS x, 2 AS y) AS foo",
+                    read="duckdb",
+                ),
+                schema={"t": {"k": "INT"}},
+                dialect="duckdb",
+            ).sql(dialect="duckdb"),
+            'SELECT "t"."k" AS "k", "foo"."x" AS "x", "foo"."y" AS "y" FROM "t" AS "t" CROSS JOIN LATERAL (SELECT 1 AS "x", 2 AS "y") AS "foo"',
+        )
+
+        self.assertEqual(
+            optimizer.qualify.qualify(
+                parse_one(
+                    "SELECT c, d FROM t CROSS JOIN LATERAL (SELECT 1 AS a, 2 AS b) AS x(c, d)",
+                    read="duckdb",
+                ),
+                schema={"t": {"k": "INT"}},
+                dialect="duckdb",
+            ).sql(dialect="duckdb"),
+            'SELECT "x"."c" AS "c", "x"."d" AS "d" FROM "t" AS "t" CROSS JOIN LATERAL (SELECT 1 AS "a", 2 AS "b") AS "x"("c", "d")',
+        )
+
+        self.assertEqual(
+            optimizer.qualify.qualify(
+                parse_one(
+                    "SELECT * FROM t CROSS JOIN LATERAL (SELECT 1 AS a, 2 AS b) AS x(c)",
+                    read="duckdb",
+                ),
+                schema={"t": {"k": "INT"}},
+                dialect="duckdb",
+            ).sql(dialect="duckdb"),
+            'SELECT "t"."k" AS "k", "x"."c" AS "c", "x"."b" AS "b" FROM "t" AS "t" CROSS JOIN LATERAL (SELECT 1 AS "a", 2 AS "b") AS "x"("c")',
         )
 
         self.assertEqual(
@@ -690,6 +739,53 @@ class TestOptimizer(unittest.TestCase):
             "`produce`.`first_half` AS `first_half`, `produce`.`second_half` AS `second_half` "
             "FROM `produce` AS `produce` UNPIVOT((`first_half`, `second_half`) FOR `semesters` "
             "IN ((`produce`.`q1`, `produce`.`q2`) AS 'h1', (`produce`.`q3`, `produce`.`q4`) AS 'h2')) AS `produce`",
+        )
+
+    def test_unnest_type_trace_is_memoized(self):
+        """Tracing an UNNEST's element type must not re-walk shared parts of the scope graph.
+
+        qualify resolves an unnested column's type by walking it back to a base table
+        (Resolver._get_column_type_from_scope). Each order_attrs_k joins order_attrs_{k-1}
+        back to the shared `orders` CTE, which does not hold `attrs`, so the walk cannot
+        short-circuit and revisits it through every path. Without memoization the trace is
+        called ~93k times at 12 levels; with it, ~90.
+        """
+        from sqlglot.optimizer import resolver as resolver_module
+
+        n_levels = 12
+        ctes = [
+            "order_attrs0 AS (SELECT id, [STRUCT('color' AS key, 'red' AS value)] AS attrs FROM orders)"
+        ]
+        for k in range(1, n_levels):
+            prev = f"order_attrs{k - 1}"
+            ctes.append(
+                f"order_attrs{k} AS (SELECT a.id AS id, "
+                f"array_concat(a.attrs, [STRUCT('size' AS key, 'large' AS value)]) AS attrs "
+                f"FROM {prev} AS a JOIN orders AS o ON a.id = o.id)"
+            )
+        ctes.append(
+            f"non_null_attrs AS (SELECT ARRAY(SELECT x FROM UNNEST(attrs) AS x "
+            f"WHERE NOT x.value IS NULL) AS attrs FROM order_attrs{n_levels - 1})"
+        )
+        sql = "WITH " + ", ".join(ctes) + " SELECT * FROM non_null_attrs"
+
+        original = resolver_module.Resolver._get_column_type_from_scope
+        with patch.object(
+            resolver_module.Resolver,
+            "_get_column_type_from_scope",
+            autospec=True,
+            side_effect=original,
+        ) as traced:
+            optimizer.qualify.qualify(
+                parse_one(sql, dialect="bigquery"),
+                schema={"orders": {"id": "INT64"}},
+                dialect="bigquery",
+            )
+
+        self.assertLess(
+            traced.call_count,
+            1000,
+            f"got {traced.call_count} trace calls -- memoization may be broken",
         )
 
     def test_validate_columns(self):
@@ -1249,9 +1345,8 @@ SELECT :with_,WITH :expressions,CTE :this,UNION :this,SELECT :expressions,1,:exp
         self.assertEqual(canon_pg_a, canon_pg_qa)
 
         # In Snowflake (upper-folding), unquoted `a` becomes `A`, while quoted `"a"` stays
-        # lowercase — they reference *different* columns. Base-table names are preserved,
-        # and the quote state on the lowercase column is retained because dropping it
-        # would let Snowflake re-case-fold `a` back to `A` (changing semantics).
+        # lowercase — they reference *different* columns. The generated alias for the quoted
+        # column keeps its exact spelling, since folding it would re-case-fold `a` back to `A`.
         sf_schema = {"X": {"A": "INT", '"a"': "INT"}}
         canon_sf = qualify_then_canonicalize(
             parse_one('SELECT a, "a" FROM x', dialect="snowflake"),
@@ -2652,7 +2747,7 @@ SELECT :with_,WITH :expressions,CTE :this,UNION :this,SELECT :expressions,1,:exp
 
         # Databricks
         sql = _parse_and_optimize("SELECT col:A.a, col:a.A FROM t", dialect="databricks")
-        assert sql == "SELECT `t`.`col`:A.a AS `a`, `t`.`col`:a.A AS `A` FROM `t` AS `t`"
+        assert sql == "SELECT `t`.`col`:A.a AS `a`, `t`.`col`:a.A AS `a` FROM `t` AS `t`"
 
         # Clickhouse
         sql = _parse_and_optimize("SELECT col.A.a, col.a.A FROM t", dialect="clickhouse")
@@ -2666,7 +2761,7 @@ SELECT :with_,WITH :expressions,CTE :this,UNION :this,SELECT :expressions,1,:exp
         sql = _parse_and_optimize("SELECT col:A.a, col:a.A FROM t", dialect="snowflake")
         assert (
             sql
-            == '''SELECT GET_PATH("T"."COL", 'A.a') AS "a", GET_PATH("T"."COL", 'a.A') AS "A" FROM "T" AS "T"'''
+            == '''SELECT GET_PATH("T"."COL", 'A.a') AS "A", GET_PATH("T"."COL", 'a.A') AS "A" FROM "T" AS "T"'''
         )
 
         query = parse_one(

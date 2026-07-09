@@ -334,6 +334,22 @@ class TestExasol(Validator):
                 "databricks": "LISTAGG(DISTINCT x, ',') WITHIN GROUP (ORDER BY y DESC)",
             },
         )
+        self.validate_identity("SELECT LISTAGG(x, ',') WITHIN GROUP (ORDER BY y) FROM t")
+        self.validate_all(
+            "SELECT LISTAGG(x, ',') WITHIN GROUP (ORDER BY y) FROM t",
+            read={
+                "exasol": "SELECT LISTAGG(x, ',') WITHIN GROUP (ORDER BY y) FROM t",
+                "oracle": "SELECT LISTAGG(x, ',') WITHIN GROUP (ORDER BY y) FROM t",
+                "snowflake": "SELECT LISTAGG(x, ',') WITHIN GROUP (ORDER BY y) FROM t",
+            },
+        )
+        self.validate_identity("LISTAGG(x, ',' ON OVERFLOW ERROR) WITHIN GROUP (ORDER BY y)")
+        self.validate_identity(
+            "LISTAGG(x, ',' ON OVERFLOW TRUNCATE '...' WITH COUNT) WITHIN GROUP (ORDER BY y)"
+        )
+        self.validate_identity(
+            "LISTAGG(x, ',' ON OVERFLOW TRUNCATE '...' WITHOUT COUNT) WITHIN GROUP (ORDER BY y)"
+        )
         self.validate_all(
             "EDIT_DISTANCE(col1, col2)",
             read={
@@ -738,8 +754,6 @@ class TestExasol(Validator):
             "HASH_SHA256(x)",
             read={
                 "clickhouse": "SHA256(x)",
-                "presto": "SHA256(x)",
-                "trino": "SHA256(x)",
                 "postgres": "SHA256(x)",
                 "duckdb": "SHA256(x)",
             },
@@ -749,9 +763,9 @@ class TestExasol(Validator):
                 "spark2": "SHA2(x, 256)",
                 "clickhouse": "SHA256(x)",
                 "postgres": "SHA256(x)",
-                "presto": "SHA256(x)",
+                "presto": "LOWER(TO_HEX(SHA256(x)))",
                 "redshift": "SHA2(x, 256)",
-                "trino": "SHA256(x)",
+                "trino": "LOWER(TO_HEX(SHA256(x)))",
                 "duckdb": "SHA256(x)",
                 "snowflake": "SHA2(x, 256)",
             },
@@ -760,16 +774,14 @@ class TestExasol(Validator):
             "HASH_SHA512(x)",
             read={
                 "clickhouse": "SHA512(x)",
-                "presto": "SHA512(x)",
-                "trino": "SHA512(x)",
             },
             write={
                 "exasol": "HASH_SHA512(x)",
                 "clickhouse": "SHA512(x)",
                 "bigquery": "SHA512(x)",
                 "spark2": "SHA2(x, 512)",
-                "presto": "SHA512(x)",
-                "trino": "SHA512(x)",
+                "presto": "LOWER(TO_HEX(SHA512(x)))",
+                "trino": "LOWER(TO_HEX(SHA512(x)))",
             },
         )
         self.validate_all(
@@ -897,6 +909,10 @@ class TestExasol(Validator):
         )
         self.validate_identity(
             """SELECT JSON_EXTRACT('{"firstname" : "Ann", "surname" : "Smith", "age" : 29}', '$.firstname', '$.surname', '$.age') EMITS (firstname VARCHAR(100), surname VARCHAR(100), age INT)"""
+        )
+        self.validate_identity(
+            "SELECT JSON_EXTRACT(x, '$.a') s FROM t",
+            "SELECT JSON_EXTRACT(x, '$.a') AS s FROM t",
         )
 
     def test_group_by_all(self):

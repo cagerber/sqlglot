@@ -3,24 +3,25 @@ from __future__ import annotations
 import typing as t
 
 from sqlglot import exp, parser
-from sqlglot.trie import new_trie
 from sqlglot.dialects.dialect import (
     Dialect,
+    binary_from_function,
     build_default_decimal_type,
     build_formatted_time,
     build_like,
     build_replace_with_optional_replacement,
     build_timetostr_or_tochar,
     build_trunc,
-    binary_from_function,
     date_trunc_to_time,
     map_date_part,
 )
 from sqlglot.helper import is_date_unit, is_int, seq_get
 from sqlglot.tokens import TokenType
+from sqlglot.trie import new_trie
 
 if t.TYPE_CHECKING:
     from collections.abc import Collection
+
     from sqlglot._typing import B, E
     from sqlglot.dialects.dialect import Dialect
 
@@ -497,6 +498,7 @@ class SnowflakeParser(parser.Parser):
             expression=seq_get(args, 1),
             null_on_zero_variance=True,
         ),
+        "COUNT_IF": lambda args: exp.CountIf(this=seq_get(args, 0), zero_on_all_null=True),
         "DATE": _build_datetime("DATE", exp.DType.DATE),
         "DATEFROMPARTS": _build_date_from_parts,
         "DATE_FROM_PARTS": _build_date_from_parts,
@@ -976,6 +978,18 @@ class SnowflakeParser(parser.Parser):
     def _parse_tag(self) -> exp.Tags:
         return self.expression(exp.Tags(expressions=self._parse_wrapped_csv(self._parse_property)))
 
+    def _parse_property_before(self) -> exp.Expr | list[exp.Expr] | None:
+        prop = super()._parse_property_before()
+        if prop:
+            return prop
+
+        if not self._next or self._next.token_type != TokenType.EQ:
+            return None
+
+        return self._parse_sequence_properties() or self._parse_key_value_property(
+            self._parse_primary_or_var
+        )
+
     def _parse_with_constraint(self) -> exp.Expr | None:
         if self._prev.token_type != TokenType.WITH:
             self._retreat(self._index - 1)
@@ -1142,6 +1156,31 @@ class SnowflakeParser(parser.Parser):
             table = table_from_rows
 
         return table
+
+    def _parse_function_call(
+        self,
+        functions: dict[str, t.Callable] | None = None,
+        anonymous: bool = False,
+        optional_parens: bool = True,
+        any_token: bool = False,
+    ) -> exp.Expr | None:
+        this = super()._parse_function_call(
+            functions=functions,
+            anonymous=anonymous,
+            optional_parens=optional_parens,
+            any_token=any_token,
+        )
+
+        # Snowflake can invoke a function whose name is dynamically resolved, e.g.
+        # `IDENTIFIER('my_func')(1, 2)`. The trailing argument list is the call's arguments.
+        #
+        # https://docs.snowflake.com/en/sql-reference/identifier-literal
+        if isinstance(this, exp.DynamicIdentifier) and self._match(
+            TokenType.L_PAREN, advance=False
+        ):
+            this.set("expressions", self._parse_wrapped_csv(self._parse_lambda))
+
+        return this
 
     def _parse_id_var(
         self,
@@ -1354,10 +1393,10 @@ class SnowflakeParser(parser.Parser):
 
     def _parse_window(self, this: exp.Expr | None, alias: bool = False) -> exp.Expr | None:
         if isinstance(this, exp.NthValue):
-            if self._match_text_seq("FROM"):
-                if self._match_texts(("FIRST", "LAST")):
-                    from_first = self._prev.text.upper() == "FIRST"
-                    this.set("from_first", from_first)
+            if self._match_text_seq("FROM", "FIRST"):
+                this.set("from_first", True)
+            elif self._match_text_seq("FROM", "LAST"):
+                this.set("from_first", False)
 
         result = super()._parse_window(this, alias)
 

@@ -769,6 +769,15 @@ class TestSnowflake(Validator):
         self.validate_identity("SELECT KURTOSIS(x) OVER (PARTITION BY 1)")
         self.validate_identity("WITH x AS (SELECT 1 AS foo) SELECT foo FROM IDENTIFIER('x')")
         self.validate_identity("WITH x AS (SELECT 1 AS foo) SELECT IDENTIFIER('foo') FROM x")
+        self.validate_identity("SELECT IDENTIFIER($my_function_name)()")
+        self.validate_identity("SELECT IDENTIFIER('speed_of_light')()")
+        self.validate_all(
+            "SELECT IDENTIFIER('my_func')(1, 2)",
+            write={
+                "snowflake": "SELECT IDENTIFIER('my_func')(1, 2)",
+                "duckdb": UnsupportedError,
+            },
+        )
         self.validate_identity("INITCAP('iqamqinterestedqinqthisqtopic', 'q')")
         self.validate_identity("OBJECT_CONSTRUCT(*)")
         self.validate_identity("SELECT CAST('2021-01-01' AS DATE) + INTERVAL '1 DAY'")
@@ -1516,6 +1525,9 @@ class TestSnowflake(Validator):
             },
         )
 
+        # FROM here is the query's FROM clause, not the FROM FIRST | LAST modifier
+        self.validate_identity("SELECT NTH_VALUE(a, 2) FROM t")
+
         # NTH_VALUE FROM FIRST not supported in DuckDB
         self.validate_all(
             "SELECT NTH_VALUE(is_deleted, 2) FROM FIRST IGNORE NULLS OVER (PARTITION BY id) AS nth_is_deleted FROM my_table",
@@ -1644,6 +1656,17 @@ class TestSnowflake(Validator):
             write={
                 "duckdb": "SELECT COUNT_IF(CAST(c1 AS BOOLEAN)) = 1 FROM test",
                 "snowflake": "SELECT BOOLXOR_AGG(c1) FROM test",
+            },
+        )
+        self.validate_all(
+            # Snowflake's COUNT_IF returns 0 when the condition is NULL on all rows of a
+            # non-empty input, whereas DuckDB >= 1.2's returns NULL; IS TRUE preserves the former
+            "SELECT COUNT_IF(x > 1) FROM t",
+            write={
+                "snowflake": "SELECT COUNT_IF(x > 1) FROM t",
+                "duckdb": "SELECT COUNT_IF((x > 1) IS TRUE) FROM t",
+                "duckdb, version=1.2": "SELECT COUNT_IF((x > 1) IS TRUE) FROM t",
+                "duckdb, version=1.1": "SELECT SUM(CASE WHEN x > 1 THEN 1 ELSE 0 END) FROM t",
             },
         )
         for suffix in (
@@ -4264,6 +4287,11 @@ class TestSnowflake(Validator):
         self.validate_identity("CREATE SECURE VIEW table1 AS (SELECT a FROM table2)")
         self.validate_identity("CREATE OR REPLACE VIEW foo (uid) COPY GRANTS AS (SELECT 1)")
         self.validate_identity("CREATE TABLE geospatial_table (id INT, g GEOGRAPHY)")
+        self.validate_identity("CREATE TABLE t (id INT) CHANGE_TRACKING=TRUE")
+        self.validate_identity(
+            "CREATE TABLE t CHANGE_TRACKING=TRUE DATA_RETENTION_TIME_IN_DAYS=1 (id INT)",
+            "CREATE TABLE t (id INT) CHANGE_TRACKING=TRUE DATA_RETENTION_TIME_IN_DAYS=1",
+        )
         self.validate_identity("CREATE MATERIALIZED VIEW a COMMENT='...' AS SELECT 1 FROM x")
         self.validate_identity("CREATE DATABASE mytestdb_clone CLONE mytestdb")
         self.validate_identity("CREATE SCHEMA mytestschema_clone CLONE testschema")
@@ -4300,6 +4328,10 @@ class TestSnowflake(Validator):
             "CREATE DYNAMIC TABLE product (pre_tax_profit, taxes, after_tax_profit) TARGET_LAG='20 minutes' WAREHOUSE=mywh AS SELECT revenue - cost, (revenue - cost) * tax_rate, (revenue - cost) * (1.0 - tax_rate) FROM staging_table"
         )
         self.validate_identity(
+            "CREATE DYNAMIC TABLE dt TARGET_LAG='1 minute' WAREHOUSE=my_wh (id) AS SELECT * FROM bla",
+            "CREATE DYNAMIC TABLE dt (id) TARGET_LAG='1 minute' WAREHOUSE=my_wh AS SELECT * FROM bla",
+        )
+        self.validate_identity(
             "ALTER TABLE db_name.schmaName.tblName ADD COLUMN_1 VARCHAR NOT NULL TAG (key1='value_1')"
         )
         self.validate_identity(
@@ -4322,7 +4354,7 @@ class TestSnowflake(Validator):
         )
         self.validate_identity(
             """CREATE OR REPLACE FUNCTION ibis_udfs.public.object_values("obj" OBJECT) RETURNS ARRAY LANGUAGE JAVASCRIPT RETURNS NULL ON NULL INPUT AS ' return Object.values(obj) '"""
-        )
+        ).assert_is(exp.Create)
         self.validate_identity(
             """CREATE OR REPLACE FUNCTION ibis_udfs.public.object_values("obj" OBJECT) RETURNS ARRAY LANGUAGE JAVASCRIPT STRICT AS ' return Object.values(obj) '"""
         )
@@ -4427,7 +4459,9 @@ class TestSnowflake(Validator):
                 "snowflake": "CREATE FUNCTION a() RETURNS INT IMMUTABLE AS 'SELECT 1'",
             },
         )
-
+        self.validate_identity(
+            "CREATE FUNCTION a(x DOUBLE) RETURNS DOUBLE LANGUAGE SQL CALLED ON NULL INPUT AS ' x * 2 '"
+        ).assert_is(exp.Create)
         self.validate_identity(
             "CREATE OR REPLACE FUNCTION repro_fn() RETURNS INT LANGUAGE PYTHON HANDLER = 'fn' RUNTIME_VERSION='3.11' PACKAGES=() AS '\\ndef fn():\\n    return 1\\n'"
         )
@@ -5956,6 +5990,13 @@ SINGLE = TRUE""",
         self.validate_identity("CREATE OR REPLACE VIEW FOO (A, B) AS SELECT A, B FROM TBL")
         self.validate_identity(
             "CREATE OR REPLACE MATERIALIZED VIEW FOO (A, B) AS SELECT A, B FROM TBL"
+        )
+
+    def test_create_view_change_tracking(self):
+        self.validate_identity("CREATE VIEW v (c) CHANGE_TRACKING=TRUE AS SELECT 1 AS c")
+        self.validate_identity(
+            "CREATE VIEW my_view CHANGE_TRACKING=TRUE (id) AS SELECT * FROM my_table",
+            "CREATE VIEW my_view (id) CHANGE_TRACKING=TRUE AS SELECT * FROM my_table",
         )
 
     def test_create_view_row_access_policy(self):

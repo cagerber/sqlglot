@@ -16,7 +16,6 @@ from sqlglot.dialects.dialect import (
     regexp_extract_sql,
     rename_func,
     right_to_substring_sql,
-    sha256_sql,
     strposition_sql,
     struct_extract_sql,
     timestamptrunc_sql,
@@ -25,7 +24,6 @@ from sqlglot.dialects.dialect import (
     unit_to_str,
     sequence_sql,
     explode_to_unnest_sql,
-    sha2_digest_sql,
 )
 from sqlglot.dialects.hive import Hive
 from sqlglot.generator import unsupported_args
@@ -33,6 +31,19 @@ from sqlglot.optimizer.scope import find_all_in_scope
 from sqlglot.transforms import unqualify_columns
 
 DATE_ADD_OR_SUB = t.Union[exp.DateAdd, exp.TimestampAdd, exp.DateSub]
+
+
+def _sha2_digest_sql(self: PrestoGenerator, expression: exp.SHA2Digest) -> str:
+    length = expression.text("length") or "256"
+    if length not in ("256", "512"):
+        self.unsupported(f"SHA{length} is not supported in Presto")
+
+    this = expression.this
+    if this.is_type(*exp.DataType.TEXT_TYPES):
+        # the native digest takes VARBINARY, so a text-typed argument needs encoding
+        this = exp.Encode(this=this, charset=exp.Literal.string("utf-8"))
+
+    return self.func(f"SHA{length}", this)
 
 
 def _initcap_sql(self: PrestoGenerator, expression: exp.Initcap) -> str:
@@ -385,8 +396,7 @@ class PrestoGenerator(generator.Generator):
         exp.MD5Digest: rename_func("MD5"),
         exp.SHA: rename_func("SHA1"),
         exp.SHA1Digest: rename_func("SHA1"),
-        exp.SHA2: sha256_sql,
-        exp.SHA2Digest: sha2_digest_sql,
+        exp.SHA2Digest: _sha2_digest_sql,
         exp.Substring: rename_func("SUBSTR"),
     }
 
@@ -502,6 +512,18 @@ class PrestoGenerator(generator.Generator):
             this = exp.Encode(this=this, charset=exp.Literal.string("utf-8"))
 
         return self.func("LOWER", self.func("TO_HEX", self.func("MD5", self.sql(this))))
+
+    def sha2_sql(self, expression: exp.SHA2) -> str:
+        length = expression.text("length") or "256"
+        if length not in ("256", "512"):
+            self.unsupported(f"SHA{length} is not supported in Presto")
+
+        this = expression.this
+
+        if this.is_type(*exp.DataType.TEXT_TYPES):
+            this = exp.Encode(this=this, charset=exp.Literal.string("utf-8"))
+
+        return self.func("LOWER", self.func("TO_HEX", self.func(f"SHA{length}", self.sql(this))))
 
     def strtounix_sql(self, expression: exp.StrToUnix) -> str:
         # Since `TO_UNIXTIME` requires a `TIMESTAMP`, we need to parse the argument into one.
