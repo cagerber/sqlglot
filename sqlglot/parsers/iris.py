@@ -16,6 +16,7 @@ from sqlglot.tokens import TokenType
 
 
 class IrisParser(TSQLParser):
+    _iris_pending_select_hints: list[exp.Expr] | None = None
     """IRIS SQL parser on T-SQL base with first-class IRIS surface forms."""
 
     FUNC_TOKENS = {
@@ -262,17 +263,17 @@ class IrisParser(TSQLParser):
     def _parse_iris_where_optimization_hint(self) -> exp.IrisOptimizationHint | None:
         return self._parse_iris_optimization_hint_name(IRIS_WHERE_OPTIMIZATION_HINTS)
 
-    def _parse_projections(self) -> t.Tuple[list[exp.Expr], bool]:
+    def _parse_projections(self) -> t.Tuple[list[exp.Expr], list[exp.Expr] | None]:
         leading: list[exp.Expr] = []
         while True:
             hint = self._parse_iris_select_optimization_hint()
             if hint is None:
                 break
             leading.append(hint)
-        projections, exclude = super()._parse_projections()
+        projections, trailing = super()._parse_projections()
         if leading:
             self._iris_pending_select_hints = leading
-        return projections, exclude
+        return projections, trailing
 
     def _parse_select_query(
         self,
@@ -523,7 +524,7 @@ class IrisParser(TSQLParser):
                 )
                 self._ensure_parse_progress(index, "iris comparison follows")
                 continue
-            iris_pred = self._try_parse_iris_percent_predicate(this)
+            iris_pred = self._try_parse_iris_percent_predicate(this) if this is not None else None
             if iris_pred is not None:
                 this = iris_pred
                 self._ensure_parse_progress(index, "iris comparison percent predicate")
@@ -583,10 +584,10 @@ class IrisParser(TSQLParser):
             )
         )
 
-    def _parse_type_size(self) -> exp.DataTypeParam | exp.EQ | None:
+    def _parse_type_size(self) -> exp.DataTypeParam | None:
         named = self._parse_iris_named_type_param()
         if named is not None:
-            return named
+            return t.cast(exp.DataTypeParam, named)  # EQ node flows to the fork's type-size callers
         index = self._index
         if self._match(TokenType.STRING):
             if self._prev.text == "":

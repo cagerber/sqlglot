@@ -15,17 +15,15 @@ class IrisGenerator(TSQLGenerator):
     }
 
     TRANSFORMS = {
-        k: v
-        for k, v in TSQLGenerator.TRANSFORMS.items()
-        if k not in (exp.CurrentTimestamp, exp.DateAdd)
+        **{
+            k: v
+            for k, v in TSQLGenerator.TRANSFORMS.items()
+            if k not in (exp.CurrentTimestamp, exp.DateAdd)
+        },
+        exp.Date: lambda self, e: self._odbc_date_literal_sql(e),
+        exp.Time: lambda self, e: self._odbc_time_literal_sql(e),
+        exp.Timestamp: lambda self, e: self._odbc_timestamp_literal_sql(e),
     }
-    TRANSFORMS.update(
-        {
-            exp.Date: lambda self, e: self._odbc_date_literal_sql(e),
-            exp.Time: lambda self, e: self._odbc_time_literal_sql(e),
-            exp.Timestamp: lambda self, e: self._odbc_timestamp_literal_sql(e),
-        }
-    )
 
     def _odbc_string_literal_sql(self, expression: exp.Expr, prefix: str) -> str:
         inner = expression.this
