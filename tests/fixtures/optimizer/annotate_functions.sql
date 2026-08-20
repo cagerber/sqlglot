@@ -118,6 +118,12 @@ INT;
 UNICODE('bcd');
 INT;
 
+CEIL(tbl.double_col);
+INT;
+
+FLOOR(tbl.double_col);
+INT;
+
 LAST_DAY(tbl.timestamp_col);
 DATE;
 
@@ -714,6 +720,10 @@ BIGINT;
 
 # dialect: spark, databricks
 ARRAY_SIZE(tbl.array_col);
+INT;
+
+# dialect: hive, spark2, spark, databricks
+SIZE(tbl.array_col);
 INT;
 
 # dialect: hive, spark2, spark, databricks
@@ -4319,6 +4329,14 @@ BIGINT;
 REGR_COUNT(tbl.double_col, tbl.double_col) OVER (PARTITION BY 1);
 BIGINT;
 
+# dialect: spark, databricks
+GROUPING(tbl.str_col);
+TINYINT;
+
+# dialect: hive, spark2
+GROUPING(tbl.str_col);
+BIGINT;
+
 # dialect: snowflake
 REGR_INTERCEPT(tbl.double_col, tbl.double_col);
 DOUBLE;
@@ -4439,6 +4457,66 @@ DOUBLE;
 REGR_SYY(tbl.decfloat_col, tbl.decfloat_col);
 DECFLOAT;
 
+# dialect: databricks
+REGR_SXX(tbl.double_col, tbl.double_col);
+DOUBLE;
+
+# dialect: databricks
+REGR_SXX(tbl.int_col, tbl.int_col);
+DOUBLE;
+
+# dialect: databricks
+REGR_SXX(ALL tbl.double_col, tbl.double_col);
+DOUBLE;
+
+# dialect: databricks
+REGR_SXX(DISTINCT tbl.double_col, tbl.double_col);
+DOUBLE;
+
+# dialect: databricks
+REGR_SXX(tbl.double_col, tbl.double_col) OVER (PARTITION BY 1);
+DOUBLE;
+
+# dialect: databricks
+REGR_SXY(tbl.double_col, tbl.double_col);
+DOUBLE;
+
+# dialect: databricks
+REGR_SXY(tbl.int_col, tbl.int_col);
+DOUBLE;
+
+# dialect: databricks
+REGR_SXY(ALL tbl.double_col, tbl.double_col);
+DOUBLE;
+
+# dialect: databricks
+REGR_SXY(DISTINCT tbl.double_col, tbl.double_col);
+DOUBLE;
+
+# dialect: databricks
+REGR_SXY(tbl.double_col, tbl.double_col) OVER (PARTITION BY 1);
+DOUBLE;
+
+# dialect: databricks
+REGR_SYY(tbl.double_col, tbl.double_col);
+DOUBLE;
+
+# dialect: databricks
+REGR_SYY(tbl.int_col, tbl.int_col);
+DOUBLE;
+
+# dialect: databricks
+REGR_SYY(ALL tbl.double_col, tbl.double_col);
+DOUBLE;
+
+# dialect: databricks
+REGR_SYY(DISTINCT tbl.double_col, tbl.double_col);
+DOUBLE;
+
+# dialect: databricks
+REGR_SYY(tbl.double_col, tbl.double_col) OVER (PARTITION BY 1);
+DOUBLE;
+
 # dialect: snowflake
 REGR_SLOPE(tbl.double_col, tbl.double_col);
 DOUBLE;
@@ -4474,6 +4552,62 @@ DOUBLE;
 # dialect: databricks
 REGR_SLOPE(tbl.double_col, tbl.double_col) OVER (PARTITION BY 1);
 DOUBLE;
+
+# dialect: databricks
+RINT(tbl.double_col);
+DOUBLE;
+
+# dialect: databricks
+RINT(tbl.float_col);
+DOUBLE;
+
+# dialect: databricks
+RINT(tbl.int_col);
+DOUBLE;
+
+# dialect: databricks
+RINT(tbl.bigint_col);
+DOUBLE;
+
+# dialect: databricks
+RPAD(tbl.str_col, 5);
+STRING;
+
+# dialect: databricks
+TO_CHAR(tbl.str_col, fmt);
+STRING;
+
+# dialect: spark
+TO_CHAR(tbl.str_col, fmt);
+STRING;
+
+# dialect: databricks
+RPAD(tbl.bin_col, 5);
+BINARY;
+
+# dialect: spark, databricks
+BITMAP_CONSTRUCT_AGG(tbl.int_col);
+BINARY;
+
+# dialect: databricks
+RTRIM(tbl.str_col);
+STRING;
+
+# dialect: databricks
+RTRIM('x', tbl.str_col);
+STRING;
+
+# dialect: databricks
+SEARCH(tbl.str_col, 'foo');
+BOOLEAN;
+
+# dialect: databricks
+SEARCH((tbl.str_col, tbl.str_col), 'foo');
+BOOLEAN;
+
+# dialect: databricks
+SEARCH(tbl.str_col, 'foo', mode => 'word');
+BOOLEAN;
 
 # dialect: snowflake
 REGR_VALX(NULL, 2.0);
@@ -6399,6 +6533,522 @@ VARCHAR;
 LEFT(tbl.bin_col, tbl.int_col);
 BINARY;
 
+# dialect: mysql
+LOCALTIMESTAMP;
+DATETIME;
+
+# dialect: mysql
+LOCALTIMESTAMP();
+DATETIME;
+
+# dialect: mysql
+LOCALTIMESTAMP(3);
+DATETIME;
+
+# dialect: mysql
+REVERSE(tbl.str_col);
+VARCHAR;
+
+# dialect: mysql
+REVERSE(tbl.bin_col);
+BINARY;
+
+# dialect: mysql
+REVERSE(tbl.int_col);
+VARCHAR;
+
+# dialect: mysql
+FORMAT(tbl.double_col, tbl.int_col);
+VARCHAR;
+
+# dialect: mysql
+FORMAT(tbl.double_col, tbl.int_col, tbl.str_col);
+VARCHAR;
+
+# dialect: mysql
+MAKETIME(tbl.int_col, tbl.int_col, tbl.int_col);
+TIME;
+
+# dialect: mysql
+MAKETIME('12', '15', '30');
+TIME;
+
+# dialect: mysql
+MINUTE(tbl.timestamp_col);
+INT;
+
+# dialect: mysql
+MINUTE(tbl.str_col);
+INT;
+
+# dialect: mysql
+MINUTE(tbl.int_col);
+INT;
+
+# dialect: mysql
+RIGHT(tbl.str_col, tbl.int_col);
+VARCHAR;
+
+# dialect: mysql
+RIGHT(tbl.bin_col, tbl.int_col);
+BINARY;
+
+# dialect: mysql
+TRUNCATE(tbl.bigint_col, tbl.int_col);
+BIGINT;
+
+# dialect: mysql
+TRUNCATE(tbl.double_col, tbl.int_col);
+DOUBLE;
+
+# dialect: mysql
+TRUNCATE(tbl.str_col, tbl.int_col);
+DOUBLE;
+
+# dialect: mysql
+CONVERT_TZ('2024-01-01 12:00:00', '+00:00', '+05:30');
+DATETIME;
+
+# dialect: mysql
+UTC_DATE();
+DATE;
+
+# dialect: mysql
+UTC_TIME();
+TIME;
+
+# dialect: mysql
+UTC_TIME(6);
+TIME;
+
+# dialect: mysql
+UTC_TIMESTAMP();
+DATETIME;
+
+# dialect: mysql
+UTC_TIMESTAMP(6);
+DATETIME;
+
+# dialect: mysql
+SUBSTRING_INDEX(tbl.str_col, '.', tbl.int_col);
+VARCHAR;
+
+# dialect: mysql
+UNHEX(tbl.str_col);
+VARBINARY;
+
+# dialect: mysql
+UNHEX(tbl.bin_col);
+VARBINARY;
+
+# dialect: mysql
+UNHEX(tbl.int_col);
+VARBINARY;
+
+# dialect: mysql
+UNHEX(tbl.bigint_col);
+VARBINARY;
+
+# dialect: mysql
+REGEXP_SUBSTR(tbl.str_col, tbl.str_col);
+VARCHAR;
+
+# dialect: mysql
+REGEXP_SUBSTR(tbl.str_col, tbl.str_col, tbl.int_col);
+VARCHAR;
+
+# dialect: mysql
+REGEXP_SUBSTR(tbl.str_col, tbl.str_col, tbl.int_col, tbl.int_col);
+VARCHAR;
+
+# dialect: mysql
+REGEXP_SUBSTR(tbl.str_col, tbl.str_col, tbl.int_col, tbl.int_col, tbl.str_col);
+VARCHAR;
+
+# dialect: mysql
+REGEXP_REPLACE(tbl.str_col, tbl.str_col, tbl.str_col);
+LONGTEXT;
+
+# dialect: mysql
+REGEXP_REPLACE(tbl.str_col, tbl.str_col, tbl.str_col, tbl.int_col);
+LONGTEXT;
+
+# dialect: mysql
+REGEXP_REPLACE(tbl.str_col, tbl.str_col, tbl.str_col, tbl.int_col, tbl.int_col);
+LONGTEXT;
+
+# dialect: mysql
+REGEXP_REPLACE(tbl.str_col, tbl.str_col, tbl.str_col, tbl.int_col, tbl.int_col, tbl.str_col);
+LONGTEXT;
+
+# dialect: mysql
+REGEXP_REPLACE(tbl.str_col, tbl.bin_col, tbl.str_col);
+LONGBLOB;
+
+# dialect: mysql
+REGEXP_REPLACE(tbl.bin_col, tbl.str_col, tbl.bin_col);
+LONGBLOB;
+
+# dialect: mysql
+REGEXP_REPLACE(tbl.bin_col, tbl.bin_col, tbl.str_col);
+LONGBLOB;
+
+# dialect: mysql
+REGEXP_REPLACE(tbl.bin_col, tbl.bin_col, tbl.bin_col);
+LONGBLOB;
+
+# dialect: mysql
+REGEXP_REPLACE(tbl.bin_col, tbl.bin_col, tbl.bin_col, tbl.int_col);
+LONGBLOB;
+
+# dialect: mysql
+REGEXP_REPLACE(tbl.bin_col, tbl.bin_col, tbl.bin_col, tbl.int_col, tbl.int_col);
+LONGBLOB;
+
+# dialect: mysql
+REGEXP_REPLACE(tbl.bin_col, tbl.bin_col, tbl.bin_col, tbl.int_col, tbl.int_col, tbl.str_col);
+LONGBLOB;
+
+# dialect: mysql
+REGEXP_REPLACE(tbl.unknown_col, tbl.str_col, tbl.str_col);
+UNKNOWN;
+
+# dialect: mysql
+REGEXP_INSTR(tbl.str_col, tbl.str_col);
+BIGINT;
+
+# dialect: mysql
+REGEXP_INSTR(tbl.str_col, tbl.str_col, tbl.int_col);
+BIGINT;
+
+# dialect: mysql
+REGEXP_INSTR(tbl.str_col, tbl.str_col, tbl.int_col, tbl.int_col);
+BIGINT;
+
+# dialect: mysql
+REGEXP_INSTR(tbl.str_col, tbl.str_col, tbl.int_col, tbl.int_col, tbl.int_col);
+BIGINT;
+
+# dialect: mysql
+REGEXP_INSTR(tbl.str_col, tbl.str_col, tbl.int_col, tbl.int_col, tbl.int_col, tbl.str_col);
+BIGINT;
+
+# dialect: mysql
+REGEXP_INSTR(tbl.bin_col, tbl.bin_col);
+BIGINT;
+
+# dialect: mysql
+REGEXP_INSTR(tbl.bin_col, tbl.bin_col, tbl.int_col);
+BIGINT;
+
+# dialect: mysql
+REGEXP_INSTR(tbl.bin_col, tbl.bin_col, tbl.int_col, tbl.int_col);
+BIGINT;
+
+# dialect: mysql
+REGEXP_INSTR(tbl.bin_col, tbl.bin_col, tbl.int_col, tbl.int_col, tbl.int_col);
+BIGINT;
+
+# dialect: mysql
+REGEXP_INSTR(tbl.bin_col, tbl.bin_col, tbl.int_col, tbl.int_col, tbl.int_col, tbl.str_col);
+BIGINT;
+
+# dialect: mysql
+MATCH(tbl.str_col) AGAINST ('database');
+DOUBLE;
+
+# dialect: mysql
+MATCH(tbl.str_col) AGAINST ('database' IN BOOLEAN MODE);
+DOUBLE;
+
+# dialect: mysql
+MATCH(tbl.str_col) AGAINST ('database' WITH QUERY EXPANSION);
+DOUBLE;
+
+# dialect: mysql
+COMPRESS(CAST('test' AS TEXT));
+LONGBLOB;
+
+# dialect: mysql
+COMPRESS(CAST('test' AS MEDIUMTEXT));
+LONGBLOB;
+
+# dialect: mysql
+COMPRESS(CAST('test' AS LONGTEXT));
+LONGBLOB;
+
+# dialect: mysql
+COMPRESS(CAST('test' AS BLOB));
+LONGBLOB;
+
+# dialect: mysql
+COMPRESS(CAST('test' AS MEDIUMBLOB));
+LONGBLOB;
+
+# dialect: mysql
+COMPRESS(CAST('test' AS LONGBLOB));
+LONGBLOB;
+
+# dialect: mysql
+COMPRESS(CAST('{}' AS JSON));
+LONGBLOB;
+
+# dialect: mysql
+COMPRESS(CAST('test' AS TINYTEXT));
+BLOB;
+
+# dialect: mysql
+COMPRESS(CAST('test' AS CHAR));
+VARBINARY;
+
+# dialect: mysql
+COMPRESS(CAST('test' AS VARCHAR));
+VARBINARY;
+
+# dialect: mysql
+COMPRESS(CAST('test' AS BINARY));
+VARBINARY;
+
+# dialect: mysql
+COMPRESS(CAST('test' AS VARBINARY));
+VARBINARY;
+
+# dialect: mysql
+COMPRESS(CAST('test' AS TINYBLOB));
+VARBINARY;
+
+# dialect: mysql
+COMPRESS(CAST(1 AS INT));
+VARBINARY;
+
+# dialect: mysql
+COMPRESS(CAST(1 AS BIGINT));
+VARBINARY;
+
+# dialect: mysql
+COMPRESS(CAST(1.5 AS DECIMAL));
+VARBINARY;
+
+# dialect: mysql
+COMPRESS(CAST(1.5 AS DOUBLE));
+VARBINARY;
+
+# dialect: mysql
+COMPRESS(CAST('2024-01-01' AS DATE));
+VARBINARY;
+
+# dialect: mysql
+COMPRESS(CAST('2024-01-01 12:00:00' AS DATETIME));
+VARBINARY;
+
+# dialect: mysql
+COLLATION(tbl.str_col);
+VARCHAR;
+
+# dialect: mysql
+COLLATION(tbl.bin_col);
+VARCHAR;
+
+# dialect: mysql
+COLLATION(tbl.int_col);
+VARCHAR;
+
+# dialect: mysql
+COLLATION(tbl.date_col);
+VARCHAR;
+
+# dialect: mysql
+ST_Distance(tbl.geom_col, tbl.geom_col2);
+DOUBLE;
+
+# dialect: mysql
+ST_Distance(tbl.geom_col, tbl.geom_col2, 'metre');
+DOUBLE;
+
+# dialect: mysql
+BIT_AND(tbl.int_col);
+BIGINT UNSIGNED;
+
+# dialect: mysql
+BIT_AND(tbl.bin_col);
+VARBINARY;
+
+# dialect: mysql
+BIT_AND(tbl.int_col) OVER (ORDER BY tbl.int_col);
+BIGINT UNSIGNED;
+
+# dialect: mysql
+BIT_AND(tbl.bin_col) OVER (ORDER BY tbl.bin_col);
+VARBINARY;
+
+# dialect: mysql
+BIT_XOR(tbl.int_col);
+BIGINT UNSIGNED;
+
+# dialect: mysql
+BIT_XOR(tbl.bin_col);
+VARBINARY;
+
+# dialect: mysql
+BIT_XOR(tbl.int_col) OVER (ORDER BY tbl.int_col);
+BIGINT UNSIGNED;
+
+# dialect: mysql
+BIT_XOR(tbl.bin_col) OVER (ORDER BY tbl.bin_col);
+VARBINARY;
+
+# dialect: mysql
+BIT_OR(tbl.int_col);
+BIGINT UNSIGNED;
+
+# dialect: mysql
+BIT_OR(tbl.bin_col);
+VARBINARY;
+
+# dialect: mysql
+BIT_OR(tbl.int_col) OVER (ORDER BY tbl.int_col);
+BIGINT UNSIGNED;
+
+# dialect: mysql
+BIT_OR(tbl.bin_col) OVER (ORDER BY tbl.bin_col);
+VARBINARY;
+
+# dialect: mysql
+JSON_OBJECTAGG(tbl.int_col, tbl.int_col);
+JSON;
+
+# dialect: mysql
+JSON_OBJECTAGG(tbl.varchar_col, tbl.varchar_col);
+JSON;
+
+# dialect: mysql
+JSON_OBJECTAGG(tbl.int_col, tbl.int_col) OVER (ORDER BY tbl.int_col);
+JSON;
+
+# dialect: mysql
+JSON_OBJECTAGG(tbl.varchar_col, tbl.varchar_col) OVER (ORDER BY tbl.varchar_col);
+JSON;
+
+# dialect: mysql
+JSON_OBJECT(tbl.varchar_col, tbl.int_col);
+JSON;
+
+# dialect: mysql
+JSON_OBJECT(tbl.varchar_col, tbl.varchar_col);
+JSON;
+
+# dialect: mysql
+JSON_OBJECT(tbl.varchar_col, tbl.double_col);
+JSON;
+
+# dialect: mysql
+JSON_OBJECT(tbl.varchar_col, tbl.json_col);
+JSON;
+
+# dialect: mysql
+JSON_EXTRACT(tbl.json_col, '$.int_col');
+JSON;
+
+# dialect: mysql
+JSON_EXTRACT(tbl.json_col, '$.varchar_col');
+JSON;
+
+# dialect: mysql
+JSON_EXTRACT(tbl.json_col, '$.double_col');
+JSON;
+
+# dialect: mysql
+JSON_EXTRACT(tbl.json_col, '$.json_col');
+JSON;
+
+# dialect: mysql
+JSON_KEYS(tbl.json_col);
+JSON;
+
+# dialect: mysql
+JSON_KEYS(tbl.json_col, '$.json_col');
+JSON;
+
+# dialect: mysql
+JSON_TYPE(tbl.json_col);
+VARCHAR;
+
+# dialect: mysql
+JSON_TYPE(JSON_OBJECT(tbl.varchar_col, tbl.int_col));
+VARCHAR;
+
+# dialect: mysql
+JSON_TYPE(JSON_ARRAY(tbl.int_col, tbl.varchar_col));
+VARCHAR;
+
+# dialect: mysql
+JSON_ARRAY_APPEND(tbl.json_col, '$', tbl.int_col);
+JSON;
+
+# dialect: mysql
+JSON_ARRAY_APPEND(tbl.json_col, '$', tbl.varchar_col);
+JSON;
+
+# dialect: mysql
+JSON_ARRAY_APPEND(tbl.json_col, '$', tbl.double_col);
+JSON;
+
+# dialect: mysql
+JSON_ARRAY_APPEND(tbl.json_col, '$', tbl.json_col);
+JSON;
+
+# dialect: mysql
+JSON_ARRAY_INSERT(tbl.json_col, '$[0]', tbl.int_col);
+JSON;
+
+# dialect: mysql
+JSON_REMOVE(tbl.json_col, '$.a');
+JSON;
+
+# dialect: mysql
+JSON_SET(tbl.json_col, '$.a', tbl.int_col);
+JSON;
+
+# dialect: mysql
+GROUPING(tbl.int_col);
+BIGINT;
+
+# dialect: mysql
+GROUPING(tbl.str_col);
+BIGINT;
+
+# dialect: mysql
+UUID();
+VARCHAR;
+
+# dialect: mysql
+CURRENT_ROLE();
+LONGTEXT;
+
+# dialect: mysql
+LEAD(tbl.int_col) OVER (ORDER BY tbl.int_col);
+INT;
+
+# dialect: mysql
+LEAD(tbl.double_col) OVER (ORDER BY tbl.int_col);
+DOUBLE;
+
+# dialect: mysql
+LEAD(tbl.bin_col) OVER (ORDER BY tbl.int_col);
+BINARY;
+
+# dialect: mysql
+LAG(tbl.int_col) OVER (ORDER BY tbl.int_col);
+INT;
+
+# dialect: mysql
+LAG(tbl.str_col) OVER (ORDER BY tbl.int_col);
+VARCHAR;
+
+# dialect: mysql
+LAG(tbl.date_col) OVER (ORDER BY tbl.int_col);
+DATE;
+
 --------------------------------------
 -- DuckDB
 --------------------------------------
@@ -6556,6 +7206,22 @@ FORMAT('Benchmark "{}" took {} seconds', 'CSV', 42);
 VARCHAR;
 
 # dialect: duckdb
+DECODE(tbl.str_col);
+VARCHAR;
+
+# dialect: duckdb
+ENCODE(tbl.str_col);
+VARBINARY;
+
+# dialect: duckdb
+UNHEX(tbl.str_col);
+VARBINARY;
+
+# dialect: duckdb
+FROM_HEX(tbl.str_col);
+VARBINARY;
+
+# dialect: duckdb
 QUARTER(tbl.date_col);
 BIGINT;
 
@@ -6663,6 +7329,130 @@ BIGINT;
 EXTRACT('month' FROM tbl.timestamp_col);
 BIGINT;
 
+# dialect: duckdb
+REGEXP_FULL_MATCH(tbl.str_col, 'a');
+BOOLEAN;
+
+# dialect: duckdb
+tbl.str_col ~ 'a';
+BOOLEAN;
+
+# dialect: duckdb
+LIST_HAS_ANY(tbl.array_col, tbl.array_col);
+BOOLEAN;
+
+# dialect: duckdb
+tbl.array_col && tbl.array_col;
+BOOLEAN;
+
+# dialect: duckdb
+CURRENT_ROLE();
+VARCHAR;
+
+--------------------------------------
+-- Postgres
+--------------------------------------
+
+# dialect: postgres
+tbl.str_col ~ 'a';
+BOOLEAN;
+
+# dialect: postgres
+tbl.str_col ~* 'a';
+BOOLEAN;
+
+# dialect: postgres
+tbl.array_col @> tbl.array_col;
+BOOLEAN;
+
+# dialect: postgres
+tbl.array_col <@ tbl.array_col;
+BOOLEAN;
+
+# dialect: postgres
+tbl.array_col && tbl.array_col;
+BOOLEAN;
+
+# dialect: postgres
+tbl.obj_col ? 'a';
+BOOLEAN;
+
+# dialect: postgres
+tbl.obj_col ?& tbl.array_col;
+BOOLEAN;
+
+# dialect: postgres
+tbl.obj_col ?| tbl.array_col;
+BOOLEAN;
+
+# dialect: postgres
+INT4RANGE(1, 2) -|- INT4RANGE(2, 3);
+BOOLEAN;
+
+# dialect: postgres
+INT4RANGE(1, 2) &< INT4RANGE(2, 3);
+BOOLEAN;
+
+# dialect: postgres
+INT4RANGE(1, 2) &> INT4RANGE(2, 3);
+BOOLEAN;
+
+# dialect: postgres
+(tbl.date_col, tbl.date_col) OVERLAPS (tbl.date_col, tbl.date_col);
+BOOLEAN;
+
+# dialect: postgres
+LEFT(tbl.str_col, tbl.int_col);
+TEXT;
+
+# dialect: postgres
+RPAD(tbl.str_col, 10, 'x');
+TEXT;
+
+# dialect: postgres
+TO_HEX(2147483647);
+TEXT;
+
+# dialect: postgres
+SPLIT_PART(tbl.str_col, '~@~', 2);
+TEXT;
+
+# dialect: postgres
+NORMALIZE(tbl.str_col);
+TEXT;
+
+# dialect: postgres
+WIDTH_BUCKET(5, 1, 10, 5);
+INT;
+
+# dialect: postgres
+TO_NUMBER('123.45', '999.99');
+NUMERIC;
+
+# dialect: postgres
+FORMAT('Hello %s, %1$s', 'World');
+TEXT;
+
+# dialect: postgres
+ENCODE(tbl.bin_col, 'base64');
+TEXT;
+
+# dialect: postgres
+RIGHT(tbl.str_col, tbl.int_col);
+TEXT;
+
+# dialect: postgres
+OVERLAY(tbl.str_col PLACING tbl.str_col FROM tbl.int_col FOR tbl.int_col);
+TEXT;
+
+# dialect: postgres
+REVERSE(tbl.str_col);
+TEXT;
+
+# dialect: postgres
+DECODE(tbl.str_col, 'base64');
+VARBINARY;
+
 --------------------------------------
 -- Presto / Trino
 --------------------------------------
@@ -6718,6 +7508,23 @@ VARCHAR;
 # dialect: clickhouse
 MD5(tbl.str_col);
 FIXEDSTRING(16);
+
+# dialect: clickhouse
+CORR(tbl.int_col, tbl.int_col);
+FLOAT64;
+
+# dialect: clickhouse
+CORR(tbl.float_col, tbl.float_col);
+FLOAT64;
+
+# dialect: clickhouse
+CORR(tbl.int_col, tbl.float_col);
+FLOAT64;
+
+# dialect: clickhouse
+CORR(tbl.float_col, tbl.int_col);
+FLOAT64;
+
 --------------------------------------
 -- IGNORE NULLS / RESPECT NULLS
 --------------------------------------

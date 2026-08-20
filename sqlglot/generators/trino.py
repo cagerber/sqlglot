@@ -13,6 +13,7 @@ from sqlglot.generators.presto import PrestoGenerator, amend_exploded_column_tab
 
 class TrinoGenerator(PrestoGenerator):
     EXCEPT_INTERSECT_SUPPORT_ALL_CLAUSE = True
+    DECLARE_DEFAULT_ASSIGNMENT = "DEFAULT"
     PROPERTIES_LOCATION = {
         **PrestoGenerator.PROPERTIES_LOCATION,
         exp.LocationProperty: exp.Properties.Location.POST_WITH,
@@ -38,6 +39,9 @@ class TrinoGenerator(PrestoGenerator):
                 amend_exploded_column_table,
             ]
         ),
+        exp.StabilityProperty: lambda self, e: (
+            "DETERMINISTIC" if e.name == "IMMUTABLE" else "NOT DETERMINISTIC"
+        ),
         exp.TimeStrToTime: lambda self, e: timestrtotime_sql(self, e, include_precision=True),
         exp.Trim: trim_sql,
     }
@@ -47,6 +51,78 @@ class TrinoGenerator(PrestoGenerator):
         exp.JSONPathRoot,
         exp.JSONPathSubscript,
     }
+
+    def functionspecification_sql(self, expression: exp.FunctionSpecification) -> str:
+        characteristics = expression.args.get("characteristics")
+        characteristics_sql = (
+            self.properties(characteristics, prefix=" ", sep=" ", wrapped=False)
+            if characteristics
+            else ""
+        )
+        properties = expression.args.get("properties")
+        with_sql = f" {self.with_properties(properties)}" if properties else ""
+        body = self.sql(expression, "expression")
+        return f"FUNCTION {self.sql(expression, 'this')}{characteristics_sql}{with_sql} {body}"
+
+    def ifblock_sql(self, expression: exp.IfBlock) -> str:
+        # ELSEIF chains are nested into `false` at parse time (see
+        # TrinoParser._parse_routine_if), so this flattens them back out rather
+        # than recursing on ifblock_sql itself, which would re-wrap each link in
+        # its own IF ... END IF.
+        branches: list[str] = []
+        node: exp.Expr | None = expression
+
+        while isinstance(node, exp.IfBlock):
+            keyword = "IF" if not branches else "ELSEIF"
+            branches.append(f"{keyword} {self.sql(node, 'this')} THEN {self.sql(node, 'true')};")
+            node = node.args.get("false")
+
+        if node is not None:
+            branches.append(f"ELSE {self.sql(node)};")
+
+        return f"{' '.join(branches)} END IF"
+
+    def casestatement_sql(self, expression: exp.CaseStatement) -> str:
+        # Mirrors case_sql, using `;`-terminated statement bodies and END CASE
+        # instead of a single value expression per branch and bare END.
+        this = self.sql(expression, "this")
+        branches = [f"CASE {this}" if this else "CASE"]
+
+        for node in expression.args["ifs"]:
+            branches.append(f"WHEN {self.sql(node, 'this')} THEN {self.sql(node, 'true')};")
+
+        default = expression.args.get("default")
+        if default:
+            branches.append(f"ELSE {self.sql(default)};")
+
+        branches.append("END CASE")
+        return " ".join(branches)
+
+    def whileblock_sql(self, expression: exp.WhileBlock) -> str:
+        label = expression.args.get("label")
+        label_sql = f"{self.sql(label)}: " if label else ""
+        condition = self.sql(expression, "this")
+        body = self.sql(expression, "body")
+        return f"{label_sql}WHILE {condition} DO {body}; END WHILE"
+
+    def loopblock_sql(self, expression: exp.LoopBlock) -> str:
+        label = expression.args.get("label")
+        label_sql = f"{self.sql(label)}: " if label else ""
+        body = self.sql(expression, "body")
+        return f"{label_sql}LOOP {body}; END LOOP"
+
+    def repeatblock_sql(self, expression: exp.RepeatBlock) -> str:
+        label = expression.args.get("label")
+        label_sql = f"{self.sql(label)}: " if label else ""
+        body = self.sql(expression, "body")
+        until = self.sql(expression, "until")
+        return f"{label_sql}REPEAT {body}; UNTIL {until} END REPEAT"
+
+    def leave_sql(self, expression: exp.Leave) -> str:
+        return f"LEAVE {self.sql(expression, 'this')}"
+
+    def iterate_sql(self, expression: exp.Iterate) -> str:
+        return f"ITERATE {self.sql(expression, 'this')}"
 
     def jsonextract_sql(self, expression: exp.JSONExtract) -> str:
         if not expression.args.get("json_query"):

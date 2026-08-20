@@ -3,6 +3,7 @@ from unittest import mock
 from sqlglot import ParseError, UnsupportedError, exp, parse_one
 from sqlglot.optimizer.annotate_types import annotate_types
 from sqlglot.optimizer.normalize_identifiers import normalize_identifiers
+from sqlglot.optimizer.qualify import qualify
 from sqlglot.optimizer.qualify_columns import quote_identifiers
 from sqlglot.parser import logger as parser_logger
 from tests.dialects.test_dialect import Validator
@@ -13,6 +14,12 @@ class TestSnowflake(Validator):
     dialect = "snowflake"
 
     def test_snowflake(self):
+        ast = parse_one("BLA(x) FILTER (WHERE x = 5)")
+        self.assertEqual(
+            ast.this.assert_is(exp.Anonymous).parent.sql("snowflake"),
+            "BLA(IFF(x = 5, x, NULL))",
+        )
+
         self.validate_identity(
             """WITH t AS (SELECT PARSE_JSON('{"level1": {"level2": {"level3": "value"}}}') AS data) SELECT data:     level1  : level2 : level3::VARIANT FROM t""",
             """WITH t AS (SELECT PARSE_JSON('{"level1": {"level2": {"level3": "value"}}}') AS data) SELECT CAST(GET_PATH(data, 'level1.level2.level3') AS VARIANT) FROM t""",
@@ -46,6 +53,10 @@ class TestSnowflake(Validator):
         self.validate_identity("SELECT MIN(amount)")
         self.validate_identity("SELECT MODE(x)")
         self.validate_identity("SELECT MODE(status) OVER (PARTITION BY region) FROM orders")
+        self.validate_all(
+            "SELECT MODE(x) FROM t",
+            read={"postgres": "SELECT MODE() WITHIN GROUP (ORDER BY x) FROM t"},
+        )
         self.validate_identity("SELECT TAN(x)")
         self.validate_identity("SELECT COS(x)")
         self.validate_identity("SELECT SINH(1.5)")
@@ -1035,6 +1046,14 @@ class TestSnowflake(Validator):
             r"SELECT 'a \' \\ \\t \\x21 z $ '",
         )
         self.validate_identity(
+            r"SELECT $$a\$b$$",
+            r"SELECT 'a\\$b'",
+        )
+        self.validate_identity(
+            r"SELECT $$a\$$",
+            r"SELECT 'a\\'",
+        )
+        self.validate_identity(
             "SELECT {'test': 'best'}::VARIANT",
             "SELECT CAST(OBJECT_CONSTRUCT('test', 'best') AS VARIANT)",
         )
@@ -1095,6 +1114,32 @@ class TestSnowflake(Validator):
         self.validate_identity(
             "ALTER TABLE foo ADD COLUMN id INT identity(1, 1)",
             "ALTER TABLE foo ADD id INT AUTOINCREMENT START 1 INCREMENT 1",
+        )
+        self.validate_identity("CREATE TABLE x (y INT AUTOINCREMENT START 10)")
+        self.validate_identity("CREATE TABLE x (y INT AUTOINCREMENT INCREMENT 2)")
+        self.validate_identity("CREATE TABLE x (y INT AUTOINCREMENT ORDER)")
+        self.validate_identity("CREATE TABLE x (y INT AUTOINCREMENT NOORDER)")
+        self.validate_identity("CREATE TABLE x (y INT AUTOINCREMENT START 10 NOORDER)")
+        self.validate_identity("CREATE TABLE x (y INT AUTOINCREMENT INCREMENT 2 ORDER)")
+        self.validate_identity(
+            "CREATE TABLE x (y INT AUTOINCREMENT INCREMENT 2 START 10)",
+            "CREATE TABLE x (y INT AUTOINCREMENT START 10 INCREMENT 2)",
+        )
+        self.validate_identity(
+            "CREATE TABLE x (y INT AUTOINCREMENT(0, 1) ORDER)",
+            "CREATE TABLE x (y INT AUTOINCREMENT START 0 INCREMENT 1 ORDER)",
+        )
+        self.validate_all(
+            "CREATE TABLE c (pk BIGINT AUTOINCREMENT START 10)",
+            read={
+                "postgres": "CREATE TABLE c (pk BIGINT GENERATED ALWAYS AS IDENTITY (START WITH 10))"
+            },
+        )
+        self.validate_all(
+            "CREATE TABLE c (pk BIGINT AUTOINCREMENT INCREMENT -1)",
+            read={
+                "postgres": "CREATE TABLE c (pk BIGINT GENERATED ALWAYS AS IDENTITY (INCREMENT BY -1))"
+            },
         )
         self.validate_identity(
             "SELECT DAYOFWEEK('2016-01-02T23:39:20.123-07:00'::TIMESTAMP)",
@@ -1430,6 +1475,10 @@ class TestSnowflake(Validator):
                 "duckdb": "SELECT CASE WHEN UPPER(CAST('T' AS TEXT)) = 'ON' THEN TRUE WHEN UPPER(CAST('T' AS TEXT)) = 'OFF' THEN FALSE WHEN ISNAN(TRY_CAST('T' AS REAL)) OR ISINF(TRY_CAST('T' AS REAL)) THEN ERROR('TO_BOOLEAN: Non-numeric values NaN and INF are not supported') ELSE CAST('T' AS BOOLEAN) END",
             },
         )
+        self.validate_identity(
+            "SELECT id FROM t START WITH (parent_id IS NULL) CONNECT BY PRIOR id = parent_id"
+        )
+        self.validate_identity("SELECT id FROM t START WITH (x) CONNECT BY PRIOR id = parent_id")
         self.validate_all(
             "SELECT * FROM x START WITH a = b CONNECT BY c = PRIOR d",
             read={
@@ -1862,7 +1911,7 @@ class TestSnowflake(Validator):
                 "bigquery": "SELECT PARSE_TIMESTAMP('%d-%m-%Y %I:%M:%S', col) FROM t",
                 "duckdb": "SELECT STRPTIME(col, '%d-%m-%Y %I:%M:%S') FROM t",
                 "snowflake": "SELECT TO_TIMESTAMP(col, 'DD-mm-yyyy hh12:mi:ss') FROM t",
-                "spark": "SELECT TO_TIMESTAMP(col, 'dd-MM-yyyy hh:mm:ss') FROM t",
+                "spark": "SELECT TO_TIMESTAMP(col, 'd-M-yyyy h:m:s') FROM t",
             },
         )
         self.validate_all(
@@ -1927,7 +1976,7 @@ class TestSnowflake(Validator):
             write={
                 "bigquery": "SELECT PARSE_TIMESTAMP('%m/%d/%Y %T', '04/05/2013 01:02:03')",
                 "snowflake": "SELECT TO_TIMESTAMP('04/05/2013 01:02:03', 'mm/DD/yyyy hh24:mi:ss')",
-                "spark": "SELECT TO_TIMESTAMP('04/05/2013 01:02:03', 'MM/dd/yyyy HH:mm:ss')",
+                "spark": "SELECT TO_TIMESTAMP('04/05/2013 01:02:03', 'M/d/yyyy H:m:s')",
             },
         )
         self.validate_all(
@@ -3393,6 +3442,29 @@ class TestSnowflake(Validator):
             },
         )
 
+    def test_chained_pivots(self):
+        self.validate_identity(
+            "SELECT * FROM t UNPIVOT(a FOR b IN (c, d)) UNPIVOT(e FOR f IN (g, h))"
+        )
+        self.validate_identity(
+            "SELECT * FROM t PIVOT(SUM(v) FOR c IN ('a' AS a)) UNPIVOT(x FOR y IN (a))"
+        )
+
+    def test_pivot_output_column_names(self):
+        # Snowflake names a bare IN-list column after the literal, quotes included, but an
+        # explicit `<value> AS <alias>` names it after the alias. Both verified in-engine.
+        for pivot, expected in (
+            ("IN ('a', 'b')", ["ID", "'a'", "'b'"]),
+            ("IN ('a' AS a, 'b' AS b)", ["ID", "A", "B"]),
+        ):
+            with self.subTest(pivot):
+                expression = qualify(
+                    self.parse_one(f"SELECT * FROM t PIVOT(SUM(val) FOR cat {pivot})"),
+                    schema={"t": {"id": "int", "cat": "text", "val": "int"}},
+                    dialect="snowflake",
+                )
+                self.assertEqual([s.alias_or_name for s in expression.selects], expected)
+
     def test_null_treatment(self):
         self.validate_all(
             r"SELECT FIRST_VALUE(TABLE1.COLUMN1) OVER (PARTITION BY RANDOM_COLUMN1, RANDOM_COLUMN2 ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS MY_ALIAS FROM TABLE1",
@@ -4603,6 +4675,10 @@ WHERE
   )""",
             },
             pretty=True,
+        )
+
+        self.validate_identity(
+            "SELECT value FROM TABLE(FLATTEN(input => SELECT PARSE_JSON('[1, 2]')))"
         )
 
         # All examples from https://docs.snowflake.com/en/sql-reference/functions/flatten.html#syntax

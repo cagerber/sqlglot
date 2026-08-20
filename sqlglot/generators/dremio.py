@@ -70,7 +70,18 @@ class DremioGenerator(generator.Generator):
         exp.DateAdd: _date_delta_sql("DATE_ADD"),
         exp.DateSub: _date_delta_sql("DATE_SUB"),
         exp.GenerateSeries: rename_func("ARRAY_GENERATE_RANGE"),
+        exp.RegexpSplit: lambda self, e: self.func(
+            "REGEXP_SPLIT", e.this, e.expression, e.args.get("mode"), e.args.get("limit")
+        ),
     }
+
+    def version_sql(self, expression: exp.Version) -> str:
+        if expression.text("kind") == "AS OF":
+            this = "SNAPSHOT" if expression.name == "VERSION" else expression.name
+            return f"AT {this} {self.sql(expression, 'expression')}"
+
+        self.unsupported("Range time travel is not supported in Dremio")
+        return super().version_sql(expression)
 
     def datatype_sql(self, expression: exp.DataType) -> str:
         """

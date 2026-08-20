@@ -6,12 +6,15 @@ import typing as t
 from sqlglot import alias, exp
 from sqlglot.helper import name_sequence
 from sqlglot.optimizer.eliminate_joins import join_condition
+from sqlglot.optimizer.scope import find_all_in_scope, find_in_scope
 from collections.abc import Iterator, Sequence, Iterable
 
 
 class Plan:
     def __init__(self, expression: exp.Expr) -> None:
         self.expression: exp.Expr = expression.copy()
+        with_: exp.With | None = self.expression.args.get("with_")
+        self.ctes: exp.With | None = with_.copy() if with_ is not None else None
         self.root: Step = Step.from_expression(self.expression)
         self._dag: dict[Step, set[Step]] = {}
 
@@ -128,7 +131,7 @@ class Step:
         next_operand_name = name_sequence("_a_")
 
         def extract_agg_operands(expression: exp.Expr) -> bool:
-            agg_funcs = tuple(expression.find_all(exp.AggFunc))
+            agg_funcs = tuple(find_all_in_scope(expression, exp.AggFunc))
             if agg_funcs:
                 aggregations[expression] = None
 
@@ -148,7 +151,7 @@ class Step:
             step.aggregations = list(aggregations)
 
         for e in expression.expressions:
-            if e.find(exp.AggFunc):
+            if find_in_scope(e, exp.AggFunc):
                 projections.append(exp.column(e.alias_or_name, step.name, quoted=True))
                 extract_agg_operands(e)
             else:
@@ -238,6 +241,11 @@ class Step:
         if limit is not None:
             step.limit = int(limit.text("expression"))
 
+        offset: exp.Offset | None = expression.args.get("offset")
+
+        if offset is not None:
+            step.offset = int(offset.text("expression"))
+
         return step
 
     def __init__(self) -> None:
@@ -246,6 +254,7 @@ class Step:
         self.dependents: set[Step] = set()
         self.projections: Sequence[exp.Expr] = []
         self.limit: float = math.inf
+        self.offset: int = 0
         self.condition: exp.Expr | None = None
 
     def add_dependency(self, dependency: Step) -> None:
@@ -278,6 +287,9 @@ class Step:
 
         if self.limit is not math.inf:
             lines.append(f"{nested}Limit: {self.limit}")
+
+        if self.offset:
+            lines.append(f"{nested}Offset: {self.offset}")
 
         if self.dependencies:
             lines.append(f"{nested}Dependencies:")
@@ -434,11 +446,6 @@ class SetOperation(Step):
 
         step.add_dependency(left)
         step.add_dependency(right)
-
-        limit: exp.Limit | None = expression.args.get("limit")
-
-        if limit is not None:
-            step.limit = int(limit.text("expression"))
 
         return step
 

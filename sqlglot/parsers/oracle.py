@@ -4,7 +4,7 @@ import typing as t
 
 from sqlglot import exp, parser
 from sqlglot.dialects.dialect import build_formatted_time, build_timetostr_or_tochar, build_trunc
-from sqlglot.helper import seq_get
+from sqlglot.helper import ensure_list, seq_get
 from sqlglot.parser import OPTIONS_TYPE, build_coalesce
 from sqlglot.tokens import TokenType
 
@@ -23,6 +23,7 @@ def _build_to_timestamp(args: list, dialect: Dialect) -> exp.StrToTime | exp.Ano
 class OracleParser(parser.Parser):
     WINDOW_BEFORE_PAREN_TOKENS = {TokenType.OVER, TokenType.KEEP}
     VALUES_FOLLOWED_BY_PAREN = False
+    SUPPORTS_NTH_VALUE_FROM_MODIFIER = True
 
     FUNCTIONS = {
         **{k: v for k, v in parser.Parser.FUNCTIONS.items() if k != "TO_BOOLEAN"},
@@ -77,7 +78,10 @@ class OracleParser(parser.Parser):
     QUERY_MODIFIER_PARSERS = {
         **parser.Parser.QUERY_MODIFIER_PARSERS,
         TokenType.ORDER_SIBLINGS_BY: lambda self: ("order", self._parse_order()),
-        TokenType.WITH: lambda self: ("options", [self._parse_query_restrictions()]),
+        TokenType.WITH: lambda self: (
+            "options",
+            ensure_list(self._parse_query_restrictions()),
+        ),
     }
 
     TYPE_LITERAL_PARSERS = {

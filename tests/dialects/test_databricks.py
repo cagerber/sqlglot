@@ -6,6 +6,11 @@ from tests.dialects.test_dialect import Validator
 class TestDatabricks(Validator):
     dialect = "databricks"
 
+    def test_insert_replace_using(self):
+        self.validate_identity(
+            "INSERT INTO target REPLACE USING (c1, c2) SELECT c1, c2 FROM source"
+        )
+
     def test_databricks(self):
         self.validate_identity("CREATE TABLE foo (my_arr ARRAY<STRING COLLATE UTF8_BINARY>)")
         self.validate_identity("CREATE TABLE foo (m MAP<STRING, STRING COLLATE UTF8_BINARY>)")
@@ -37,6 +42,16 @@ class TestDatabricks(Validator):
         self.validate_identity("CREATE TABLE my_table TBLPROPERTIES (a.b=15)")
         self.validate_identity("CREATE TABLE my_table TBLPROPERTIES ('a.b'=15)")
         self.validate_identity("CREATE TABLE table1 CLUSTER BY AUTO")
+        self.validate_identity(
+            "CREATE TABLE t (customer_id INT NOT NULL, ts TIMESTAMP NOT NULL, CONSTRAINT customer_features_pk PRIMARY KEY (customer_id, ts TIMESERIES))"
+        )
+        self.validate_all(
+            "CREATE TABLE t (a INT, b TIMESTAMP, PRIMARY KEY (a, b TIMESERIES))",
+            write={
+                "databricks": "CREATE TABLE t (a INT, b TIMESTAMP, PRIMARY KEY (a, b TIMESERIES))",
+                "duckdb": "CREATE TABLE t (a INT, b TIMESTAMPTZ, PRIMARY KEY (a, b))",
+            },
+        )
         self.validate_identity("ALTER TABLE t CLUSTER BY NONE")
         self.validate_identity("CREATE TABLE t CLUSTER BY (col1)")
         self.validate_identity("CREATE TABLE t CLUSTER BY (col1, col2)")
@@ -162,7 +177,7 @@ class TestDatabricks(Validator):
             "CREATE TABLE foo (x INT GENERATED ALWAYS AS (YEAR(y)))",
             write={
                 "databricks": "CREATE TABLE foo (x INT GENERATED ALWAYS AS (YEAR(y)))",
-                "tsql": "CREATE TABLE foo (x AS YEAR(CAST(y AS DATE)))",
+                "tsql": "CREATE TABLE foo (x AS YEAR(y))",
             },
         )
         self.validate_all(
@@ -274,6 +289,15 @@ class TestDatabricks(Validator):
             """WITH t AS (SELECT '{"x-y": "z"}' AS c) SELECT get_json_object(c, '$.x-y') FROM t""",
             """WITH t AS (SELECT '{"x-y": "z"}' AS c) SELECT GET_JSON_OBJECT(c, '$["x-y"]') FROM t""",
         ).selects[0].expression.assert_is(exp.JSONPath)
+
+        self.validate_identity("INSERT INTO t REPLACE WHERE a = 1 SELECT * FROM src")
+        self.validate_identity("INSERT INTO t REPLACE WHERE a = 2 (SELECT * FROM src)")
+        self.validate_identity(
+            "WITH s AS (SELECT * FROM src) INSERT INTO t REPLACE WHERE a = 1 SELECT * FROM s"
+        )
+        self.validate_identity(
+            "WITH s AS (SELECT * FROM src) INSERT INTO t REPLACE USING (a) SELECT * FROM s"
+        )
 
     # https://docs.databricks.com/sql/language-manual/functions/colonsign.html
     def test_json(self):

@@ -1,12 +1,14 @@
 from __future__ import annotations
 
+import typing as t
+
 from sqlglot import exp
 from sqlglot.dialects.dialect import (
     approx_count_distinct_sql,
     property_sql,
     rename_func,
     time_format,
-    unit_to_str,
+    weekstart_unit_to_str,
 )
 from sqlglot.generators.mysql import MySQLGenerator
 
@@ -22,6 +24,7 @@ def _lag_lead_sql(self, expression: exp.Lag | exp.Lead) -> str:
 
 class DorisGenerator(MySQLGenerator):
     LAST_DAY_SUPPORTS_DATE_PART = False
+    SUPPORTS_ALTER_COLUMN_NULLABILITY = False
     VARCHAR_REQUIRES_SIZE = False
     WITH_PROPERTIES_PREFIX = "PROPERTIES"
     RENAME_TABLE_WITH_DB = False
@@ -41,8 +44,8 @@ class DorisGenerator(MySQLGenerator):
         exp.BuildProperty: exp.Properties.Location.POST_SCHEMA,
     }
 
-    CAST_MAPPING = {}
-    TIMESTAMP_FUNC_TYPES = set()
+    CAST_MAPPING: t.ClassVar[dict[exp.DType, str]] = {}
+    TIMESTAMP_FUNC_TYPES: t.ClassVar[set[exp.DType]] = set()
 
     TRANSFORMS = {
         **MySQLGenerator.TRANSFORMS,
@@ -55,7 +58,9 @@ class DorisGenerator(MySQLGenerator):
         exp.ArrayUniqueAgg: rename_func("COLLECT_SET"),
         exp.CurrentDate: lambda self, _: self.func("CURRENT_DATE"),
         exp.CurrentTimestamp: lambda self, _: self.func("NOW"),
-        exp.DateTrunc: lambda self, e: self.func("DATE_TRUNC", e.this, unit_to_str(e)),
+        exp.DateTrunc: lambda self, e: self.func(
+            "DATE_TRUNC", e.this, weekstart_unit_to_str(self, e)
+        ),
         exp.EuclideanDistance: rename_func("L2_DISTANCE"),
         exp.GroupConcat: lambda self, e: self.func(
             "GROUP_CONCAT", e.this, e.args.get("separator") or exp.Literal.string(",")
@@ -75,7 +80,9 @@ class DorisGenerator(MySQLGenerator):
         exp.TsOrDsAdd: lambda self, e: self.func("DATE_ADD", e.this, e.expression),
         exp.TsOrDsToDate: lambda self, e: self.func("TO_DATE", e.this),
         exp.TimeToUnix: rename_func("UNIX_TIMESTAMP"),
-        exp.TimestampTrunc: lambda self, e: self.func("DATE_TRUNC", e.this, unit_to_str(e)),
+        exp.TimestampTrunc: lambda self, e: self.func(
+            "DATE_TRUNC", e.this, weekstart_unit_to_str(self, e)
+        ),
         exp.UnixToStr: lambda self, e: self.func(
             "FROM_UNIXTIME", e.this, time_format("doris")(self, e)
         ),

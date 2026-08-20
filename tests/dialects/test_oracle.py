@@ -1,4 +1,4 @@
-from sqlglot import exp, UnsupportedError, ParseError, parse, parse_one
+from sqlglot import exp, ErrorLevel, UnsupportedError, ParseError, parse, parse_one
 from tests.dialects.test_dialect import Validator
 from sqlglot.optimizer.qualify import qualify
 
@@ -17,6 +17,13 @@ class TestOracle(Validator):
         )
         self.parse_one("ALTER TABLE tbl_name DROP FOREIGN KEY fk_symbol").assert_is(exp.Alter)
 
+        self.validate_identity("SELECT NTH_VALUE(x, 2) FROM FIRST OVER (ORDER BY y) AS c FROM t")
+        self.validate_identity(
+            "SELECT NTH_VALUE(x, 2) FROM LAST IGNORE NULLS OVER (ORDER BY y) AS c FROM t"
+        )
+        self.validate_identity(
+            "SELECT NTH_VALUE(x, 2) FROM FIRST RESPECT NULLS OVER (ORDER BY y) AS c FROM t"
+        )
         self.validate_identity("XMLELEMENT(EVALNAME foo + bar)")
         self.validate_identity("SELECT BITMAP_BUCKET_NUMBER(32769)")
         self.validate_identity("SELECT BITMAP_CONSTRUCT_AGG(value)")
@@ -75,6 +82,10 @@ class TestOracle(Validator):
         self.validate_identity(
             "SELECT * FROM test UNPIVOT INCLUDE NULLS (value FOR Description IN (col AS 'PREFIX ' || CHR(38) || ' SUFFIX'))"
         )
+        self.validate_identity(
+            "SELECT * FROM sales UNPIVOT(q FOR p IN (q1 AS 'Prod1', q2 AS 'Prod2'))"
+        )
+        self.validate_identity("SELECT * FROM sales UNPIVOT(q FOR p IN (q1 AS 1, q2 AS 2))")
         self.validate_identity(
             "SELECT last_name, employee_id, manager_id, LEVEL FROM employees START WITH employee_id = 100 CONNECT BY PRIOR employee_id = manager_id ORDER SIBLINGS BY last_name"
         )
@@ -148,7 +159,21 @@ class TestOracle(Validator):
         self.validate_identity(
             "SELECT * FROM t START WITH col CONNECT BY NOCYCLE PRIOR col1 = col2"
         )
+        self.validate_identity(
+            "SELECT id FROM t START WITH (parent_id IS NULL) CONNECT BY PRIOR id = parent_id"
+        )
+        self.validate_identity("SELECT id FROM t START WITH (x) CONNECT BY PRIOR id = parent_id")
 
+        self.validate_all(
+            "SELECT NTH_VALUE(x, 2) FROM LAST OVER (ORDER BY y) AS c FROM t",
+            write={
+                "oracle": "SELECT NTH_VALUE(x, 2) FROM LAST OVER (ORDER BY y) AS c FROM t",
+                "snowflake": "SELECT NTH_VALUE(x, 2) FROM LAST OVER (ORDER BY y) AS c FROM t",
+                # FROM LAST is lossy in dialects that don't support it
+                "duckdb": "SELECT NTH_VALUE(x, 2) OVER (ORDER BY y) AS c FROM t",
+                "postgres": UnsupportedError,
+            },
+        )
         self.validate_all(
             "SELECT DBMS_RANDOM.VALUE()",
             read={
@@ -387,6 +412,33 @@ class TestOracle(Validator):
         )
         self.validate_identity("L2_DISTANCE(x, y)")
         self.validate_identity("BITMAP_OR_AGG(x)")
+
+    def test_pivot_syntax_restrictions(self):
+        """Oracle only accepts simple column names in a (UN)PIVOT's FOR clause and IN-list
+        (ORA-01748), and rejects AS before the operator's alias (ORA-03048). The aggregate
+        itself may stay qualified. All of these were executed against Oracle Free.
+        """
+        self.validate_all(
+            "SELECT * FROM t UNPIVOT(revenue FOR month IN (t.jan, t.feb)) AS u",
+            write={"oracle": "SELECT * FROM t UNPIVOT(revenue FOR month IN (jan, feb)) u"},
+        )
+        self.validate_all(
+            "SELECT * FROM t PIVOT(SUM(t.val) FOR t.cat IN ('a' AS a)) AS p",
+            write={"oracle": "SELECT * FROM t PIVOT(SUM(t.val) FOR cat IN ('a' AS a)) p"},
+        )
+
+        # qualify qualifies the IN-list in the AST, which must not reach the generated SQL
+        self.assertEqual(
+            qualify(
+                parse_one(
+                    "SELECT * FROM t UNPIVOT(revenue FOR month IN (jan, feb))", dialect="oracle"
+                ),
+                schema={"t": {"id": "int", "jan": "int", "feb": "int"}},
+                dialect="oracle",
+            ).sql(dialect="oracle"),
+            'SELECT "T"."ID" AS "ID", "T"."MONTH" AS "MONTH", "T"."REVENUE" AS "REVENUE" '
+            'FROM "T" "T" UNPIVOT("REVENUE" FOR "MONTH" IN ("JAN", "FEB")) "T"',
+        )
 
     def test_join_marker(self):
         self.validate_identity("SELECT e1.x, e2.x FROM e e1, e e2 WHERE e1.y (+) = e2.y")
@@ -629,6 +681,24 @@ CONNECT BY PRIOR employee_id = manager_id AND LEVEL <= 4"""
                     self.validate_identity(
                         f"CREATE VIEW view AS SELECT * FROM tbl WITH {restriction}{constraint_name}"
                     )
+
+    def test_unrecognized_query_restriction(self):
+        """An unrecognized WITH must error, not spin in _parse_query_modifiers.
+
+        _parse_query_restrictions returns None when WITH isn't followed by a
+        recognized restriction. Wrapping that in a list literal made it the
+        truthy [None], which passed the modifier loop's `if expression:` guard
+        without ever consuming the WITH token.
+        """
+        for sql in (
+            "SELECT * FROM tbl WITH",
+            "SELECT * FROM tbl WITH READ",
+            "SELECT * FROM tbl WITH GRANT OPTION",
+            "SELECT * FROM t WITH x AS (SELECT 1) SELECT * FROM x",
+        ):
+            with self.subTest(sql):
+                with self.assertRaises(ParseError):
+                    parse_one(sql, read="oracle", error_level=ErrorLevel.RAISE)
 
     def test_multitable_inserts(self):
         self.maxDiff = None

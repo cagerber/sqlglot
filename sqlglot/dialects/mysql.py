@@ -44,8 +44,11 @@ class MySQL(Dialect):
         "%u": "%W",
         "%k": "%-H",
         "%l": "%-I",
+        "%r": "%I:%M:%S %p",
         "%T": "%H:%M:%S",
         "%W": "%A",
+        "%x": "%G",
+        # %v (ISO week) is unmapped due to collision with %V (roundtrip issue)
     }
 
     VALID_INTERVAL_UNITS = {
@@ -96,7 +99,6 @@ class MySQL(Dialect):
             "SERIAL": TokenType.SERIAL,
             "SIGNED": TokenType.BIGINT,
             "SIGNED INTEGER": TokenType.BIGINT,
-            "SOUNDS LIKE": TokenType.SOUNDS_LIKE,
             "START": TokenType.BEGIN,
             "TIMESTAMP": TokenType.TIMESTAMPTZ,
             "TINYBLOB": TokenType.TINYBLOB,

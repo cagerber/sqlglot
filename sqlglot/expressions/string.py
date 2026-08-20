@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from sqlglot.expressions.core import Expression, Func, Binary
+from sqlglot.expressions.core import Expression, Func, Binary, Predicate
 
 
 # String basics
@@ -138,6 +138,10 @@ class Search(Expression, Func):
 
 
 class SearchIp(Expression, Func):
+    arg_types = {"this": True, "expression": True}
+
+
+class Secret(Expression, Func):
     arg_types = {"this": True, "expression": True}
 
 
@@ -441,11 +445,11 @@ class RegexpExtractAll(Expression, Func):
     }
 
 
-class RegexpFullMatch(Expression, Binary, Func):
+class RegexpFullMatch(Expression, Binary, Predicate, Func):
     arg_types = {"this": True, "expression": True, "options": False}
 
 
-class RegexpILike(Expression, Binary, Func):
+class RegexpILike(Expression, Binary, Predicate, Func):
     arg_types = {"this": True, "expression": True, "flag": False}
 
 
@@ -474,7 +478,8 @@ class RegexpReplace(Expression, Func):
 
 
 class RegexpSplit(Expression, Func):
-    arg_types = {"this": True, "expression": True, "limit": False}
+    # "mode" is Dremio-specific, appended after "limit" for from_arg_list compat
+    arg_types = {"this": True, "expression": True, "limit": False, "mode": False}
 
 
 class RegexpSubstr(Expression, Func):

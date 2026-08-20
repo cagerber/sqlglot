@@ -16,6 +16,7 @@ from sqlglot.dialects.dialect import (
     strposition_sql,
 )
 from sqlglot.generator import unsupported_args
+from sqlglot.optimizer.scope import find_in_scope
 from sqlglot.tokens import TokenType
 
 
@@ -68,7 +69,9 @@ def _generated_to_auto_increment(expression: exp.Expr) -> exp.Expr:
 
     generated = expression.find(exp.GeneratedAsIdentityColumnConstraint)
 
-    if generated:
+    # Only rewrite true identity columns. Expression-bearing forms are computed
+    # columns (GENERATED ALWAYS AS (expr)) and must keep their expression.
+    if generated and generated.expression is None:
         t.cast(exp.ColumnConstraint, generated.parent).pop()
 
         not_null = expression.find(exp.NotNullColumnConstraint)
@@ -162,7 +165,6 @@ class SQLiteGenerator(generator.Generator):
         exp.JSONArrayAgg: unsupported_args("order", "null_handling", "return_type", "strict")(
             rename_func("JSON_GROUP_ARRAY")
         ),
-        exp.JSONExtractScalar: arrow_json_extract_sql,
         exp.JSONObjectAgg: lambda self, e: self._jsonobject_sql(e, name="JSON_GROUP_OBJECT"),
         exp.Levenshtein: unsupported_args("ins_cost", "del_cost", "sub_cost", "max_dist")(
             rename_func("EDITDIST3")
@@ -171,6 +173,7 @@ class SQLiteGenerator(generator.Generator):
         exp.LogicalAnd: rename_func("MIN"),
         exp.Pivot: no_pivot_sql,
         exp.Rand: rename_func("RANDOM"),
+        exp.RegexpLike: lambda self, e: self.binary(e, "REGEXP"),
         exp.Select: transforms.preprocess(
             [
                 _offset_to_limit,
@@ -228,10 +231,22 @@ class SQLiteGenerator(generator.Generator):
             return self.function_fallback_sql(expression)
         return arrow_json_extract_sql(self, expression)
 
+    def jsonextractscalar_sql(self, expression: exp.JSONExtractScalar) -> str:
+        if expression.args.get("json_subtype"):
+            # json_extract() keeps the JSON subtype on object/array results;
+            # ->> strips it, observable when the result feeds another JSON function
+            return self.func("JSON_EXTRACT", expression.this, expression.expression)
+        return arrow_json_extract_sql(self, expression)
+
     def dateadd_sql(self, expression: exp.DateAdd) -> str:
         modifier = expression.expression
-        modifier = modifier.name if modifier.is_string else self.sql(modifier)
         unit = expression.args.get("unit")
+        # An INTERVAL amount carries its own unit, e.g. DATE_ADD(d, INTERVAL 1 DAY);
+        # unwrap it so the unit is not left inside the quoted modifier string.
+        if isinstance(modifier, exp.Interval):
+            unit = unit or modifier.unit
+            modifier = modifier.this
+        modifier = modifier.name if modifier.is_string else self.sql(modifier)
         modifier = f"'{modifier} {unit.name}'" if unit else f"'{modifier}'"
         return self.func("DATE", expression.this, modifier)
 
@@ -240,6 +255,19 @@ class SQLiteGenerator(generator.Generator):
             return self.func("DATE", expression.this)
 
         return super().cast_sql(expression)
+
+    # https://www.sqlite.org/gencol.html
+    # Inline unsupported check: mypyc cannot compile @unsupported_args on an
+    # override of an undecorated base-class method.
+    def computedcolumnconstraint_sql(self, expression: exp.ComputedColumnConstraint) -> str:
+        if expression.args.get("data_type"):
+            self.unsupported("SQLite generated columns do not support a data type")
+
+        this = expression.this
+        this_sql = self.sql(this) if isinstance(this, exp.Paren) else f"({self.sql(this)})"
+        storage = " STORED" if expression.args.get("persisted") else ""
+        not_null = " NOT NULL" if expression.args.get("not_null") else ""
+        return f"AS {this_sql}{storage}{not_null}"
 
     # Note: SQLite's TRUNC always returns REAL (e.g., trunc(10.99) -> 10.0), not INTEGER.
     # This creates a transpilation gap affecting division semantics, similar to Presto.
@@ -294,7 +322,7 @@ class SQLiteGenerator(generator.Generator):
     # https://www.sqlite.org/lang_aggfunc.html#group_concat
     def groupconcat_sql(self, expression: exp.GroupConcat) -> str:
         this = expression.this
-        distinct = expression.find(exp.Distinct)
+        distinct = find_in_scope(expression, exp.Distinct)
 
         if distinct:
             this = distinct.expressions[0]

@@ -22,6 +22,7 @@ from sqlglot.dialects.dialect import (
     timestrtotime_sql,
     ts_or_ds_add_cast,
     unit_to_str,
+    week_unit_to_dow,
     sequence_sql,
     explode_to_unnest_sql,
 )
@@ -168,6 +169,40 @@ def _date_delta_sql(
     return _delta_sql
 
 
+def _date_diff_sql(
+    self: PrestoGenerator, expression: exp.DateDiff | exp.DatetimeDiff | exp.TimestampDiff
+) -> str:
+    # Presto/Trino only expose date_diff(unit, ts1, ts2); it returns ts2 - ts1, so the
+    # operands are emitted as (expression, this) to preserve `this - expression` semantics.
+    this: exp.Expr = expression.this
+    expr: exp.Expr = expression.expression
+    unit = unit_to_str(expression)
+
+    # DATE_DIFF counts complete units between its operands, whereas dialects that set
+    # date_part_boundary count unit boundary crossings, so the operands are truncated
+    # down to the unit to make the two coincide
+    if unit and expression.args.get("date_part_boundary"):
+        raw_unit = expression.args.get("unit")
+        dow = week_unit_to_dow(raw_unit)
+
+        if dow is not None:
+            unit = exp.Literal.string("WEEK")
+
+            # DATE_TRUNC('WEEK', ...) is Monday-based; shifting both operands by the same
+            # delta realigns it to the requested week start without changing the diff
+            shift_days = 1 if dow == 7 else 1 - dow
+            if shift_days:
+                delta = exp.Interval(this=exp.Literal.string(str(shift_days)), unit=exp.var("DAY"))
+                this = exp.Add(this=this, expression=delta)
+                expr = exp.Add(this=expr, expression=delta.copy())
+
+        if not isinstance(raw_unit, exp.WeekStart) or dow is not None:
+            this = exp.DateTrunc(unit=unit.copy(), this=this)
+            expr = exp.DateTrunc(unit=unit.copy(), this=expr)
+
+    return self.func("DATE_DIFF", unit, expr, this)
+
+
 def _explode_to_unnest_sql(self: PrestoGenerator, expression: exp.Lateral) -> str:
     explode = expression.this
     if isinstance(explode, exp.Explode):
@@ -300,7 +335,9 @@ class PrestoGenerator(generator.Generator):
         exp.CurrentTimestamp: lambda *_: "CURRENT_TIMESTAMP",
         exp.CurrentUser: lambda *_: "CURRENT_USER",
         exp.DateAdd: _date_delta_sql("DATE_ADD"),
-        exp.DateDiff: lambda self, e: self.func("DATE_DIFF", unit_to_str(e), e.expression, e.this),
+        exp.DateDiff: _date_diff_sql,
+        exp.DatetimeDiff: _date_diff_sql,
+        exp.TimestampDiff: _date_diff_sql,
         exp.DateStrToDate: datestrtodate_sql,
         exp.DateToDi: lambda self, e: (
             f"CAST(DATE_FORMAT({self.sql(e, 'this')}, {type(self.dialect).DATEINT_FORMAT}) AS INT)"

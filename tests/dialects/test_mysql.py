@@ -10,6 +10,8 @@ class TestMySQL(Validator):
     dialect = "mysql"
 
     def test_ddl(self):
+        self.validate_identity("DROP TEMPORARY TABLE IF EXISTS db.t1, t2 CASCADE")
+
         for t in ("BIGINT", "INT", "MEDIUMINT", "SMALLINT", "TINYINT"):
             self.validate_identity(f"CREATE TABLE t (id {t} UNSIGNED)")
             self.validate_identity(f"CREATE TABLE t (id {t}(10) UNSIGNED)")
@@ -19,6 +21,12 @@ class TestMySQL(Validator):
         self.validate_identity("CREATE TABLE foo (a BIGINT, UNIQUE (b) USING BTREE)")
         self.validate_identity("CREATE TABLE foo (a VARCHAR(32) NOT NULL UNIQUE COMMENT 'test')")
         self.validate_identity("CREATE TABLE foo (id BIGINT)")
+        self.validate_identity(
+            "CREATE VIEW v AS SELECT * FROM start WITH CHECK OPTION", check_command_warning=True
+        )
+        self.validate_identity("CREATE DATABASE db CHARACTER SET=utf8")
+        self.validate_identity("CREATE DATABASE db DEFAULT CHARACTER SET=utf8")
+        self.validate_identity("CREATE SCHEMA db DEFAULT CHARACTER SET=utf8")
         self.validate_identity("CREATE TABLE 00f (1d BIGINT)")
         self.validate_identity("CREATE TABLE temp (id SERIAL PRIMARY KEY)")
         self.validate_identity("UPDATE items SET items.price = 0 WHERE items.id >= 5 LIMIT 10")
@@ -118,6 +126,14 @@ class TestMySQL(Validator):
         )
         self.validate_identity(
             "INSERT INTO x VALUES (1, 'a', 2.0) ON DUPLICATE KEY UPDATE x.id = 1"
+        )
+        self.validate_identity(
+            "INSERT INTO `test_table` SET `test_col_1` = 123, `test_col_2` = '456'",
+            "INSERT INTO `test_table` (`test_col_1`, `test_col_2`) VALUES (123, '456')",
+        )
+        self.validate_identity(
+            "INSERT INTO t SET a = DEFAULT, b = 2 AS new ON DUPLICATE KEY UPDATE a = new.a + 1",
+            "INSERT INTO t (a, b) VALUES (DEFAULT, 2) AS new ON DUPLICATE KEY UPDATE a = new.a + 1",
         )
         self.validate_identity(
             "CREATE OR REPLACE VIEW my_view AS SELECT column1 AS `boo`, column2 AS `foo` FROM my_table WHERE column3 = 'some_value' UNION SELECT q.* FROM fruits_table, JSON_TABLE(Fruits, '$[*]' COLUMNS(id VARCHAR(255) PATH '$.$id', value VARCHAR(255) PATH '$.value')) AS q",
@@ -415,9 +431,12 @@ class TestMySQL(Validator):
         self.validate_identity(
             "SELECT 'foo' SOUNDS LIKE 'bar'", "SELECT SOUNDEX('foo') = SOUNDEX('bar')"
         )
+        self.validate_identity("SELECT a SOUNDS LIKE b | c", "SELECT SOUNDEX(a) = SOUNDEX(b | c)")
         self.validate_identity(
-            "SELECT 'foo' NOT SOUNDS LIKE 'bar'", "SELECT NOT SOUNDEX('foo') = SOUNDEX('bar')"
+            "SELECT a SOUNDS LIKE b IS NULL",
+            "SELECT (SOUNDEX(a) = SOUNDEX(b)) IS NULL",
         )
+        self.validate_identity("SELECT * FROM t WHERE sounds LIKE 'a%'")
         self.validate_identity("SELECT SUBSTR(1 FROM 2 FOR 3)", "SELECT SUBSTRING(1, 2, 3)")
         self.validate_identity("SELECT ELT(2, 'foo', 'bar', 'baz') AS Result")
         self.validate_identity("SELECT CHARSET(CHAR(100 USING utf8))")
@@ -801,6 +820,29 @@ class TestMySQL(Validator):
                 "snowflake": "SELECT TO_CHAR(CAST('1900-10-04 22:23:00' AS TIMESTAMP), 'DD yy DY DD mm mon')",
             },
         )
+        self.validate_all(
+            "SELECT DATE_FORMAT('2021-01-01 22:23:00', '%x')",
+            write={
+                "mysql": "SELECT DATE_FORMAT('2021-01-01 22:23:00', '%x')",
+                "duckdb": "SELECT STRFTIME(CAST('2021-01-01 22:23:00' AS TIMESTAMP), '%G')",
+            },
+        )
+        self.validate_all(
+            "SELECT DATE_FORMAT(CAST('2021-01-01 22:23:00' AS DATETIME), '%x')",
+            read={
+                "duckdb": "SELECT STRFTIME(CAST('2021-01-01 22:23:00' AS TIMESTAMP), '%G')",
+            },
+        )
+        self.validate_all(
+            "SELECT DATE_FORMAT('2007-10-04 22:23:00', '%r')",
+            write={
+                "mysql": "SELECT DATE_FORMAT('2007-10-04 22:23:00', '%r')",
+                "duckdb": "SELECT STRFTIME(CAST('2007-10-04 22:23:00' AS TIMESTAMP), '%I:%M:%S %p')",
+            },
+        )
+        self.validate_identity("SELECT DATE_FORMAT(x, '%X-%V')")
+        self.validate_identity("SELECT DATE_FORMAT(x, '%x-%v')")
+        self.validate_identity("SELECT DATE_FORMAT(x, '%U')")
 
     def test_mysql_time(self):
         self.validate_identity("TIME_STR_TO_UNIX(x)", "UNIX_TIMESTAMP(x)")
@@ -822,7 +864,8 @@ class TestMySQL(Validator):
             write={
                 "exasol": "SELECT DAYS_BETWEEN(x, y)",
                 "mysql": "SELECT DATEDIFF(x, y)",
-                "presto": "SELECT DATE_DIFF('DAY', y, x)",
+                "postgres": "SELECT (CAST(x AS DATE) - CAST(y AS DATE))",
+                "presto": "SELECT DATE_DIFF('DAY', DATE_TRUNC('DAY', y), DATE_TRUNC('DAY', x))",
                 "redshift": "SELECT DATEDIFF(DAY, y, x)",
             },
         )
@@ -982,9 +1025,6 @@ class TestMySQL(Validator):
         )
         self.validate_all(
             "SELECT JSON_EXTRACT('[10, 20, [30, 40]]', '$[1]')",
-            read={
-                "sqlite": "SELECT JSON_EXTRACT('[10, 20, [30, 40]]', '$[1]')",
-            },
             write={
                 "mysql": "SELECT JSON_EXTRACT('[10, 20, [30, 40]]', '$[1]')",
                 "sqlite": "SELECT '[10, 20, [30, 40]]' -> '$[1]'",
@@ -1500,9 +1540,9 @@ COMMENT='客户账户表'"""
             "a / b",
             write={
                 "bigquery": "a / NULLIF(b, 0)",
-                "clickhouse": "a / b",
+                "clickhouse": "a / nullIf(b, 0)",
                 "databricks": "a / NULLIF(b, 0)",
-                "duckdb": "a / b",
+                "duckdb": "a / NULLIF(b, 0)",
                 "hive": "a / b",
                 "mysql": "a / b",
                 "oracle": "a / NULLIF(b, 0)",

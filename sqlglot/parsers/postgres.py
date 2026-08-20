@@ -105,6 +105,7 @@ class PostgresParser(parser.Parser):
         "BIT_AND": exp.BitwiseAndAgg.from_arg_list,
         "BIT_OR": exp.BitwiseOrAgg.from_arg_list,
         "BIT_XOR": exp.BitwiseXorAgg.from_arg_list,
+        "BTRIM": exp.Trim.from_arg_list,
         "VERSION": exp.CurrentVersion.from_arg_list,
         "DATE_TRUNC": build_timestamp_trunc,
         "DIV": lambda args: exp.cast(binary_from_function(exp.IntDiv)(args), exp.DType.DECIMAL),
@@ -191,7 +192,19 @@ class PostgresParser(parser.Parser):
     JSON_ARROWS_REQUIRE_JSON_TYPE = True
 
     COLUMN_OPERATORS = {
-        **parser.Parser.COLUMN_OPERATORS,
+        k: v
+        for k, v in parser.Parser.COLUMN_OPERATORS.items()
+        if k
+        not in (
+            TokenType.ARROW,
+            TokenType.DARROW,
+            TokenType.HASH_ARROW,
+            TokenType.DHASH_ARROW,
+            TokenType.PLACEHOLDER,
+        )
+    }
+
+    JSON_OPERATORS = {
         TokenType.ARROW: lambda self, this, path: self.validate_expression(
             build_json_extract_path(
                 exp.JSONExtract, arrow_req_json_type=self.JSON_ARROWS_REQUIRE_JSON_TYPE
@@ -202,6 +215,9 @@ class PostgresParser(parser.Parser):
                 exp.JSONExtractScalar, arrow_req_json_type=self.JSON_ARROWS_REQUIRE_JSON_TYPE
             )([this, path])
         ),
+        TokenType.HASH_ARROW: parser.build_jsonb_extract,
+        TokenType.DHASH_ARROW: parser.build_jsonb_extract_scalar,
+        TokenType.PLACEHOLDER: parser.build_jsonb_contains_top_key,
     }
 
     ARG_MODE_TOKENS: t.ClassVar = {TokenType.IN, TokenType.OUT, TokenType.INOUT, TokenType.VARIADIC}

@@ -1,5 +1,6 @@
-from sqlglot import ParseError, UnsupportedError, exp, transpile
+from sqlglot import ParseError, UnsupportedError, exp, parse_one, transpile
 from sqlglot.helper import logger as helper_logger
+from sqlglot.optimizer.annotate_types import annotate_types
 from tests.dialects.test_dialect import Validator
 
 
@@ -21,6 +22,8 @@ class TestPostgres(Validator):
         sql = "ARRAY[x" + ",x" * 27 + "]"
         expected_sql = "ARRAY[\n  x" + (",\n  x" * 27) + "\n]"
         self.validate_identity(sql, expected_sql, pretty=True)
+
+        self.validate_identity("UPDATE character SET x = 1")
 
         self.validate_identity('WITH t AS (SELECT 1 AS "null") SELECT t.null FROM t')
         self.validate_identity('WITH t AS (SELECT 1 AS "true") SELECT t.true FROM t')
@@ -83,6 +86,13 @@ class TestPostgres(Validator):
         self.validate_identity("SELECT CAST(e'\\176' AS BYTEA)")
         self.validate_identity("SELECT * FROM x WHERE SUBSTRING('Thomas' FROM '...$') IN ('mas')")
         self.validate_identity("SELECT TRIM(' X' FROM ' XXX ')")
+        self.validate_all(
+            "SELECT BTRIM(x, 'ab')",
+            write={
+                "postgres": "SELECT TRIM('ab' FROM x)",
+                "duckdb": "SELECT TRIM(x, 'ab')",
+            },
+        )
         self.validate_identity("SELECT TRIM(LEADING 'bla' FROM ' XXX ' COLLATE utf8_bin)")
         self.validate_identity("""SELECT * FROM JSON_TO_RECORDSET(z) AS y("rank" INT)""")
         self.validate_identity("SELECT ~x")
@@ -209,7 +219,7 @@ class TestPostgres(Validator):
         )
         self.validate_identity(
             "x::JSON -> 'duration' ->> -1",
-            "JSON_EXTRACT_PATH_TEXT(CAST(x AS JSON) -> 'duration', -1)",
+            "CAST(x AS JSON) -> 'duration' ->> -1",
         ).assert_is(exp.JSONExtractScalar).this.assert_is(exp.JSONExtract)
         self.validate_identity(
             "SELECT SUBSTRING('Thomas' FOR 3 FROM 2)",
@@ -381,7 +391,7 @@ class TestPostgres(Validator):
         )
         self.validate_identity(
             "SELECT id, email, CAST(deleted AS TEXT) FROM users WHERE deleted NOTNULL",
-            "SELECT id, email, CAST(deleted AS TEXT) FROM users WHERE NOT deleted IS NULL",
+            "SELECT id, email, CAST(deleted AS TEXT) FROM users WHERE deleted IS NOT NULL",
         )
         self.validate_identity(
             "SELECT id, email, CAST(deleted AS TEXT) FROM users WHERE NOT deleted ISNULL",
@@ -449,7 +459,7 @@ class TestPostgres(Validator):
     'field_id' AS field_id
 )
 SELECT
-  JSON_ARRAY_ELEMENTS(JSON_EXTRACT_PATH(json_data.data, field_ids.field_id)) AS element
+  JSON_ARRAY_ELEMENTS(json_data.data -> field_ids.field_id) AS element
 FROM json_data, field_ids""",
             pretty=True,
         )
@@ -457,10 +467,11 @@ FROM json_data, field_ids""",
         self.validate_all(
             "x ? y",
             write={
-                "": "JSONB_CONTAINS(x, y)",
+                "": "x ? y",
                 "postgres": "x ? y",
             },
         )
+        self.validate_identity("JSONB_CONTAINS(x, y)").assert_is(exp.JSONBContains)
         self.validate_all(
             "SELECT E'a\\tb'",
             write={
@@ -574,6 +585,11 @@ FROM json_data, field_ids""",
                 "redshift": "SELECT JSON_EXTRACT_PATH_TEXT(x, k1, k2, k3) FROM t",
             },
         )
+
+        self.validate_identity("SELECT JSON_EXTRACT_PATH(x, k1, 'k2') FROM t")
+        self.validate_identity("SELECT JSON_EXTRACT_PATH(x, 'k1', k2) FROM t")
+        self.validate_identity("SELECT JSON_EXTRACT_PATH_TEXT(x, k1, 'k2') FROM t")
+
         self.validate_all(
             "x #> 'y'",
             read={
@@ -710,8 +726,43 @@ FROM json_data, field_ids""",
         self.validate_all(
             "SELECT GENERATE_SERIES(1, 5)",
             write={
-                "bigquery": UnsupportedError,
+                "bigquery": "SELECT _gen_series_value FROM UNNEST(GENERATE_ARRAY(1, 5)) AS _gen_series_value",
                 "postgres": "SELECT GENERATE_SERIES(1, 5)",
+            },
+        )
+        self.validate_all(
+            "SELECT GENERATE_SERIES(1, 5) AS x",
+            write={
+                "bigquery": "SELECT x FROM UNNEST(GENERATE_ARRAY(1, 5)) AS x",
+                "postgres": "SELECT GENERATE_SERIES(1, 5) AS x",
+            },
+        )
+        self.validate_all(
+            "SELECT GENERATE_SERIES(1, 5) AS x WHERE x > 2 ORDER BY x DESC LIMIT 3",
+            write={
+                "bigquery": "SELECT x FROM UNNEST(GENERATE_ARRAY(1, 5)) AS x WHERE x > 2 ORDER BY x DESC NULLS FIRST LIMIT 3",
+                "postgres": "SELECT GENERATE_SERIES(1, 5) AS x WHERE x > 2 ORDER BY x DESC LIMIT 3",
+            },
+        )
+        self.validate_all(
+            "SELECT y, GENERATE_SERIES(1, 3) AS g FROM t",
+            write={
+                "bigquery": "SELECT y, g FROM t CROSS JOIN UNNEST(GENERATE_ARRAY(1, 3)) AS g",
+                "postgres": "SELECT y, GENERATE_SERIES(1, 3) AS g FROM t",
+            },
+        )
+        self.validate_all(
+            "SELECT GENERATE_SERIES(1, 2) AS a, GENERATE_SERIES(11, 13) AS b",
+            write={
+                "bigquery": "SELECT a, b FROM UNNEST(GENERATE_ARRAY(1, 2)) AS a CROSS JOIN UNNEST(GENERATE_ARRAY(11, 13)) AS b",
+                "postgres": "SELECT GENERATE_SERIES(1, 2) AS a, GENERATE_SERIES(11, 13) AS b",
+            },
+        )
+        self.validate_all(
+            "SELECT y, GENERATE_SERIES(1, 2) AS a, GENERATE_SERIES(11, 13) AS b FROM t",
+            write={
+                "bigquery": "SELECT y, a, b FROM t CROSS JOIN UNNEST(GENERATE_ARRAY(1, 2)) AS a CROSS JOIN UNNEST(GENERATE_ARRAY(11, 13)) AS b",
+                "postgres": "SELECT y, GENERATE_SERIES(1, 2) AS a, GENERATE_SERIES(11, 13) AS b FROM t",
             },
         )
         self.validate_all(
@@ -1039,6 +1090,11 @@ FROM json_data, field_ids""",
         self.validate_identity("SELECT * FROM foo WHERE id = %(id_param)s")
         self.validate_identity("SELECT * FROM foo WHERE id = ?")
 
+        self.validate_identity("a ? b").assert_is(exp.JSONBContainsTopKey)
+
+        # `@>` is polymorphic in Postgres (arrays, ranges, jsonb), so it parses to ArrayContainsAll
+        self.validate_identity("a @> b").assert_is(exp.ArrayContainsAll)
+
         self.validate_identity("a ?| b").assert_is(exp.JSONBContainsAnyTopKeys)
         self.validate_identity(
             """SELECT '{"a":1, "b":2, "c":3}'::jsonb ?| array['b', 'c']""",
@@ -1137,6 +1193,11 @@ FROM json_data, field_ids""",
         self.assertTrue(create_type.expression.assert_is(exp.DataType).is_type(exp.DType.ENUM))
 
         self.validate_identity("CREATE TYPE mood AS ENUM ()").assert_is(exp.Create)
+
+        self.validate_identity(
+            "CREATE VIEW v AS SELECT * FROM start WITH CHECK OPTION", check_command_warning=True
+        )
+        self.validate_identity("CREATE VIEW start WITH (security_barrier=TRUE) AS SELECT 1")
 
         create_type = self.validate_identity(
             "CREATE TYPE inventory_item AS (name TEXT, supplier_id INT, price DECIMAL)"
@@ -1466,6 +1527,19 @@ FROM json_data, field_ids""",
                 read="postgres",
             )
 
+    def test_called_on_null_input_malformed(self):
+        # Regression test for a zero-progress parse loop: a malformed property suffix used to
+        # retreat the cursor back onto the property keyword, making the function-property loop
+        # re-match it forever. It now terminates with a ParseError instead of hanging or
+        # silently re-parsing the leftover keyword as the function body.
+        for sql in (
+            "CREATE FUNCTION f() RETURNS INT LANGUAGE SQL CALLED XYZ AS 'SELECT 1'",
+            "CREATE FUNCTION f() RETURNS INT LANGUAGE SQL PARTITION XYZ AS 'SELECT 1'",
+            "CREATE FUNCTION f() RETURNS INT LANGUAGE SQL COPY XYZ AS 'SELECT 1'",
+        ):
+            with self.assertRaises(ParseError):
+                self.parse_one(sql)
+
     def test_unnest(self):
         self.validate_identity(
             "SELECT * FROM UNNEST(ARRAY[1, 2], ARRAY['foo', 'bar', 'baz']) AS x(a, b)"
@@ -1541,6 +1615,52 @@ FROM json_data, field_ids""",
                 "duckdb": "a || b",
                 "postgres": "a || b",
                 "presto": "CONCAT(CAST(a AS VARCHAR), CAST(b AS VARCHAR))",
+            },
+        )
+
+    def test_unicode_string(self):
+        self.validate_identity("SELECT u & 5 FROM t")
+        self.validate_identity("SELECT (U&'\\FE01' || 'Test literal') AS label FROM data")
+        self.validate_identity("SELECT U&'d!0061t!+000061' UESCAPE '!' AS label")
+        self.validate_identity(
+            "SELECT u&'\\0441\\043B\\043E\\043D'", "SELECT U&'\\0441\\043B\\043E\\043D'"
+        )
+        self.validate_identity("SELECT U&'can''t'")
+        self.validate_identity("SELECT U&'a''b''c'")
+        self.validate_identity("SELECT U&'can''t !0061' UESCAPE '!' AS label")
+
+        self.validate_all(
+            "SELECT U&'Hello winter \\2603 !'",
+            read={
+                "presto": "SELECT U&'Hello winter \\2603 !'",
+            },
+            write={
+                "presto": "SELECT U&'Hello winter \\2603 !'",
+            },
+        )
+
+        # A Unicode literal doubles its delimiter regardless of the dialect's string escapes,
+        # since a backslash there introduces a code point rather than an escape sequence
+        self.validate_all(
+            "SELECT U&'can''t'",
+            write={
+                "athena": "SELECT U&'can''t'",
+                "bigquery": "SELECT 'can\\'t'",
+                "duckdb": "SELECT 'can''t'",
+                "postgres": "SELECT U&'can''t'",
+                "presto": "SELECT U&'can''t'",
+            },
+        )
+
+        # A control character stays raw inside a Unicode literal, where \n would be read back
+        # as an invalid code point escape; dialects without one fall back to their own escapes
+        self.validate_all(
+            "SELECT U&'a\nb'",
+            write={
+                "athena": "SELECT U&'a\nb'",
+                "bigquery": "SELECT 'a\\nb'",
+                "duckdb": "SELECT 'a\nb'",
+                "postgres": "SELECT U&'a\nb'",
             },
         )
 
@@ -1767,6 +1887,39 @@ CROSS JOIN JSON_ARRAY_ELEMENTS(CAST(JSON_EXTRACT_PATH(tbox, 'boxes') AS JSON)) A
             "ROUND(CAST(x AS DECIMAL(18, 3)), 4)", read={"duckdb": "ROUND(x::DECIMAL, 4)"}
         )
 
+    def test_extract_date_parts(self):
+        self.validate_all(
+            "SELECT EXTRACT(DAY FROM CAST(x AS DATE)), EXTRACT(MONTH FROM CAST(x AS DATE)), EXTRACT(YEAR FROM CAST(x AS DATE))",
+            read={
+                "tsql": "SELECT DAY(x), MONTH(x), YEAR(x)",
+            },
+        )
+
+        for part in ("DAY", "MONTH", "YEAR"):
+            with self.subTest(f"Testing {part} of date input"):
+                self.assertEqual(
+                    annotate_types(parse_one(f"SELECT {part}(CAST(x AS DATE))", read="tsql")).sql(
+                        "postgres"
+                    ),
+                    f"SELECT EXTRACT({part} FROM CAST(x AS DATE))",
+                )
+
+            with self.subTest(f"Testing {part} of integer input"):
+                self.assertEqual(
+                    annotate_types(
+                        parse_one(f"SELECT {part}(t.col) FROM t", read="tsql"),
+                        schema={"t": {"col": "int"}},
+                    ).sql("postgres"),
+                    f"SELECT EXTRACT({part} FROM CAST('1900-01-01' AS DATE) + t.col) FROM t",
+                )
+
+        self.assertEqual(
+            annotate_types(
+                parse_one("WITH t AS (SELECT 1 AS col) SELECT YEAR(t.col) FROM t", read="tsql")
+            ).sql("postgres"),
+            "WITH t AS (SELECT 1 AS col) SELECT EXTRACT(YEAR FROM CAST('1900-01-01' AS DATE) + t.col) FROM t",
+        )
+
     def test_datatype(self):
         self.assertEqual(exp.DataType.build("XML", dialect="postgres").sql("postgres"), "XML")
         self.validate_identity("CREATE TABLE foo (data XML)")
@@ -1952,3 +2105,14 @@ CROSS JOIN JSON_ARRAY_ELEMENTS(CAST(JSON_EXTRACT_PATH(tbox, 'boxes') AS JSON)) A
 
     def test_postgis_distance_3d(self):
         self.validate_identity("SELECT a <<->> b")
+
+    def test_preserve_is_not_null(self):
+        self.validate_identity("SELECT r IS NOT NULL FROM t")
+        self.validate_identity("SELECT NOT r IS NULL FROM t")
+        self.validate_identity("SELECT NOT r IS NOT NULL FROM t")
+        self.validate_identity("SELECT r NOTNULL FROM t", "SELECT r IS NOT NULL FROM t")
+        self.validate_identity("SELECT r ISNULL FROM t", "SELECT r IS NULL FROM t")
+
+        is_not_null = self.parse_one("r IS NOT NULL")
+        is_not_null.assert_is(exp.Is)
+        self.assertTrue(is_not_null.args.get("negate"))

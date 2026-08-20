@@ -87,7 +87,7 @@ TIMESTAMP_TRUNC_UNITS = {
 }
 
 
-AGG_FUNCTIONS = {
+_AGG_FUNCTIONS = {
     "count",
     "min",
     "max",
@@ -156,6 +156,7 @@ AGG_FUNCTIONS = {
     "quantile",
     "quantiles",
     "quantileExact",
+    "quantileExactInclusive",
     "quantilesExact",
     "quantilesExactExclusive",
     "quantileExactLow",
@@ -208,7 +209,7 @@ AGG_FUNCTIONS = {
 
 # Sorted longest-first so that compound suffixes (e.g. "SimpleState") are matched
 # before their sub-suffixes (e.g. "State") when resolving multi-combinator functions.
-AGG_FUNCTIONS_SUFFIXES: list[str] = sorted(
+_AGG_FUNCTIONS_SUFFIXES: list[str] = sorted(
     [
         "If",
         "Array",
@@ -231,9 +232,9 @@ AGG_FUNCTIONS_SUFFIXES: list[str] = sorted(
 )
 
 # Memoized examples of all 0- and 1-suffix aggregate function names
-AGG_FUNC_MAPPING: Mapping[str, tuple[str, str | None]] = {
-    f"{f}{sfx}": (f, sfx) for sfx in AGG_FUNCTIONS_SUFFIXES for f in AGG_FUNCTIONS
-} | {f: (f, None) for f in AGG_FUNCTIONS}
+_AGG_FUNC_MAPPING: Mapping[str, tuple[str, str | None]] = {
+    f"{f}{sfx}": (f, sfx) for sfx in _AGG_FUNCTIONS_SUFFIXES for f in _AGG_FUNCTIONS
+} | {f: (f, None) for f in _AGG_FUNCTIONS}
 
 
 class ClickHouseParser(parser.Parser):
@@ -287,6 +288,7 @@ class ClickHouseParser(parser.Parser):
         "DATE_FORMAT": _build_datetime_format(exp.TimeToStr),
         "DATE_SUB": build_date_delta(exp.DateSub, default_unit=None),
         "DATESUB": build_date_delta(exp.DateSub, default_unit=None),
+        "DATETRUNC": exp.DateTrunc.from_arg_list,
         "FORMATDATETIME": _build_datetime_format(exp.TimeToStr),
         "HAS": exp.ArrayContains.from_arg_list,
         "ILIKE": build_like(exp.ILike),
@@ -322,8 +324,8 @@ class ClickHouseParser(parser.Parser):
         "UTCTIMESTAMP": exp.UtcTimestamp.from_arg_list,
     }
 
-    AGG_FUNCTIONS = AGG_FUNCTIONS
-    AGG_FUNCTIONS_SUFFIXES = AGG_FUNCTIONS_SUFFIXES
+    AGG_FUNCTIONS: t.ClassVar = _AGG_FUNCTIONS
+    AGG_FUNCTIONS_SUFFIXES: t.ClassVar = _AGG_FUNCTIONS_SUFFIXES
 
     FUNC_TOKENS = {
         *parser.Parser.FUNC_TOKENS,
@@ -340,7 +342,7 @@ class ClickHouseParser(parser.Parser):
         TokenType.LIKE,
     }
 
-    AGG_FUNC_MAPPING = AGG_FUNC_MAPPING
+    AGG_FUNC_MAPPING: t.ClassVar = _AGG_FUNC_MAPPING
 
     @classmethod
     def _resolve_clickhouse_agg(cls, name: str) -> tuple[str, Sequence[str]] | None:
@@ -354,8 +356,8 @@ class ClickHouseParser(parser.Parser):
         # AGG_FUNCTIONS_SUFFIXES_SORTED). This loop only runs for 2 or more suffixes,
         # as AGG_FUNC_MAPPING memoizes all 0- and 1-suffix
         accumulated_suffixes: deque[str] = deque()
-        while (parts := AGG_FUNC_MAPPING.get(name)) is None:
-            for suffix in AGG_FUNCTIONS_SUFFIXES:
+        while (parts := _AGG_FUNC_MAPPING.get(name)) is None:
+            for suffix in _AGG_FUNCTIONS_SUFFIXES:
                 if name.endswith(suffix) and len(name) != len(suffix):
                     accumulated_suffixes.appendleft(suffix)
                     name = name[: -len(suffix)]
@@ -380,14 +382,15 @@ class ClickHouseParser(parser.Parser):
         "MEDIAN": lambda self: self._parse_quantile(),
         "COLUMNS": lambda self: self._parse_columns(),
         "TUPLE": lambda self: exp.Struct.from_arg_list(self._parse_function_args(alias=True)),
-        "AND": lambda self: exp.and_(*self._parse_function_args(alias=False)),
-        "OR": lambda self: exp.or_(*self._parse_function_args(alias=False)),
+        "AND": lambda self: self._parse_connector_function(exp.and_),
+        "OR": lambda self: self._parse_connector_function(exp.or_),
         "XOR": lambda self: exp.xor(*self._parse_function_args(alias=False)),
     }
 
     PROPERTY_PARSERS = {
         **{k: v for k, v in parser.Parser.PROPERTY_PARSERS.items() if k != "DYNAMIC"},
         "ENGINE": lambda self: self._parse_engine_property(),
+        "REFRESH": lambda self: self._parse_auto_refresh_property(),
         "UUID": lambda self: self.expression(exp.UuidProperty(this=self._parse_string())),
     }
 
@@ -456,7 +459,7 @@ class ClickHouseParser(parser.Parser):
 
     ALTER_PARSERS = {
         **parser.Parser.ALTER_PARSERS,
-        "MODIFY": lambda self: self._parse_alter_table_modify(),
+        "MODIFY": lambda self: self._parse_alter_table_alter(),
         "REPLACE": lambda self: self._parse_alter_table_replace(),
     }
 
@@ -653,9 +656,9 @@ class ClickHouseParser(parser.Parser):
         return super()._parse_position(haystack_first=True)
 
     # https://clickhouse.com/docs/en/sql-reference/statements/select/with/
-    def _parse_cte(self) -> exp.CTE | None:
+    def _parse_cte(self) -> exp.CTE | exp.FunctionSpecification | None:
         # WITH <identifier> AS <subquery expression>
-        cte: exp.CTE | None = self._try_parse(super()._parse_cte)
+        cte: exp.CTE | exp.FunctionSpecification | None = self._try_parse(super()._parse_cte)
 
         if not cte:
             # WITH <expression> AS <identifier>
@@ -715,7 +718,7 @@ class ClickHouseParser(parser.Parser):
         func = expr.this if isinstance(expr, exp.Window) else expr
 
         # Aggregate functions can be split in 2 parts: <func_name><suffix[es]>
-        parts = self._resolve_clickhouse_agg(func.this) if isinstance(func, exp.Anonymous) else None
+        parts = self._resolve_clickhouse_agg(func.name) if isinstance(func, exp.Anonymous) else None
 
         if parts:
             anon_func: exp.Anonymous = t.cast(exp.Anonymous, func)
@@ -813,6 +816,58 @@ class ClickHouseParser(parser.Parser):
                 self._retreat(index)
         return None
 
+    def _parse_auto_refresh_property(self) -> exp.AutoRefreshProperty | None:
+        index = self._index - 1
+        cadence = self._prev.text.upper() if self._match_texts(("EVERY", "AFTER")) else None
+        interval = (
+            self._parse_interval(require_interval=False, parse_function_unit=False)
+            if cadence
+            else None
+        )
+
+        if cadence and not interval:
+            self._retreat(index)
+            return None
+
+        offset = None
+        if self._match_text_seq("OFFSET"):
+            offset = self._parse_interval(require_interval=False, parse_function_unit=False)
+            if not offset:
+                self._retreat(index)
+                return None
+
+        randomize = None
+        if self._match_text_seq("RANDOMIZE", "FOR"):
+            randomize = self._parse_interval(require_interval=False, parse_function_unit=False)
+            if not randomize:
+                self._retreat(index)
+                return None
+
+        dependencies = None
+        if self._match_text_seq("DEPENDS", "ON"):
+            dependencies = self._parse_csv(lambda: self._parse_table_parts(schema=True))
+            if not dependencies:
+                self._retreat(index)
+                return None
+
+        if not cadence and not dependencies:
+            self._retreat(index)
+            return None
+
+        settings = self._parse_settings_property() if self._match_text_seq("SETTINGS") else None
+
+        return self.expression(
+            exp.AutoRefreshProperty(
+                this=interval,
+                cadence=cadence,
+                offset=offset,
+                randomize=randomize,
+                expressions=dependencies,
+                settings=settings,
+                append=self._match_text_seq("APPEND"),
+            )
+        )
+
     def _parse_index_constraint(self, kind: str | None = None) -> exp.IndexColumnConstraint:
         # INDEX name1 expr TYPE type1(args) GRANULARITY value
         this = self._parse_id_var()
@@ -853,10 +908,19 @@ class ClickHouseParser(parser.Parser):
             exp.ReplacePartition(expression=partition, source=self._parse_table_parts())
         )
 
-    def _parse_alter_table_modify(self) -> exp.Expr | None:
-        if properties := self._parse_properties():
-            return self.expression(exp.AlterModifySqlSecurity(expressions=properties.expressions))
-        return None
+    def _parse_alter_table_alter(self) -> exp.Expr | None:
+        # MODIFY forms other than MODIFY COLUMN (SQL SECURITY, ORDER BY, TTL, COMMENT, ...)
+        # are parsed as properties, since ALTER can now reach this path too
+        if self._prev.text.upper() == "MODIFY" and not self._match(TokenType.COLUMN, advance=False):
+            if properties := self._parse_properties():
+                return self.expression(
+                    exp.AlterModifySqlSecurity(expressions=properties.expressions)
+                )
+            return None
+
+        # https://clickhouse.com/docs/sql-reference/statements/alter/column#modify-column
+        alter = super()._parse_alter_table_alter()
+        return None if self._curr else alter
 
     def _parse_definer(self) -> exp.DefinerProperty | None:
         self._match(TokenType.EQ)
@@ -913,11 +977,13 @@ class ClickHouseParser(parser.Parser):
         # In INSERT INTO statements the same clause actually references multiple columns (opposite semantics),
         # but the final result is not altered by the extra parentheses.
         # Note: Clickhouse allows VALUES([structure], value, ...) so the branch checks for the last expression
+        # A single-value tuple is generated as "(x)", which is parsed back into a Paren
+        # rather than a Tuple, so it's unwrapped here to keep this rewrite idempotent
         expressions = value.expressions
         if values and not isinstance(expressions[-1], exp.Tuple):
             value.set(
                 "expressions",
-                [self.expression(exp.Tuple(expressions=[expr])) for expr in expressions],
+                [self.expression(exp.Tuple(expressions=[expr.unnest()])) for expr in expressions],
             )
 
         return value

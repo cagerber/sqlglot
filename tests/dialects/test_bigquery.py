@@ -174,6 +174,19 @@ class TestBigQuery(Validator):
         self.validate_identity("CAST(x AS STRUCT<list ARRAY<INT64>>)")
         self.validate_identity("assert.true(1 = 1)")
         self.validate_identity("SELECT jsondoc['some_key']")
+        self.validate_identity("SELECT data.144A_FLAG FROM t", "SELECT data.`144A_FLAG` FROM t")
+        self.validate_identity("SELECT t.1a FROM t", "SELECT t.`1a` FROM t")
+        self.validate_identity("SELECT STRING(data.144) FROM t", "SELECT STRING(data.`144`) FROM t")
+        self.validate_identity(
+            "SELECT STRING(data.1e10) FROM t", "SELECT STRING(data.`1e10`) FROM t"
+        )
+        self.validate_identity("SELECT t.144 A_FLAG FROM t", "SELECT t.`144` AS A_FLAG FROM t")
+
+        col = self.parse_one("SELECT data.144A_FLAG FROM t").selects[0]
+        self.assertIsInstance(col, exp.Column)
+        self.assertEqual(
+            col.parts, [exp.to_identifier("data"), exp.to_identifier("144A_FLAG", quoted=True)]
+        )
         self.validate_identity("SELECT `p.d.UdF`(data).* FROM `p.d.t`")
         self.validate_identity("SELECT * FROM `my-project.my-dataset.my-table`")
         self.validate_identity("CREATE OR REPLACE TABLE `a.b.c` CLONE `a.b.d`")
@@ -209,6 +222,10 @@ class TestBigQuery(Validator):
         self.validate_identity("ARRAY_AGG(DISTINCT x IGNORE NULLS ORDER BY x LIMIT 1)")
         self.validate_identity("ARRAY_AGG(x IGNORE NULLS)")
         self.validate_identity("ARRAY_AGG(DISTINCT x IGNORE NULLS HAVING MAX x ORDER BY x LIMIT 1)")
+        self.validate_identity("SELECT ARRAY_AGG((SELECT c FROM t LIMIT 1) IGNORE NULLS) FROM u")
+        self.validate_identity(
+            "SELECT ARRAY_AGG((SELECT c FROM t ORDER BY c) IGNORE NULLS LIMIT 1) FROM u"
+        )
         self.validate_identity("SELECT * FROM dataset.my_table TABLESAMPLE SYSTEM (10 PERCENT)")
         self.validate_identity("TIME('2008-12-25 15:30:00+08')")
         self.validate_identity("TIME('2008-12-25 15:30:00+08', 'America/Los_Angeles')")
@@ -272,6 +289,13 @@ class TestBigQuery(Validator):
         self.validate_identity("x <> ''")
         self.validate_identity("DATE_TRUNC(col, WEEK(MONDAY))")
         self.validate_identity("DATE_TRUNC(col, MONTH, 'UTC+8')")
+        self.validate_all(
+            "SELECT DATE_TRUNC(DATE '2015-06-15', ISOYEAR)",
+            write={
+                "bigquery": "SELECT DATE_TRUNC(CAST('2015-06-15' AS DATE), ISOYEAR)",
+                "duckdb": "SELECT DATE_TRUNC('ISOYEAR', CAST('2015-06-15' AS DATE))",
+            },
+        )
         self.validate_identity("SELECT b'abc'")
         self.validate_identity("SELECT AS STRUCT 1 AS a, 2 AS b")
         self.validate_identity("SELECT DISTINCT AS STRUCT 1 AS a, 2 AS b")
@@ -336,6 +360,8 @@ class TestBigQuery(Validator):
         self.validate_identity(
             "FOR record IN (SELECT word, word_count FROM bigquery-public-data.samples.shakespeare LIMIT 5) DO SELECT record.word, record.word_count"
         )
+        self.validate_identity("FOR system_time IN (SELECT 1 AS x) DO SELECT system_time.x")
+        self.validate_identity("FOR timestamp IN (SELECT 1 AS x) DO SELECT timestamp.x")
         self.validate_identity(
             "DATE(CAST('2016-12-25 05:30:00+07' AS DATETIME), 'America/Los_Angeles')"
         )
@@ -434,6 +460,26 @@ class TestBigQuery(Validator):
         self.validate_identity(
             "x <> ''''''",
             "x <> ''",
+        )
+        self.validate_identity(
+            'SELECT """ends with \\"word\\""""',
+            "SELECT 'ends with \"word\"'",
+        )
+        self.validate_identity(
+            "SELECT '''ends with \\'word\\''''",
+            "SELECT 'ends with \\'word\\''",
+        )
+        self.validate_identity(
+            'SELECT """a\\"b"""',
+            "SELECT 'a\"b'",
+        )
+        self.validate_identity(
+            'SELECT r"""ends with \\""""',
+            "SELECT 'ends with \\\\\"'",
+        )
+        self.validate_identity(
+            'SELECT r"""a\\"b"""',
+            "SELECT 'a\\\\\"b'",
         )
         self.validate_identity(
             "SELECT a overlaps",
@@ -714,19 +760,26 @@ LANGUAGE js AS
             },
         )
         self.validate_all(
-            "SELECT ARRAY_AGG(DISTINCT x IGNORE NULLS ORDER BY a, b DESC LIMIT 10) AS x",
+            "SELECT ARRAY_AGG(DISTINCT x IGNORE NULLS ORDER BY x LIMIT 10) AS x",
             write={
-                "bigquery": "SELECT ARRAY_AGG(DISTINCT x IGNORE NULLS ORDER BY a, b DESC LIMIT 10) AS x",
-                "duckdb": "SELECT ARRAY_AGG(DISTINCT x ORDER BY a NULLS FIRST, b DESC LIMIT 10) AS x",
-                "spark": "SELECT COLLECT_LIST(DISTINCT x ORDER BY a, b DESC LIMIT 10) IGNORE NULLS AS x",
+                "bigquery": "SELECT ARRAY_AGG(DISTINCT x IGNORE NULLS ORDER BY x LIMIT 10) AS x",
+                "duckdb": UnsupportedError,
+                "spark": "SELECT COLLECT_LIST(DISTINCT x ORDER BY x LIMIT 10) IGNORE NULLS AS x",
             },
         )
         self.validate_all(
-            "SELECT ARRAY_AGG(DISTINCT x IGNORE NULLS ORDER BY a, b DESC LIMIT 1, 10) AS x",
+            "SELECT ARRAY_AGG(x IGNORE NULLS) AS x",
             write={
-                "bigquery": "SELECT ARRAY_AGG(DISTINCT x IGNORE NULLS ORDER BY a, b DESC LIMIT 1, 10) AS x",
-                "duckdb": "SELECT ARRAY_AGG(DISTINCT x ORDER BY a NULLS FIRST, b DESC LIMIT 1, 10) AS x",
-                "spark": "SELECT COLLECT_LIST(DISTINCT x ORDER BY a, b DESC LIMIT 1, 10) IGNORE NULLS AS x",
+                "bigquery": "SELECT ARRAY_AGG(x IGNORE NULLS) AS x",
+                "duckdb": "SELECT ARRAY_AGG(x) FILTER(WHERE x IS NOT NULL) AS x",
+            },
+        )
+        self.validate_all(
+            "SELECT ARRAY_AGG(DISTINCT x IGNORE NULLS ORDER BY x) AS x",
+            write={
+                "bigquery": "SELECT ARRAY_AGG(DISTINCT x IGNORE NULLS ORDER BY x) AS x",
+                "duckdb": "SELECT ARRAY_AGG(DISTINCT x ORDER BY x NULLS FIRST) FILTER(WHERE x IS NOT NULL) AS x",
+                "spark": "SELECT COLLECT_LIST(DISTINCT x) IGNORE NULLS AS x",
             },
         )
         self.validate_all(
@@ -835,7 +888,9 @@ LANGUAGE js AS
                 "bigquery": "SELECT TIMESTAMP_DIFF(TIMESTAMP_SECONDS(60), TIMESTAMP_SECONDS(0), MINUTE)",
                 "databricks": "SELECT TIMESTAMPDIFF(MINUTE, CAST(FROM_UNIXTIME(0) AS TIMESTAMP), CAST(FROM_UNIXTIME(60) AS TIMESTAMP))",
                 "duckdb": "SELECT DATE_DIFF('MINUTE', TO_TIMESTAMP(0), TO_TIMESTAMP(60))",
+                "presto": "SELECT DATE_DIFF('MINUTE', FROM_UNIXTIME(0), FROM_UNIXTIME(60))",
                 "snowflake": "SELECT TIMESTAMPDIFF(MINUTE, TO_TIMESTAMP(0), TO_TIMESTAMP(60))",
+                "trino": "SELECT DATE_DIFF('MINUTE', FROM_UNIXTIME(0), FROM_UNIXTIME(60))",
             },
         )
         self.validate_all(
@@ -848,7 +903,9 @@ LANGUAGE js AS
             write={
                 "databricks": "TIMESTAMPDIFF(MONTH, b, a)",
                 "mysql": "TIMESTAMPDIFF(MONTH, b, a)",
+                "presto": "DATE_DIFF('MONTH', b, a)",
                 "snowflake": "TIMESTAMPDIFF(MONTH, b, a)",
+                "trino": "DATE_DIFF('MONTH', b, a)",
             },
         )
 
@@ -929,6 +986,28 @@ LANGUAGE js AS
                     "duckdb": "SELECT DATE_DIFF('MILLISECOND', CAST('2023-01-01T05:00:00' AS TIMESTAMP), CAST('2023-01-01T00:00:00' AS TIMESTAMP))",
                 },
             ),
+        )
+        # DATETIME_DIFF counts unit boundary crossings, so Presto/Trino's date_diff (which
+        # counts complete units) must truncate its operands: both dates below are 1 day
+        # apart but cross a month boundary
+        self.validate_all(
+            "SELECT DATETIME_DIFF(DATETIME '2021-02-01 00:00:00', DATETIME '2021-01-31 00:00:00', MONTH)",
+            write={
+                "bigquery": "SELECT DATETIME_DIFF(CAST('2021-02-01 00:00:00' AS DATETIME), CAST('2021-01-31 00:00:00' AS DATETIME), MONTH)",
+                "presto": "SELECT DATE_DIFF('MONTH', DATE_TRUNC('MONTH', CAST('2021-01-31 00:00:00' AS TIMESTAMP)), DATE_TRUNC('MONTH', CAST('2021-02-01 00:00:00' AS TIMESTAMP)))",
+                "trino": "SELECT DATE_DIFF('MONTH', DATE_TRUNC('MONTH', CAST('2021-01-31 00:00:00' AS TIMESTAMP)), DATE_TRUNC('MONTH', CAST('2021-02-01 00:00:00' AS TIMESTAMP)))",
+            },
+        )
+        # BigQuery weeks start on Sunday: 2017-10-14 (Saturday) -> 2017-10-15 (Sunday)
+        # crosses a week boundary, so the Monday-based DATE_TRUNC('WEEK') is shifted
+        self.validate_all(
+            "SELECT DATETIME_DIFF(DATETIME '2017-10-15 00:00:00', DATETIME '2017-10-14 00:00:00', WEEK)",
+            write={
+                "bigquery": "SELECT DATETIME_DIFF(CAST('2017-10-15 00:00:00' AS DATETIME), CAST('2017-10-14 00:00:00' AS DATETIME), WEEK)",
+                "duckdb": "SELECT DATE_DIFF('WEEK', DATE_TRUNC('WEEK', CAST('2017-10-14 00:00:00' AS TIMESTAMP) + INTERVAL '1' DAY), DATE_TRUNC('WEEK', CAST('2017-10-15 00:00:00' AS TIMESTAMP) + INTERVAL '1' DAY))",
+                "presto": "SELECT DATE_DIFF('WEEK', DATE_TRUNC('WEEK', CAST('2017-10-14 00:00:00' AS TIMESTAMP) + INTERVAL '1' DAY), DATE_TRUNC('WEEK', CAST('2017-10-15 00:00:00' AS TIMESTAMP) + INTERVAL '1' DAY))",
+                "trino": "SELECT DATE_DIFF('WEEK', DATE_TRUNC('WEEK', CAST('2017-10-14 00:00:00' AS TIMESTAMP) + INTERVAL '1' DAY), DATE_TRUNC('WEEK', CAST('2017-10-15 00:00:00' AS TIMESTAMP) + INTERVAL '1' DAY))",
+            },
         )
         (
             self.validate_all(
@@ -1285,8 +1364,9 @@ LANGUAGE js AS
         self.validate_all(
             "r'x\\''",
             write={
-                "bigquery": "'x\\''",
-                "hive": "'x\\''",
+                "bigquery": "'x\\\\\\''",
+                "duckdb": "'x\\'''",
+                "hive": "'x\\\\\\''",
             },
         )
 
@@ -1577,9 +1657,17 @@ LANGUAGE js AS
             "SELECT * FROM a WHERE b IN UNNEST([1, 2, 3])",
             write={
                 "bigquery": "SELECT * FROM a WHERE b IN UNNEST([1, 2, 3])",
+                "duckdb": "SELECT * FROM a WHERE CASE WHEN [1, 2, 3] IS NULL OR ARRAY_LENGTH([1, 2, 3]) = 0 THEN FALSE WHEN ARRAY_CONTAINS([1, 2, 3], b) THEN TRUE WHEN b IS NULL OR ARRAY_LENGTH([1, 2, 3]) <> LIST_COUNT([1, 2, 3]) THEN NULL ELSE FALSE END",
                 "presto": "SELECT * FROM a WHERE b IN (SELECT UNNEST(ARRAY[1, 2, 3]))",
                 "hive": "SELECT * FROM a WHERE b IN (SELECT EXPLODE(ARRAY(1, 2, 3)))",
                 "spark": "SELECT * FROM a WHERE b IN (SELECT EXPLODE(ARRAY(1, 2, 3)))",
+            },
+        )
+        self.validate_all(
+            "SELECT * FROM a WHERE b NOT IN UNNEST([1, 2, 3])",
+            write={
+                "bigquery": "SELECT * FROM a WHERE NOT b IN UNNEST([1, 2, 3])",
+                "duckdb": "SELECT * FROM a WHERE NOT CASE WHEN [1, 2, 3] IS NULL OR ARRAY_LENGTH([1, 2, 3]) = 0 THEN FALSE WHEN ARRAY_CONTAINS([1, 2, 3], b) THEN TRUE WHEN b IS NULL OR ARRAY_LENGTH([1, 2, 3]) <> LIST_COUNT([1, 2, 3]) THEN NULL ELSE FALSE END",
             },
         )
         self.validate_all(
@@ -2078,10 +2166,39 @@ WHERE
         )
 
         self.validate_all(
-            "SELECT ARRAY_CONCAT_AGG(1)",
+            "SELECT ARRAY_CONCAT_AGG(arr) FROM (SELECT [1, 2] AS arr) AS t",
             write={
-                "snowflake": "SELECT ARRAY_FLATTEN(ARRAY_AGG(1))",
-                "bigquery": "SELECT ARRAY_CONCAT_AGG(1)",
+                "bigquery": "SELECT ARRAY_CONCAT_AGG(arr) FROM (SELECT [1, 2] AS arr) AS t",
+                "snowflake": "SELECT ARRAY_FLATTEN(ARRAY_AGG(arr)) FROM (SELECT [1, 2] AS arr) AS t",
+                "duckdb": "SELECT FLATTEN(ARRAY_AGG(arr) FILTER(WHERE NOT arr IS NULL)) FROM (SELECT [1, 2] AS arr) AS t",
+            },
+        )
+        self.validate_all(
+            "SELECT ARRAY_CONCAT_AGG(arr ORDER BY y) FROM (SELECT [1, 2] AS arr, 1 AS y) AS t",
+            write={
+                "bigquery": "SELECT ARRAY_CONCAT_AGG(arr ORDER BY y) FROM (SELECT [1, 2] AS arr, 1 AS y) AS t",
+                "duckdb": "SELECT FLATTEN(ARRAY_AGG(arr ORDER BY y NULLS FIRST) FILTER(WHERE NOT arr IS NULL)) FROM (SELECT [1, 2] AS arr, 1 AS y) AS t",
+            },
+        )
+        self.validate_all(
+            "SELECT ARRAY_CONCAT_AGG(arr LIMIT 2) FROM (SELECT [1, 2] AS arr) AS t",
+            write={
+                "bigquery": "SELECT ARRAY_CONCAT_AGG(arr LIMIT 2) FROM (SELECT [1, 2] AS arr) AS t",
+                "duckdb": UnsupportedError,
+            },
+        )
+        self.validate_all(
+            "SELECT ARRAY_CONCAT_AGG(arr ORDER BY y DESC LIMIT 2) FROM (SELECT [1, 2] AS arr, 1 AS y) AS t",
+            write={
+                "bigquery": "SELECT ARRAY_CONCAT_AGG(arr ORDER BY y DESC LIMIT 2) FROM (SELECT [1, 2] AS arr, 1 AS y) AS t",
+                "duckdb": UnsupportedError,
+            },
+        )
+        self.validate_all(
+            "SELECT * FROM a LEFT JOIN b ON a.key = b.key AND a.val IN UNNEST(b.arr)",
+            write={
+                "bigquery": "SELECT * FROM a LEFT JOIN b ON a.key = b.key AND a.val IN UNNEST(b.arr)",
+                "duckdb": "SELECT * FROM a LEFT JOIN b ON a.key = b.key AND CASE WHEN b.arr IS NULL OR ARRAY_LENGTH(b.arr) = 0 THEN FALSE WHEN ARRAY_CONTAINS(b.arr, a.val) THEN TRUE WHEN a.val IS NULL OR ARRAY_LENGTH(b.arr) <> LIST_COUNT(b.arr) THEN NULL ELSE FALSE END",
             },
         )
         self.validate_all(
@@ -2385,6 +2502,9 @@ WHERE
     def test_user_defined_functions(self):
         self.validate_identity(
             "CREATE TEMPORARY FUNCTION a(x FLOAT64, y FLOAT64) RETURNS FLOAT64 NOT DETERMINISTIC LANGUAGE js AS 'return x*y;'"
+        )
+        self.assertIsInstance(
+            self.validate_identity("SELECT NOT deterministic FROM t").selects[0], exp.Not
         )
         self.validate_identity("CREATE TEMPORARY FUNCTION udf(x ANY TYPE) AS (x)")
         self.validate_identity("CREATE TEMPORARY FUNCTION a(x FLOAT64, y FLOAT64) AS ((x + 4) / y)")
@@ -2917,6 +3037,15 @@ OPTIONS (
                     },
                 )
 
+                # `->>` binds looser than most operators in DuckDB, so the arrow expression
+                # must be parenthesized when it's an operand of another operator
+                self.validate_all(
+                    f"SELECT {func}(j, '$.a') IS NOT NULL FROM t",
+                    write={
+                        "duckdb": "SELECT NOT (JSON_VALUE(j, '$.a') ->> '$') IS NULL FROM t",
+                    },
+                )
+
         self.assertEqual(self.parse_one(sql).sql("bigquery", normalize_functions="upper"), sql)
 
         # Test double quote escaping
@@ -3212,6 +3341,17 @@ OPTIONS (
                             f"SELECT 1 AS foo{side}{kind} UNION ALL{name} SELECT 3 AS foo, 4 AS bar",
                         )
 
+        union = self.validate_identity(
+            "(SELECT 1 AS foo) FULL OUTER UNION ALL BY NAME (SELECT 2 AS foo, 3 AS bar)"
+        )
+        self.assertEqual(union.side, "FULL")
+        self.assertEqual(union.kind, "OUTER")
+
+        self.validate_identity("(SELECT 1 AS foo) FULL UNION ALL BY NAME (SELECT 2 AS foo)")
+
+        union = self.validate_identity("(SELECT 1) AS x UNION ALL (SELECT 2)")
+        self.assertIsInstance(union.this, exp.Subquery)
+
         self.validate_identity(
             "SELECT 1 AS x UNION ALL CORRESPONDING SELECT 2 AS x",
             "SELECT 1 AS x INNER UNION ALL BY NAME SELECT 2 AS x",
@@ -3473,6 +3613,159 @@ OPTIONS (
         )
         self.validate_identity("DATE_DIFF('2017-12-18', '2017-12-17', WEEK(SATURDAY))")
         self.validate_identity("DATETIME_DIFF('2017-12-18', '2017-12-17', WEEK(MONDAY))")
+
+        self.validate_all(
+            "SELECT LAST_DAY(DATE '2008-11-10', WEEK(SUNDAY))",
+            write={
+                "bigquery": "SELECT LAST_DAY(CAST('2008-11-10' AS DATE), WEEK)",
+                "duckdb": "SELECT CAST(CAST('2008-11-10' AS DATE) + INTERVAL ((13 - EXTRACT(DAYOFWEEK FROM CAST('2008-11-10' AS DATE))) % 7) DAY AS DATE)",
+            },
+        )
+        self.validate_all(
+            "SELECT LAST_DAY(DATE '2008-11-10', WEEK)",
+            write={
+                "bigquery": "SELECT LAST_DAY(CAST('2008-11-10' AS DATE), WEEK)",
+                "duckdb": "SELECT CAST(CAST('2008-11-10' AS DATE) + INTERVAL ((13 - EXTRACT(DAYOFWEEK FROM CAST('2008-11-10' AS DATE))) % 7) DAY AS DATE)",
+            },
+        )
+        self.validate_all(
+            "SELECT LAST_DAY(DATE '2008-11-10', WEEK(MONDAY))",
+            write={
+                "bigquery": "SELECT LAST_DAY(CAST('2008-11-10' AS DATE), WEEK(MONDAY))",
+                "duckdb": "SELECT CAST(CAST('2008-11-10' AS DATE) + INTERVAL ((7 - EXTRACT(DAYOFWEEK FROM CAST('2008-11-10' AS DATE))) % 7) DAY AS DATE)",
+            },
+        )
+        self.validate_all(
+            "SELECT LAST_DAY(DATE '2008-11-10', ISOWEEK)",
+            write={
+                "bigquery": "SELECT LAST_DAY(CAST('2008-11-10' AS DATE), ISOWEEK)",
+                "duckdb": "SELECT CAST(CAST('2008-11-10' AS DATE) + INTERVAL ((7 - EXTRACT(DAYOFWEEK FROM CAST('2008-11-10' AS DATE))) % 7) DAY AS DATE)",
+            },
+        )
+        # Dialects without week-start syntax degrade WEEK(<day>) to their plain week unit,
+        # warning when that changes the week start day; only outputs that preserve the
+        # source semantics are asserted
+        self.validate_all(
+            "SELECT DATE_TRUNC(d, WEEK(SUNDAY))",
+            write={
+                "bigquery": "SELECT DATE_TRUNC(d, WEEK)",
+                "exasol": UnsupportedError,
+                "mysql": UnsupportedError,
+                "snowflake": UnsupportedError,
+                "spark": UnsupportedError,
+            },
+        )
+        self.validate_all(
+            "SELECT TIMESTAMP_TRUNC(ts, WEEK(SUNDAY))",
+            write={
+                "bigquery": "SELECT TIMESTAMP_TRUNC(ts, WEEK)",
+                "clickhouse": UnsupportedError,
+                "duckdb": "SELECT DATE_TRUNC('WEEK', ts + INTERVAL '1' DAY) + INTERVAL '-1' DAY",
+                "mysql": UnsupportedError,
+                "snowflake": UnsupportedError,
+                "spark": UnsupportedError,
+            },
+        )
+        self.validate_all(
+            "SELECT DATETIME_TRUNC(dt, WEEK(SUNDAY))",
+            write={
+                "bigquery": "SELECT DATETIME_TRUNC(dt, WEEK)",
+                "duckdb": "SELECT DATE_TRUNC('WEEK', CAST(dt AS TIMESTAMP) + INTERVAL '1' DAY) + INTERVAL '-1' DAY",
+            },
+        )
+        # T-SQL's DATEDIFF counts Sunday-based week boundaries, matching WEEK(SUNDAY) exactly
+        self.validate_all(
+            "SELECT DATE_DIFF(d1, d2, WEEK(SUNDAY))",
+            write={
+                "bigquery": "SELECT DATE_DIFF(d1, d2, WEEK)",
+                "snowflake": UnsupportedError,
+                "tsql": "SELECT DATEDIFF(WEEK, d2, d1)",
+            },
+        )
+        self.validate_all(
+            "SELECT LAST_DAY(d, WEEK(SUNDAY))",
+            write={
+                "bigquery": "SELECT LAST_DAY(d, WEEK)",
+                "snowflake": UnsupportedError,
+            },
+        )
+        self.validate_all(
+            "SELECT EXTRACT(WEEK(THURSDAY) FROM d)",
+            write={
+                "bigquery": "SELECT EXTRACT(WEEK(THURSDAY) FROM d)",
+                "hive": UnsupportedError,
+                "snowflake": UnsupportedError,
+                "spark": UnsupportedError,
+            },
+        )
+        # DuckDB's weeks are Monday-based, so other week starts need shifting and ISOWEEK
+        # maps to its plain WEEK unit
+        self.validate_all(
+            "SELECT DATE_TRUNC(DATE '2008-11-10', WEEK(SUNDAY))",
+            write={
+                "bigquery": "SELECT DATE_TRUNC(CAST('2008-11-10' AS DATE), WEEK)",
+                "duckdb": "SELECT CAST(DATE_TRUNC('WEEK', CAST('2008-11-10' AS DATE) + INTERVAL '1' DAY) + INTERVAL '-1' DAY AS DATE)",
+            },
+        )
+        self.validate_all(
+            "SELECT DATE_TRUNC(DATE '2008-11-10', ISOWEEK)",
+            write={
+                "bigquery": "SELECT DATE_TRUNC(CAST('2008-11-10' AS DATE), ISOWEEK)",
+                "duckdb": "SELECT DATE_TRUNC('WEEK', CAST('2008-11-10' AS DATE))",
+            },
+        )
+        # A bare WEEK unit means WEEK(SUNDAY), so it must transpile exactly like the explicit
+        # spelling: DuckDB emulates the Sunday start, dialects without week-start syntax warn
+        self.validate_all(
+            "SELECT DATE_TRUNC(DATE '2008-11-10', WEEK)",
+            write={
+                "bigquery": "SELECT DATE_TRUNC(CAST('2008-11-10' AS DATE), WEEK)",
+                "duckdb": "SELECT CAST(DATE_TRUNC('WEEK', CAST('2008-11-10' AS DATE) + INTERVAL '1' DAY) + INTERVAL '-1' DAY AS DATE)",
+                "snowflake": UnsupportedError,
+            },
+        )
+        self.validate_all(
+            "SELECT TIMESTAMP_TRUNC(TIMESTAMP '2008-11-10 14:30:00', WEEK)",
+            write={
+                "bigquery": "SELECT TIMESTAMP_TRUNC(CAST('2008-11-10 14:30:00' AS TIMESTAMP), WEEK)",
+                "duckdb": "SELECT DATE_TRUNC('WEEK', CAST('2008-11-10 14:30:00' AS TIMESTAMPTZ) + INTERVAL '1' DAY) + INTERVAL '-1' DAY",
+            },
+        )
+        self.validate_all(
+            "SELECT TIMESTAMP_TRUNC(TIMESTAMP '2008-11-10 14:30:00', WEEK(SUNDAY))",
+            write={
+                "bigquery": "SELECT TIMESTAMP_TRUNC(CAST('2008-11-10 14:30:00' AS TIMESTAMP), WEEK)",
+                "duckdb": "SELECT DATE_TRUNC('WEEK', CAST('2008-11-10 14:30:00' AS TIMESTAMPTZ) + INTERVAL '1' DAY) + INTERVAL '-1' DAY",
+            },
+        )
+        self.validate_all(
+            "SELECT DATETIME_TRUNC(DATETIME '2008-11-10 14:30:00', WEEK)",
+            write={
+                "bigquery": "SELECT DATETIME_TRUNC(CAST('2008-11-10 14:30:00' AS DATETIME), WEEK)",
+                "duckdb": "SELECT DATE_TRUNC('WEEK', CAST(CAST('2008-11-10 14:30:00' AS TIMESTAMP) AS TIMESTAMP) + INTERVAL '1' DAY) + INTERVAL '-1' DAY",
+            },
+        )
+        self.validate_all(
+            "SELECT DATETIME_TRUNC(DATETIME '2008-11-10 14:30:00', WEEK(SUNDAY))",
+            write={
+                "bigquery": "SELECT DATETIME_TRUNC(CAST('2008-11-10 14:30:00' AS DATETIME), WEEK)",
+                "duckdb": "SELECT DATE_TRUNC('WEEK', CAST(CAST('2008-11-10 14:30:00' AS TIMESTAMP) AS TIMESTAMP) + INTERVAL '1' DAY) + INTERVAL '-1' DAY",
+            },
+        )
+        self.validate_all(
+            "SELECT TIMESTAMP_TRUNC(TIMESTAMP '2008-11-10 14:30:00+00', WEEK, 'America/New_York')",
+            write={
+                "bigquery": "SELECT TIMESTAMP_TRUNC(CAST('2008-11-10 14:30:00+00' AS TIMESTAMP), WEEK, 'America/New_York')",
+                "duckdb": "SELECT (DATE_TRUNC('WEEK', CAST('2008-11-10 14:30:00+00' AS TIMESTAMPTZ) AT TIME ZONE 'America/New_York' + INTERVAL '1' DAY) + INTERVAL '-1' DAY) AT TIME ZONE 'America/New_York'",
+            },
+        )
+        self.validate_all(
+            "SELECT TIMESTAMP_TRUNC(TIMESTAMP '2008-11-10 14:30:00+00', WEEK(SUNDAY), 'America/New_York')",
+            write={
+                "bigquery": "SELECT TIMESTAMP_TRUNC(CAST('2008-11-10 14:30:00+00' AS TIMESTAMP), WEEK, 'America/New_York')",
+                "duckdb": "SELECT (DATE_TRUNC('WEEK', CAST('2008-11-10 14:30:00+00' AS TIMESTAMPTZ) AT TIME ZONE 'America/New_York' + INTERVAL '1' DAY) + INTERVAL '-1' DAY) AT TIME ZONE 'America/New_York'",
+            },
+        )
         self.validate_identity(
             "EXTRACT(WEEK(THURSDAY) FROM DATE '2013-12-25')",
             "EXTRACT(WEEK(THURSDAY) FROM CAST('2013-12-25' AS DATE))",
@@ -3943,6 +4236,15 @@ OPTIONS (
                     write={
                         "bigquery": "DECLARE x BIGNUMERIC(76, 38)",
                         "duckdb": "DECLARE x DECIMAL(38, 38)",
+                    },
+                )
+
+                # Exponent notation must not materialize a huge integer when checking bounds
+                self.validate_all(
+                    f"DECLARE x {type_}(1e1000000, 4)",
+                    write={
+                        "bigquery": "DECLARE x BIGNUMERIC(1e1000000, 4)",
+                        "duckdb": "DECLARE x DECIMAL(38, 4)",
                     },
                 )
 

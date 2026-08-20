@@ -74,6 +74,39 @@ class TestDremio(Validator):
             "SELECT * FROM t ORDER BY a DESC NULLS FIRST",
         )
 
+    def test_time_travel(self):
+        self.validate_identity("SELECT * FROM t AT SNAPSHOT '4132119532727284872'")
+        self.validate_identity("SELECT * FROM t AT TIMESTAMP '2024-01-01 12:00:00.000'")
+        self.validate_identity("SELECT * FROM t AT SNAPSHOT '4132119532727284872' AS a")
+
+        self.validate_all(
+            "SELECT * FROM t AT SNAPSHOT '123'",
+            read={
+                "spark": "SELECT * FROM t VERSION AS OF '123'",
+                "trino": "SELECT * FROM t FOR VERSION AS OF '123'",
+            },
+            write={
+                "spark": "SELECT * FROM t VERSION AS OF '123'",
+                "trino": "SELECT * FROM t FOR VERSION AS OF '123'",
+            },
+        )
+        self.validate_all(
+            "SELECT * FROM t AT TIMESTAMP '2024-01-01'",
+            read={
+                "spark": "SELECT * FROM t TIMESTAMP AS OF '2024-01-01'",
+            },
+            write={
+                "spark": "SELECT * FROM t TIMESTAMP AS OF '2024-01-01'",
+            },
+        )
+
+        with self.assertRaises(UnsupportedError):
+            transpile(
+                "SELECT * FROM t FOR VERSION BETWEEN '1' AND '2'",
+                write="dremio",
+                unsupported_level=ErrorLevel.IMMEDIATE,
+            )
+
     def test_convert_timezone(self):
         self.validate_all(
             "SELECT CONVERT_TIMEZONE('America/Chicago', DateColumn)",
@@ -216,6 +249,27 @@ class TestDremio(Validator):
     def test_datetype(self):
         self.validate_identity("DATETYPE(2024,2,2)", "DATE('2024-02-02')")
         self.validate_identity("DATETYPE(x,y,z)", "CAST(CONCAT(x, '-', y, '-', z) AS DATE)")
+
+    def test_regexp_split(self):
+        ast = self.validate_identity("SELECT REGEXP_SPLIT(tags, ',', 'ALL', 1000) AS t")
+        regexp_split = ast.find(exp.RegexpSplit)
+        self.assertEqual(regexp_split.text("mode"), "ALL")
+        self.assertEqual(regexp_split.text("limit"), "1000")
+
+        # Construct in exp.RegexpSplit's declared arg_types order (this,
+        # expression, limit, mode), which does NOT match Dremio's real
+        # argument order (this, expression, mode, limit), to prove the
+        # generator renders by key and not by construction/kwarg order.
+        reordered = exp.RegexpSplit(
+            this=exp.column("tags"),
+            expression=exp.Literal.string(","),
+            limit=exp.Literal.number(1000),
+            mode=exp.Literal.string("ALL"),
+        )
+        self.assertEqual(
+            reordered.sql(dialect="dremio"),
+            "REGEXP_SPLIT(tags, ',', 'ALL', 1000)",
+        )
 
     def test_try_cast(self):
         self.validate_all(

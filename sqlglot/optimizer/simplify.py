@@ -154,7 +154,8 @@ def simplify_parens(expression: exp.Expr, dialect: DialectType) -> exp.Expr:
     if isinstance(this, exp.Predicate) and (
         not (
             parent_is_predicate
-            or isinstance(parent, exp.Neg)
+            # unary operators that bind tighter than the predicate, unlike NOT
+            or isinstance(parent, (exp.Neg, exp.BitwiseNot))
             or (isinstance(parent, exp.Binary) and not isinstance(parent, exp.Connector))
         )
     ):
@@ -286,11 +287,26 @@ def _datetrunc_neq(
     if not drange:
         return None
 
-    return exp.and_(
+    return exp.or_(
         left < date_literal(drange[0], target_type),
         left >= date_literal(drange[1], target_type),
         copy=False,
     )
+
+
+def _parenthesize_nested_connector(expression: exp.Expr, parent: exp.Expr | None) -> exp.Expr:
+    """
+    The generator flattens nested connectors and relies on Paren nodes for grouping.
+    Operator precedence varies across dialects, so wrap unless the parent is the same
+    connector type, in which case flattening is safe by associativity.
+    """
+    if isinstance(expression, exp.Connector) and (
+        isinstance(parent, exp.Not)
+        or (isinstance(parent, exp.Connector) and type(parent) is not type(expression))
+    ):
+        return exp.paren(expression, copy=False)
+
+    return expression
 
 
 def always_true(expression: object) -> bool:
@@ -332,6 +348,8 @@ def eval_boolean(
     expression: object, a: SupportsComparison, b: SupportsComparison
 ) -> exp.Boolean | None:
     if isinstance(expression, (exp.EQ, exp.Is)):
+        if isinstance(expression, exp.Is) and expression.args.get("negate"):
+            return boolean_literal(a != b)
         return boolean_literal(a == b)
     if isinstance(expression, exp.NEQ):
         return boolean_literal(a != b)
@@ -483,8 +501,8 @@ def datetime_floor(d: date, unit: str, dialect: Dialect) -> date:
     elif unit == "month":
         result = d.replace(month=d.month, day=1)
     elif unit == "week":
-        # Assuming week starts on Monday (0) and ends on Sunday (6)
-        result = d - timedelta(days=d.weekday() - dialect.WEEK_OFFSET)
+        # Week truncation respects dialect.WEEK_OFFSET (0=Monday, -1=Sunday)
+        result = d - timedelta(days=(d.weekday() - dialect.WEEK_OFFSET) % 7)
     elif unit == "day":
         result = d
     else:
@@ -494,6 +512,17 @@ def datetime_floor(d: date, unit: str, dialect: Dialect) -> date:
     if isinstance(result, datetime):
         return result.replace(hour=0, minute=0, second=0, microsecond=0)
     return result
+
+
+def _trunc_unit(unit: exp.Expr, dialect: Dialect) -> str:
+    if isinstance(unit, exp.WeekStart):
+        from sqlglot.dialects.dialect import WEEK_START_DAY_TO_DOW, week_offset_to_dow
+
+        if WEEK_START_DAY_TO_DOW.get(unit.name.upper()) != week_offset_to_dow(dialect.WEEK_OFFSET):
+            raise UnsupportedUnit(f"Unsupported unit: {unit}")
+        return "week"
+
+    return unit.name.lower()
 
 
 def date_ceil(d: date, unit: str, dialect: Dialect) -> date:
@@ -710,9 +739,6 @@ class Simplifier:
             if node is not original:
                 original.replace(node)
 
-            for n in node.iter_expressions(reverse=True):
-                if n.meta_get(FINAL):
-                    raise
             pre_transformation_stack.extend(
                 n for n in node.iter_expressions(reverse=True) if not n.meta_get(FINAL)
             )
@@ -786,7 +812,9 @@ class Simplifier:
         if isinstance(expression, exp.Not):
             this = expression.this
             if is_null(this):
-                return exp.and_(exp.null(), exp.true(), copy=False)
+                return _parenthesize_nested_connector(
+                    exp.and_(exp.null(), exp.true(), copy=False), expression.parent
+                )
             if this.__class__ in self.COMPLEMENT_COMPARISONS:
                 right = this.expression
                 complement_subquery_predicate = self.COMPLEMENT_SUBQUERY_PREDICATES.get(
@@ -817,7 +845,9 @@ class Simplifier:
                         copy=False,
                     )
                 if is_null(condition):
-                    return exp.and_(exp.null(), exp.true(), copy=False)
+                    return _parenthesize_nested_connector(
+                        exp.and_(exp.null(), exp.true(), copy=False), expression.parent
+                    )
             if always_true(this):
                 return exp.false()
             if is_false(this):
@@ -895,8 +925,11 @@ class Simplifier:
         self, expression: exp.Expr, left: exp.Expr, right: exp.Expr, or_: bool = False
     ) -> exp.Expr | None:
         if isinstance(left, self.COMPARISONS) and isinstance(right, self.COMPARISONS):
-            ll, lr = left.args.values()
-            rl, rr = right.args.values()
+            if any(isinstance(e, exp.Is) and e.args.get("negate") for e in (left, right)):
+                return None
+
+            ll, lr = left.this, left.expression
+            rl, rr = right.this, right.expression
 
             largs = {ll, lr}
             rargs = {rl, rr}
@@ -1016,11 +1049,11 @@ class Simplifier:
         absorption:
             A AND (A OR B) -> A
             A OR (A AND B) -> A
-            A AND (NOT A OR B) -> A AND B
-            A OR (NOT A AND B) -> A OR B
+            A AND (NOT A OR B) -> A AND B (only for non-NULL A)
+            A OR (NOT A AND B) -> A OR B (only for non-NULL A)
         elimination:
-            (A AND B) OR (A AND NOT B) -> A
-            (A OR B) AND (A OR NOT B) -> A
+            (A AND B) OR (A AND NOT B) -> A (only for non-NULL B)
+            (A OR B) AND (A OR NOT B) -> A (only for non-NULL B)
         """
         if isinstance(expression, self.AND_OR) and (root or not expression.same_parent):
             kind = exp.Or if isinstance(expression, exp.And) else exp.And
@@ -1052,9 +1085,10 @@ class Simplifier:
                     subops[i].append(subset)
 
                 a, b = op.unnest_operands()
-                if isinstance(a, exp.Not):
+
+                if isinstance(a, exp.Not) and a.this.meta_get("nonnull") is True:
                     pairs[frozenset((a.this, b))].append((op, b))
-                if isinstance(b, exp.Not):
+                if isinstance(b, exp.Not) and b.this.meta_get("nonnull") is True:
                     pairs[frozenset((a, b.this))].append((op, a))
 
             for op in ops:
@@ -1064,10 +1098,18 @@ class Simplifier:
                 a, b = op.unnest_operands()
 
                 # Absorb
-                if isinstance(a, exp.Not) and a.this in op_set:
+                if (
+                    isinstance(a, exp.Not)
+                    and a.this in op_set
+                    and a.this.meta_get("nonnull") is True
+                ):
                     a.replace(exp.true() if kind == exp.And else exp.false())
                     continue
-                if isinstance(b, exp.Not) and b.this in op_set:
+                if (
+                    isinstance(b, exp.Not)
+                    and b.this in op_set
+                    and b.this.meta_get("nonnull") is True
+                ):
                     b.replace(exp.true() if kind == exp.And else exp.false())
                     continue
                 superset = set(op.flatten())
@@ -1196,6 +1238,9 @@ class Simplifier:
             else:
                 c = b
                 not_ = False
+
+            if expression.args.get("negate"):
+                not_ = not not_
 
             if is_null(c):
                 if isinstance(a, exp.Literal):
@@ -1355,7 +1400,7 @@ class Simplifier:
         if concat_type is exp.ConcatWs:
             new_args = [sep_expr] + new_args
         elif isinstance(expression, exp.DPipe):
-            return reduce(lambda x, y: exp.DPipe(this=x, expression=y), new_args)
+            return reduce(lambda x, y: exp.DPipe(this=x, expression=y, safe=args["safe"]), new_args)
 
         return concat_type(expressions=new_args, **args)
 
@@ -1420,7 +1465,7 @@ class Simplifier:
             date = extract_date(this)
             if date and expression.unit:
                 return date_literal(
-                    datetime_floor(date, expression.unit.name.lower(), self.dialect),
+                    datetime_floor(date, _trunc_unit(expression.unit, self.dialect), self.dialect),
                     trunc_type,
                 )
         elif comparison not in self.DATETRUNC_COMPARISONS:
@@ -1435,18 +1480,19 @@ class Simplifier:
                 return expression
 
             trunc_arg = l.this
-            unit = l.args["unit"].name.lower()
+            unit = _trunc_unit(l.args["unit"], self.dialect)
             date = extract_date(r)
 
             if not date:
                 return expression
 
-            return (
-                self.DATETRUNC_BINARY_COMPARISONS[comparison](
-                    trunc_arg, date, unit, self.dialect, extract_type(r)
-                )
-                or expression
+            simplified = self.DATETRUNC_BINARY_COMPARISONS[comparison](
+                trunc_arg, date, unit, self.dialect, extract_type(r)
             )
+            if simplified is None:
+                return expression
+
+            return _parenthesize_nested_connector(simplified, expression.parent)
 
         if isinstance(expression, exp.In):
             l = expression.this
@@ -1457,7 +1503,7 @@ class Simplifier:
                 and all(self._is_datetrunc_predicate(l, r) for r in rs)
                 and isinstance(l, (exp.DateTrunc, exp.TimestampTrunc))
             ):
-                unit = l.args["unit"].name.lower()
+                unit = _trunc_unit(l.args["unit"], self.dialect)
 
                 ranges = []
                 for r in rs:
@@ -1474,10 +1520,11 @@ class Simplifier:
                 ranges = merge_ranges(ranges)
                 target_type = extract_type(*rs)
 
-                return exp.or_(
+                simplified = exp.or_(
                     *[_datetrunc_eq_expression(l, drange, target_type) for drange in ranges],
                     copy=False,
                 )
+                return _parenthesize_nested_connector(simplified, expression.parent)
 
         return expression
 
@@ -1615,7 +1662,11 @@ class Gen:
             name = this.upper()
         elif isinstance(this, exp.Identifier):
             name = this.this
-            name = f'"{name}"' if this.quoted else name.upper()
+            if this.quoted:
+                escaped = name.replace('"', '""')
+                name = f'"{escaped}"'
+            else:
+                name = name.upper()
         else:
             raise ValueError(
                 f"Anonymous.this expects a str or an Identifier, got '{this.__class__.__name__}'."
@@ -1682,10 +1733,14 @@ class Gen:
         self._binary(e, " >= ")
 
     def identifier_sql(self, e: exp.Identifier) -> None:
-        self.stack.append(f'"{e.this}"' if e.quoted else e.this)
+        if e.quoted:
+            escaped = e.this.replace('"', '""')
+            self.stack.append(f'"{escaped}"')
+        else:
+            self.stack.append(e.this)
 
     def ilike_sql(self, e: exp.ILike) -> None:
-        self._binary(e, " ILIKE ")
+        self._binary(e, " NOT ILIKE " if e.args.get("negate") else " ILIKE ")
 
     def in_sql(self, e: exp.In) -> None:
         self.stack.append(")")
@@ -1702,13 +1757,17 @@ class Gen:
         self._binary(e, " DIV ")
 
     def is_sql(self, e: exp.Is) -> None:
-        self._binary(e, " IS ")
+        self._binary(e, " IS NOT " if e.args.get("negate") else " IS ")
 
     def like_sql(self, e: exp.Like) -> None:
-        self._binary(e, " Like ")
+        self._binary(e, " NOT Like " if e.args.get("negate") else " Like ")
 
     def literal_sql(self, e: exp.Literal) -> None:
-        self.stack.append(f"'{e.this}'" if e.is_string else e.this)
+        if e.is_string:
+            escaped = e.this.replace("'", "''")
+            self.stack.append(f"'{escaped}'")
+        else:
+            self.stack.append(e.this)
 
     def lt_sql(self, e: exp.LT) -> None:
         self._binary(e, " < ")
@@ -1800,7 +1859,8 @@ class Gen:
             v = node.args.get(k)
 
             if v is not None:
-                kvs.append([f":{k}", v])
+                # repr() plain strings so their content can't mimic gen's structural text
+                kvs.append([f":{k}", repr(v) if isinstance(v, str) else v])
         if kvs:
             self.stack.append(kvs)
             return True
