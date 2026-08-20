@@ -12,6 +12,7 @@ setup(
     extras_require={
         "dev": [
             "duckdb>=0.6",
+            "pytz",  # bigquery dialect tests
             # sqlglot-mypy 1.20+ is the build dep for sqlglotc and only ships
             # for py3.10+; on py3.9 just use upstream mypy for type checking.
             "sqlglot-mypy >= 2.3.0.post2; python_version >= '3.10'",
@@ -20,6 +21,7 @@ setup(
             "pandas-stubs",
             "python-dateutil",
             "pytz",
+            "pytest",
             "pdoc",
             "pre-commit",
             "ruff==0.15.6",
