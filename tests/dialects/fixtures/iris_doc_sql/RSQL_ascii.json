@@ -1,0 +1,32 @@
+{
+  "doc_key": "RSQL_ascii",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_ascii",
+  "title": "ASCII (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_4f06b5c1",
+      "section": "Examples",
+      "sql": "SELECT ASCII('Z') AS AsciiCode",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_b1654373",
+      "section": "Examples",
+      "sql": "SELECT {fn ASCII('ZEBRA')} AS AsciiCode",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_67cd1288",
+      "section": "Examples",
+      "sql": "SELECT ASCII(+007) AS AsciiCode",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_663d9860",
+      "section": "Examples",
+      "sql": "SELECT ASCII('+007') AS AsciiCode",
+      "roundtrip": false
+    }
+  ]
+}

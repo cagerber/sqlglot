@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_log",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_log",
+  "title": "LOG (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_cb4511f3",
+      "section": "Examples",
+      "sql": "SELECT {fn LOG(5)} AS Logarithm",
+      "roundtrip": false
+    }
+  ]
+}

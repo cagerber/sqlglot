@@ -1,0 +1,56 @@
+{
+  "doc_key": "RSQL_windowfunctions",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_windowfunctions",
+  "title": "Overview of Window Functions | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_7ed2e339",
+      "section": "Examples",
+      "sql": "SELECT Name,City,ROW_NUMBER() OVER (PARTITION BY City) FROM CityTable",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_a4a9a10c",
+      "section": "Examples",
+      "sql": "SELECT Name,City,ROW_NUMBER() OVER (ORDER BY City) FROM CityTable",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_d11dd241",
+      "section": "Examples",
+      "sql": "SELECT Name,City,ROW_NUMBER() OVER (Partition BY City ORDER BY Name) FROM CityTable",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_9200c9fd",
+      "section": "Examples",
+      "sql": "SELECT Name,City,ROW_NUMBER() OVER (ORDER BY City) AS RowNum, RANK() OVER (ORDER BY City) AS RankNum, PERCENT_RANK() OVER (ORDER BY City) AS RankPct FROM CityTable ORDER BY City",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_b63a0f74",
+      "section": "Examples",
+      "sql": "SELECT Item,Score,SUM(Score) OVER (ORDER BY Score ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING)/3 AS CohortScore FROM Sample.TestScores",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_b735c729",
+      "section": "Examples",
+      "sql": "SELECT Name,State,ROW_NUMBER() OVER (PARTITION BY State),Age,AVG(Age),ROW_NUMBER() OVER (ORDER BY Age) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_51301ebb",
+      "section": "Examples",
+      "sql": "SELECT Name,State,ROW_NUMBER() OVER (PARTITION BY State) AS StateRow,Age FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_90b06ab6",
+      "section": "Examples",
+      "sql": "SELECT Name,State,ROW_NUMBER() OVER (PARTITION BY State) AS StateRow,Age FROM Sample.Person ORDER BY StateRow",
+      "roundtrip": false
+    }
+  ]
+}

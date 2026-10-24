@@ -1,0 +1,32 @@
+{
+  "doc_key": "RSQL_getdate",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_getdate",
+  "title": "GETDATE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_0f839d0b",
+      "section": "Examples",
+      "sql": "SELECT GETDATE() AS DateTime",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_f397a561",
+      "section": "Examples",
+      "sql": "SELECT GETDATE(2) AS DateTime",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_d1175782",
+      "section": "Examples",
+      "sql": "SELECT GETDATE(), GETUTCDATE()",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_cb4738a5",
+      "section": "Examples",
+      "sql": "UPDATE Orders SET LastUpdate = GETDATE() WHERE Orders.OrderNumber=:ord",
+      "roundtrip": false
+    }
+  ]
+}

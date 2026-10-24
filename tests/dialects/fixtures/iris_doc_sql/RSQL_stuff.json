@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_stuff",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_stuff",
+  "title": "STUFF (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_7e9dc579",
+      "section": "Examples",
+      "sql": "SELECT STUFF('BOLT',2,1,'E')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_1209f5d9",
+      "section": "Examples",
+      "sql": "SELECT STUFF('In my old Kentucky home',11,8,'Rhode Island'), STUFF('In my old Kentucky home',11,8,'KY')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_a053599c",
+      "section": "Examples",
+      "sql": "SELECT STUFF('In my old Kentucky home',19,0,' (KY)')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_40259de9",
+      "section": "Examples",
+      "sql": "SELECT STUFF('In my old Kentucky home',0,0,'The sun shines bright ')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_a8896cba",
+      "section": "Examples",
+      "sql": "SELECT STUFF('In my old Kentucky home',11,8,'')",
+      "roundtrip": false
+    }
+  ]
+}

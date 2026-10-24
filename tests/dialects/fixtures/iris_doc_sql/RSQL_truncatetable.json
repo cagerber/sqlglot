@@ -1,0 +1,28 @@
+{
+  "doc_key": "RSQL_truncatetable",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_truncatetable",
+  "title": "TRUNCATE TABLE (SQL)",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_003_be58a545",
+      "section": "Examples",
+      "sql": "TRUNCATE TABLE SQLUser.MyStudents",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_1cb4bdd4",
+      "section": "Examples",
+      "sql": "TRUNCATE TABLE [restriction] tablename",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_002_6a709e74",
+      "section": "Examples",
+      "sql": "DELETE %NOTRIGGER FROM tablename",
+      "roundtrip": false
+    }
+  ]
+}

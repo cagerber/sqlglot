@@ -1,0 +1,63 @@
+{
+  "doc_key": "GSOC_hints",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSOC_hints",
+  "title": "Specify Optimization Hints in Queries",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "select_doruntime",
+      "section": "Standard diagnostic hints — SELECT",
+      "sql": "SELECT %DORUNTIME Name FROM Sample.Person"
+    },
+    {
+      "id": "select_noruntime_star",
+      "section": "Standard diagnostic hints — SELECT",
+      "sql": "SELECT %NORUNTIME * FROM Sample.Person"
+    },
+    {
+      "id": "from_firsttable",
+      "section": "Standard diagnostic hints — FROM",
+      "sql": "SELECT * FROM %FIRSTTABLE P Sample.Employee AS E JOIN Sample.Person AS P ON E.Name = P.Name"
+    },
+    {
+      "id": "from_inorder",
+      "section": "Standard diagnostic hints — FROM",
+      "sql": "SELECT Name FROM %INORDER Sample.Person"
+    },
+    {
+      "id": "from_nofixedstats",
+      "section": "Standard diagnostic hints — FROM",
+      "sql": "SELECT Name FROM %NOFIXEDSTATS Sample.Person"
+    },
+    {
+      "id": "from_nofplan",
+      "section": "Standard diagnostic hints — FROM",
+      "sql": "SELECT Name FROM %NOFPLAN Sample.Person"
+    },
+    {
+      "id": "from_parallel",
+      "section": "Standard diagnostic hints — FROM",
+      "sql": "SELECT Name FROM %PARALLEL Sample.Person"
+    },
+    {
+      "id": "from_noparallel",
+      "section": "Standard diagnostic hints — FROM",
+      "sql": "SELECT Name FROM %NOPARALLEL Sample.Person"
+    },
+    {
+      "id": "where_noindex",
+      "section": "Standard diagnostic hints — WHERE",
+      "sql": "SELECT Name FROM Sample.Person WHERE %NOINDEX Age >= 18"
+    },
+    {
+      "id": "comment_noindex",
+      "section": "Comment hints",
+      "sql": "/* %NOINDEX */ SELECT Name FROM Sample.Person WHERE Age >= 18"
+    },
+    {
+      "id": "ex_001_doc_from_fragment",
+      "section": "Examples (harvested FROM fragment)",
+      "sql": "SELECT * FROM %FIRSTTABLE P Sample.Employee AS E JOIN Sample.Person AS P ON E.Name = P.Name"
+    }
+  ]
+}

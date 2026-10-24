@@ -1,0 +1,56 @@
+{
+  "doc_key": "RSQL_forsome",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_forsome",
+  "title": "FOR SOME (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_75eae922",
+      "section": "Examples",
+      "sql": "SELECT Name,COUNT(Name) AS NameCount FROM Sample.Person AS p WHERE FOR SOME (Sample.Employee AS e)(e.Name=p.Name AND p.Name %STARTSWITH 'A') ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_a926dd8c",
+      "section": "Examples",
+      "sql": "SELECT Name,COUNT(Name) AS NameCount FROM Sample.Person AS p WHERE FOR SOME (Sample.Employee AS e)(e.Name=p.Name OR p.Name %STARTSWITH 'A') ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_bc98528c",
+      "section": "Examples",
+      "sql": "SELECT Name,COUNT(Name) AS NameCount FROM Sample.Person AS p WHERE FOR SOME (Sample.Employee AS e)(e.Name=p.Name) ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_18f1bc8f",
+      "section": "Examples",
+      "sql": "SELECT Name,Age,COUNT(Name) AS NameCount FROM Sample.Person WHERE FOR SOME (Sample.Person)(Age>65) ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_7925e76c",
+      "section": "Examples",
+      "sql": "SELECT Name,Age,COUNT(Name) AS NameCount FROM Sample.Person WHERE NOT FOR SOME (Sample.Person)(Age>65) ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_dd02194c",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_State,COUNT(Name) AS NameCount FROM Sample.Person AS p WHERE FOR SOME (Sample.Employee AS e)(p.Name=e.Name AND p.Home_State=e.Office_State) ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_94291fd8",
+      "section": "Examples",
+      "sql": "SELECT Name AS PersonName,Age,COUNT(Name) AS NameCount FROM Sample.Person WHERE FOR SOME (Sample.Employee AS e,Sample.Person AS p) (e.Name=p.Name) ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_b376692a",
+      "section": "Examples",
+      "sql": "SELECT Name AS PersonName,Age,COUNT(Name) AS NameCount FROM Sample.Person WHERE FOR SOME (Sample.Company AS c,Sample.Person AS p) (c.Name=p.Name) ORDER BY Name",
+      "roundtrip": false
+    }
+  ]
+}

@@ -263,6 +263,10 @@ class Insert(Expression, DDL, DML):
         )
 
 
+class InsertOrUpdate(Insert):
+    """InterSystems IRIS ``INSERT OR UPDATE`` upsert statement."""
+
+
 class OnConflict(Expression):
     arg_types = {
         "duplicate": False,

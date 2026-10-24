@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_windowavg",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_windowavg",
+  "title": "AVG (SQL Window Function) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_ebbadd32",
+      "section": "Examples",
+      "sql": "SELECT AVG(Salary) OVER (PARTITION BY Department) FROM Company.Employee",
+      "roundtrip": false
+    }
+  ]
+}

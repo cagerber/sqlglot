@@ -206,6 +206,7 @@ class Generator:
         exp.Int64: lambda self, e: self.sql(exp.cast(e.this, exp.DType.BIGINT)),
         exp.JSONBContainsAnyTopKeys: lambda self, e: self.binary(e, "?|"),
         exp.JSONBContainsAllTopKeys: lambda self, e: self.binary(e, "?&"),
+        exp.JSONBContainsTopKey: lambda self, e: self.binary(e, "?"),
         exp.JSONBDeleteAtPath: lambda self, e: self.binary(e, "#-"),
         exp.JSONBPathExists: lambda self, e: self.binary(e, "@?"),
         exp.JSONObject: lambda self, e: self._jsonobject_sql(e),
@@ -1827,6 +1828,8 @@ class Generator:
 
     def drop_sql(self, expression: exp.Drop) -> str:
         this = self.sql(expression, "this")
+        tables = self.expressions(expression, key="tables", flat=True)
+        this = f"{this}, {tables}" if tables else this
         expressions = self.expressions(expression, flat=True)
         expressions = f" ({expressions})" if expressions else ""
         kind = expression.args["kind"]
@@ -5035,6 +5038,12 @@ class Generator:
 
         return self.sql(case)
 
+    def nthvalue_sql(self, expression: exp.NthValue) -> str:
+        if expression.args.get("from_first") is False:
+            self.unsupported("NTH_VALUE FROM LAST is not supported")
+
+        return self.function_fallback_sql(expression)
+
     def comprehension_sql(self, expression: exp.Comprehension) -> str:
         this = self.sql(expression, "this")
         expr = self.sql(expression, "expression")
@@ -5395,9 +5404,11 @@ class Generator:
 
         if self.IGNORE_NULLS_IN_FUNC and not expression.meta_get("inline"):
             if self.IGNORE_NULLS_BEFORE_ORDER:
+                from sqlglot.optimizer.scope import find_all_in_scope
+
                 # The first modifier here will be the one closest to the AggFunc's arg
                 mods = sorted(
-                    expression.find_all(exp.HavingMax, exp.Order, exp.Limit),
+                    find_all_in_scope(expression, exp.HavingMax, exp.Order, exp.Limit),
                     key=lambda x: (
                         0
                         if isinstance(x, exp.HavingMax)

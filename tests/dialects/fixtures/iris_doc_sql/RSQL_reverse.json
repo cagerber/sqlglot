@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_reverse",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_reverse",
+  "title": "REVERSE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_7597f438",
+      "section": "Examples",
+      "sql": "SELECT Name,REVERSE(Name) AS RevName FROM Sample.Person ORDER BY RevName",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_c9f729d6",
+      "section": "Examples",
+      "sql": "SELECT REVERSE(+007.10) AS RevNum, REVERSE('+007.10') AS RevNumStr",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_481275df",
+      "section": "Examples",
+      "sql": "SELECT CAST(1.1 AS DOUBLE) AS DoubleNumber, REVERSE(CAST(1.1 AS DOUBLE)) AS ReverseDouble",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_849fa80a",
+      "section": "Examples",
+      "sql": "SELECT FavoriteColors,REVERSE(FavoriteColors) AS RevColors FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_91c5ae10",
+      "section": "Examples",
+      "sql": "SELECT DOB,%INTERNAL(DOB) AS IntDOB,REVERSE(DOB) AS RevDOB FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

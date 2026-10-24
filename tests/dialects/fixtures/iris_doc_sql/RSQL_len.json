@@ -1,0 +1,13 @@
+{
+  "doc_key": "RSQL_len",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_len",
+  "title": "LEN (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "curated_len",
+      "section": "DocBook synopsis (curated)",
+      "sql": "SELECT LEN(Name) FROM Sample.Person"
+    }
+  ]
+}

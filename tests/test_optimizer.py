@@ -1106,6 +1106,61 @@ class TestOptimizer(unittest.TestCase):
         )
         self.assertEqual(qualified.selects[0].type.sql("bigquery"), "INT64")
 
+    def test_qualify_snowflake_positional_column_with_visible_schema(self):
+        visible_schema = MappingSchema(
+            {"t": {"hidden": "INT", "HAS SPACE": "INT"}},
+            visible={"T": {"HAS SPACE"}},
+            dialect="snowflake",
+        )
+        self.assertEqual(
+            qualify(
+                parse_one("SELECT t.$1 FROM t", dialect="snowflake"),
+                dialect="snowflake",
+                quote_identifiers=False,
+                schema=visible_schema,
+            ).sql("snowflake"),
+            'SELECT T."HAS SPACE" AS "HAS SPACE" FROM T AS T',
+        )
+
+    def test_qualify_positional_columns_is_snowflake_only(self):
+        expression = parse_one(
+            "WITH t AS (SELECT 1 AS a) SELECT t.$1 FROM t",
+            dialect="postgres",
+        )
+
+        self.assertEqual(
+            qualify(
+                expression,
+                dialect="postgres",
+                allow_partial_qualification=True,
+                quote_identifiers=False,
+            ).sql("postgres"),
+            "WITH t AS (SELECT 1 AS a) SELECT t.$1 AS _col_0 FROM t AS t",
+        )
+
+    def test_qualify_snowflake_positional_column_out_of_range(self):
+        sql = "WITH t AS (SELECT 1 AS a) SELECT t.$2 FROM t"
+
+        with self.assertRaisesRegex(
+            OptimizeError, r"Positional reference \$2 is out of range for source 'T'"
+        ):
+            qualify(
+                parse_one(sql, dialect="snowflake"),
+                dialect="snowflake",
+            )
+
+        expression = qualify(
+            parse_one(sql, dialect="snowflake"),
+            dialect="snowflake",
+            allow_partial_qualification=True,
+            quote_identifiers=False,
+        )
+
+        self.assertEqual(
+            expression.sql("snowflake"),
+            "WITH T AS (SELECT 1 AS A) SELECT T.$2 AS _COL_0 FROM T AS T",
+        )
+
     def test_qualify_columns__with_invisible(self):
         schema = MappingSchema(self.schema, {"x": {"a"}, "y": {"b"}, "z": {"b"}})
         self.check_file("qualify_columns__with_invisible", qualify_columns, schema=schema)
@@ -2140,6 +2195,66 @@ SELECT :with_,WITH :expressions,CTE :this,UNION :this,SELECT :expressions,1,:exp
         self.assertEqual(
             sql[identifier.meta["start"] : identifier.meta["end"] + 1], "CaseSensitive"
         )
+
+    def test_annotate_semi_structured_dot_parts(self):
+        # Dot access into semi-structured values is a case sensitive data lookup, unlike
+        # struct field access, which the engines resolve like any other identifier
+        schema = {
+            "t": {"m": "MAP(VARCHAR, INT)", "v": "VARIANT", "j": "JSON", "s": "STRUCT(Foo INT)"}
+        }
+
+        for sql, expected in (
+            ("SELECT m.Foo FROM t", 'SELECT "t"."m"."Foo" AS "foo" FROM "t" AS "t"'),
+            ("SELECT v.Foo FROM t", 'SELECT "t"."v"."Foo" AS "foo" FROM "t" AS "t"'),
+            ("SELECT j.Foo.Bar FROM t", 'SELECT "t"."j"."Foo"."Bar" AS "bar" FROM "t" AS "t"'),
+            ("SELECT s.Foo FROM t", 'SELECT "t"."s"."foo" AS "foo" FROM "t" AS "t"'),
+            # Roots that are already qualified drop a different number of leading dot parts
+            ("SELECT t.m.Foo FROM t", 'SELECT "t"."m"."Foo" AS "foo" FROM "t" AS "t"'),
+            ("SELECT t.j.Foo.Bar FROM t", 'SELECT "t"."j"."Foo"."Bar" AS "bar" FROM "t" AS "t"'),
+            ("SELECT x.j.Foo FROM t AS x", 'SELECT "x"."j"."Foo" AS "foo" FROM "t" AS "x"'),
+        ):
+            with self.subTest(sql):
+                qualified = qualify(
+                    parse_one(sql, dialect="duckdb"), schema=schema, dialect="duckdb"
+                )
+                annotated = annotate_types(qualified, schema=schema, dialect="duckdb")
+                self.assertEqual(annotated.sql("duckdb"), expected)
+
+    def test_annotate_dot_parts_of_non_column_roots(self):
+        # Dot access is also restored when the chain is rooted at an arbitrary expression
+        for sql, dialect, expected in (
+            (
+                "SELECT PARSE_JSON('{\"Foo\":1}').Foo",
+                "bigquery",
+                "SELECT PARSE_JSON('{\"Foo\":1}').`Foo` AS `foo`",
+            ),
+            (
+                "SELECT ('{\"Foo\":1}'::JSON).Foo",
+                "duckdb",
+                'SELECT (CAST(\'{"Foo":1}\' AS JSON))."Foo" AS "foo"',
+            ),
+            # Every part of the chain is restored, not just the innermost one
+            (
+                'SELECT PARSE_JSON(\'{"Foo":{"Bar":1}}\').Foo.Bar',
+                "bigquery",
+                'SELECT PARSE_JSON(\'{"Foo":{"Bar":1}}\').`Foo`.`Bar` AS `bar`',
+            ),
+            (
+                'SELECT (\'{"Foo":{"Bar":{"Baz":1}}}\'::JSON).Foo.Bar.Baz',
+                "duckdb",
+                'SELECT (CAST(\'{"Foo":{"Bar":{"Baz":1}}}\' AS JSON))."Foo"."Bar"."Baz" AS "baz"',
+            ),
+            # Dot access that doesn't name a key is left alone
+            (
+                "SELECT ('{\"Foo\":1}'::JSON).*",
+                "duckdb",
+                "SELECT (CAST('{\"Foo\":1}' AS JSON)).*",
+            ),
+        ):
+            with self.subTest(sql):
+                qualified = qualify(parse_one(sql, dialect=dialect), dialect=dialect)
+                annotated = annotate_types(qualified, dialect=dialect)
+                self.assertEqual(annotated.sql(dialect), expected)
 
     def test_annotate_types_caches_schema_lookups(self):
         schema = MappingSchema({"t": {"a": "INT"}})

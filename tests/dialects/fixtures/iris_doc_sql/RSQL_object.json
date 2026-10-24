@@ -1,0 +1,21 @@
+{
+  "doc_key": "RSQL_object",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_object",
+  "title": "%OBJECT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_a55592f9",
+      "section": "Examples",
+      "sql": "SELECT TOP 3 Title,Notes,%OBJECT(Picture) AS Photo FROM Sample.Employee",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 26.\n  SELECT TOP 3 Title,Notes,\u001b[4m%\u001b[0mOBJECT(Picture) AS Photo FROM Sample.Employee"
+    },
+    {
+      "id": "curated_object",
+      "section": "OBJECT() alias (curated)",
+      "sql": "SELECT OBJECT(Picture) FROM Sample.Employee"
+    }
+  ]
+}

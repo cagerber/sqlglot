@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_currenttime",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_currenttime",
+  "title": "CURRENT_TIME (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_30df71f1",
+      "section": "Examples",
+      "sql": "SELECT CURRENT_TIME",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_eacca1d5",
+      "section": "Examples",
+      "sql": "SELECT CURRENT_TIME(3)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_61d072d1",
+      "section": "Examples",
+      "sql": "UPDATE Contacts SET LastCall = CURRENT_TIME WHERE Contacts.ItemNumber=:item",
+      "roundtrip": false
+    }
+  ]
+}

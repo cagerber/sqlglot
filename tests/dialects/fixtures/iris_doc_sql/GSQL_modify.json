@@ -1,0 +1,32 @@
+{
+  "doc_key": "GSQL_modify",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_modify",
+  "title": "Modifying the Database | Using SQL | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_c5c53209",
+      "section": "Examples",
+      "sql": "INSERT INTO MyApp.Person (Name,HairColor) VALUES ('Fred Rogers','Black')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_e9f78ba1",
+      "section": "Examples",
+      "sql": "INSERT INTO MyApp.Person (Name,HairColor) SELECT Name,Haircolor FROM Sample.Person WHERE Haircolor IS NOT NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_0b9cda50",
+      "section": "Examples",
+      "sql": "UPDATE MyApp.Person SET HairColor = 'Red' WHERE Name %STARTSWITH 'Fred'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_19181d32",
+      "section": "Examples",
+      "sql": "DELETE FROM MyApp.Person WHERE HairColor = 'Aqua'",
+      "roundtrip": false
+    }
+  ]
+}

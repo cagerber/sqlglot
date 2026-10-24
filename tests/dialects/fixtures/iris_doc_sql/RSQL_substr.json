@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_substr",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_substr",
+  "title": "SUBSTR (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_b1482e04",
+      "section": "Examples",
+      "sql": "SELECT SUBSTR('ABCDEFG',3) AS Sub",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_48b7a949",
+      "section": "Examples",
+      "sql": "SELECT SUBSTR('ABCDEFG',3,4) AS Sub",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_a3bf9e0c",
+      "section": "Examples",
+      "sql": "SELECT SUBSTR('ABCDEFG',-5,4) AS Sub",
+      "roundtrip": false
+    }
+  ]
+}

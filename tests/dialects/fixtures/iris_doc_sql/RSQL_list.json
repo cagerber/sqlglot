@@ -1,0 +1,56 @@
+{
+  "doc_key": "RSQL_list",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_list",
+  "title": "LIST (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_3150bc61",
+      "section": "Examples",
+      "sql": "SELECT LIST(Home_State) AS StateList FROM Sample.Person WHERE Home_State %STARTSWITH 'A'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_58fa161b",
+      "section": "Examples",
+      "sql": "SELECT LIST(DISTINCT Home_State) AS DistinctStates FROM Sample.Person WHERE Home_State %STARTSWITH 'A'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_955dab08",
+      "section": "Examples",
+      "sql": "SELECT Home_State, COUNT(Home_City) AS CityCount, LIST(Home_City) AS ListAllCities FROM Sample.Person GROUP BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_f0dea71c",
+      "section": "Examples",
+      "sql": "SELECT Home_State, COUNT(DISTINCT Home_City) AS DistCityCount, COUNT(Home_City) AS TotCityCount, LIST(DISTINCT Home_City) AS DistCitiesList FROM Sample.Person GROUP BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_a7c46331",
+      "section": "Examples",
+      "sql": "SELECT LIST(DISTINCT Home_State) AS DistStates, LIST(DISTINCT BY(Home_City) Home_State) AS DistCityStates, LIST(Home_State) AS AllStates FROM Sample.Person WHERE Home_State %STARTSWITH 'A'",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 86.\n  SELECT LIST(DISTINCT Home_State) AS DistStates, LIST(DISTINCT BY(Home_City) \u001b[4mHome_State\u001b[0m) AS DistCityStates, LIST(Home_State) AS AllStates FROM Sample.Person WHER"
+    },
+    {
+      "id": "ex_006_06ed4f90",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT Home_State, LIST(Age %FOREACH(Home_State)) AgesForState FROM Sample.Person WHERE Home_State %STARTSWITH 'M'",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 38.\n  SELECT DISTINCT Home_State, LIST(Age \u001b[4m%\u001b[0mFOREACH(Home_State)) AgesForState FROM Sample.Person WHERE Home_State %STARTSWITH 'M'"
+    },
+    {
+      "id": "ex_007_b879f2e7",
+      "section": "Examples",
+      "sql": "SELECT Home_State, LIST(Name) AS AllNames, LIST(Name %AFTERHAVING) AS HavingClauseNames FROM Sample.Person GROUP BY Home_State HAVING Name LIKE 'M%' ORDER BY Home_State",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 54.\n  SELECT Home_State, LIST(Name) AS AllNames, LIST(Name \u001b[4m%\u001b[0mAFTERHAVING) AS HavingClauseNames FROM Sample.Person GROUP BY Home_State HAVING Name LIKE 'M%' ORDER"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "doc_key": "GSQL_partitioned",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_partitioned",
+  "title": "Partitioned Tables | Using SQL | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_007_441dd0ed",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT(x__partitionid1) from Demo.Inventory WHERE TransactionDate >= TO_DATE('01 JAN 2023') AND TransactionDate <= TO_DATE('01 JAN 2026')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_013_99264d0d",
+      "section": "Examples",
+      "sql": "SELECT x__partitionid1 || '||' || x__partitionid2 FROM Demo.Inventory",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_7752b986",
+      "section": "Examples",
+      "sql": "CREATE TABLE Store.Transactions ( CustomerName VARCHAR(50), TransactionDate DATE, StoreLocation VARCHAR(25) ) PARTITION BY RANGE (TransactionDate) INTERVAL 3 MONTHS",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_002_72cff7db",
+      "section": "Examples",
+      "sql": "CREATE TABLE Store.Orders ( OrderID INTEGER, CustomerID INTEGER, OrderTotal NUMERIC(12,2) ) PARTITION BY RANGE (CustomerID) INTERVAL 100",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_003_cc0acd40",
+      "section": "Examples",
+      "sql": "CREATE TABLE Store.Transactions ( CustomerName VARCHAR(50), TransactionDate DATE, StoreLocation VARCHAR(25) COLLATE %EXACT ) PARTITION BY LIST (StoreLocation)",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_004_2a35f435",
+      "section": "Examples",
+      "sql": "CREATE TABLE Store.Transactions ( TransactionGUID VARCHAR(128), TransactionDate DATE, StoreLocation VARCHAR(25) ) PARTITION BY HASH (TransactionGUID) IN 4 PARTITIONS",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_005_b18dc34a",
+      "section": "Examples",
+      "sql": "CREATE TABLE Store.Transactions ( CustomerName VARCHAR(50), TransactionDate DATE, StoreLocation VARCHAR(25) COLLATE %EXACT ) PARTITION BY LIST (StoreLocation), RANGE (TransactionDate) INTERVAL 3 MONTHS",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_006_762e835b",
+      "section": "Examples",
+      "sql": "ALTER TABLE demo.log MOVE PARTITION BETWEEN '2023-01-01' AND '2023-12-31' TO data-2023",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_008_cb7430c4",
+      "section": "Examples",
+      "sql": "ALTER TABLE Demo.Inventory MOVE PARTITION ID 202411010000 TO data-2024",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_009_06ecaf27",
+      "section": "Examples",
+      "sql": "ALTER TABLE Demo.Inventory MOVE PARTITION ID 'alabama' TO us-south",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    }
+  ]
+}

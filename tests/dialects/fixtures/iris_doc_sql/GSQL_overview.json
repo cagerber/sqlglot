@@ -1,0 +1,39 @@
+{
+  "doc_key": "GSQL_overview",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_overview",
+  "title": "Using InterSystems SQL",
+  "doc_version": "2026.1",
+  "page_kind": "index",
+  "child_doc_keys": [
+    "GSQL_intr",
+    "GSQL_basics",
+    "GSQL_langelements",
+    "GSQL_implicitjoins",
+    "GSQL_identifiers",
+    "GSQL_tables",
+    "GSQL_views",
+    "GSQL_foreignkeys",
+    "GSQL_triggers",
+    "GSQL_collation",
+    "GSQL_foreigntables",
+    "GSQL_partitioned",
+    "GSQL_modify",
+    "GSQL_queries",
+    "GSQL_procedures",
+    "GSQL_blobs",
+    "GSQL_privileges",
+    "GSQL_rls",
+    "GSQL_vecsearch",
+    "GSQL_options",
+    "GSQL_import",
+    "GSQL_impexp"
+  ],
+  "examples": [
+    {
+      "id": "ex_001_smoke_gsql",
+      "section": "Examples (curated smoke)",
+      "sql": "SELECT p.Name, p.Age, e.Company->Name AS CompanyName FROM Sample.Person p, Sample.Employee e WHERE p.%ID = e.EmployeeRef AND e.Company->Name IS NOT NULL ORDER BY p.Age DESC",
+      "roundtrip": false
+    }
+  ]
+}

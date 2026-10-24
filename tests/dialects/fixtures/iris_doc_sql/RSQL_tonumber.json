@@ -1,0 +1,110 @@
+{
+  "doc_key": "RSQL_tonumber",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_tonumber",
+  "title": "TO_NUMBER (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_c3a02a97",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_Street FROM Sample.Person WHERE Home_Street LIKE '%Oakhurst%' ORDER BY TO_NUMBER(Home_Street)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_909d598b",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('-+123 feet') -- -123",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_f155ef1d",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('+-+-123 feet') -- 123",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_8062b222",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('1e3') -- 1000",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_419c7a4b",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('1E-3') -- .001",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_8a30445b",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('7dwarves') -- 7",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_733f94c3",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('question3') -- 0",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_035e0aed",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('') -- 0",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_0b2312f7",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('-0') -- 0",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_b92517e0",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('2+4') -- 2",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_28abcab1",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('-15 degrees F') -- Display Mode: -15.00",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_92741315",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('-15.835 degrees F') -- Display Mode: -15.84",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_013_a70c16e0",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('-15.60000 degrees F') -- Display Mode: -15.60",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_014_e8aea5c2",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('-15 degrees F') -- Logical/ODBC Mode: -15",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_015_93b8d316",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('-15.835 degrees F') -- Logical/ODBC Mode: -15.835",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_016_4aef7f29",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER('-15.60000 degrees F') -- Logical/ODBC Mode: -15.6",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_017_ad20b764",
+      "section": "Examples",
+      "sql": "SELECT TO_NUMBER(CAST('-15.6 degrees F' AS DOUBLE)) -- -15.599999999999999644",
+      "roundtrip": false
+    }
+  ]
+}

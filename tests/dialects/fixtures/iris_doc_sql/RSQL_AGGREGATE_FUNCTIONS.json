@@ -1,0 +1,30 @@
+{
+  "doc_key": "RSQL_AGGREGATE_FUNCTIONS",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_AGGREGATE_FUNCTIONS",
+  "title": "SQL Aggregate Functions",
+  "doc_version": "2026.1",
+  "page_kind": "index",
+  "child_doc_keys": [
+    "RSQL_aggregatefunctions",
+    "RSQL_approxcountdistinct",
+    "RSQL_avg",
+    "RSQL_count",
+    "RSQL_dlist",
+    "RSQL_jsonarrayagg",
+    "RSQL_list",
+    "RSQL_max",
+    "RSQL_min",
+    "RSQL_stddev",
+    "RSQL_sum",
+    "RSQL_variance",
+    "RSQL_xmlagg"
+  ],
+  "examples": [
+    {
+      "id": "index_aggregate_smoke",
+      "section": "Cross-reference smoke (curated)",
+      "sql": "SELECT Home_State, COUNT(Name), AVG(Age), MIN(Age), MAX(Age), SUM(Age) FROM Sample.Person GROUP BY Home_State",
+      "roundtrip": false
+    }
+  ]
+}

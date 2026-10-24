@@ -1,0 +1,13 @@
+{
+  "doc_key": "RSQL_datalength",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_datalength",
+  "title": "DATALENGTH (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "curated_datalength",
+      "section": "DocBook synopsis (curated)",
+      "sql": "SELECT DATALENGTH(Name) FROM Sample.Person"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_lastday",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_lastday",
+  "title": "LAST_DAY (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_f1754bdd",
+      "section": "Examples",
+      "sql": "SELECT LAST_DAY('2004-02-25')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_6eb460a2",
+      "section": "Examples",
+      "sql": "SELECT LAST_DAY(59590)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_5b01b37b",
+      "section": "Examples",
+      "sql": "SELECT LAST_DAY({fn NOW()}) AS LD_Now, LAST_DAY(CURRENT_DATE) AS LD_CurrDate, LAST_DAY(CURRENT_TIMESTAMP) AS LD_CurrTstamp, LAST_DAY($ZTIMESTAMP) AS LD_ZTstamp, LAST_DAY($HOROLOG) AS LD_Horolog",
+      "roundtrip": false
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "doc_key": "RSQL_length",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_length",
+  "title": "LENGTH (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_5c4d0902",
+      "section": "Examples",
+      "sql": "SELECT {fn LENGTH(7.00)} AS CharCount, {fn LENGTH(+007)} AS CharCount, {fn LENGTH(007.)} AS CharCount, {fn LENGTH(00000.00)} AS CharCount, {fn LENGTH(-0)} AS CharCount",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_3070547a",
+      "section": "Examples",
+      "sql": "SELECT LENGTH(0.7) AS CharCount, LENGTH('0.7') AS CharCount",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_9065a5b7",
+      "section": "Examples",
+      "sql": "SELECT LENGTH('INTERSYSTEMS') AS CharCount",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_74697534",
+      "section": "Examples",
+      "sql": "SELECT LENGTH(' INTERSYSTEMS ') AS CharCount, LENGTH(LTRIM(' INTERSYSTEMS ')) AS CharCount",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_d94ba723",
+      "section": "Examples",
+      "sql": "SELECT Name,{fn LENGTH(Name)} AS CharCount FROM Sample.Person ORDER BY CharCount",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_05d7a36f",
+      "section": "Examples",
+      "sql": "SELECT DOB,{fn LENGTH(DOB)} AS LenCount, CHAR_LENGTH(DOB) AS CCount, CHARACTER_LENGTH(DOB) AS CtrCount FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

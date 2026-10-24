@@ -1,0 +1,70 @@
+{
+  "doc_key": "RSQL_ifnull",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_ifnull",
+  "title": "IFNULL (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_afb2b09c",
+      "section": "Examples",
+      "sql": "SELECT TOP 20 Name, IFNULL(FavoriteColors,$LISTBUILD('No Preference'),FavoriteColors) AS ColorChoice FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_4810bd3b",
+      "section": "Examples",
+      "sql": "SELECT IFNULL(NULL,99) AS NullGen,{fn IFNULL(NULL,99)} AS NullODBC",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_8bd143df",
+      "section": "Examples",
+      "sql": "SELECT IFNULL(33,99) AS NullGen,{fn IFNULL(33,99)} AS NullODBC",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_aacfaaad",
+      "section": "Examples",
+      "sql": "SELECT Name, IFNULL(FavoriteColors,'No Preference') AS ColorChoice FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_5a803411",
+      "section": "Examples",
+      "sql": "SELECT Name, IFNULL(FavoriteColors,'No Preference',FavoriteColors) AS ColorChoice FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_a0de661a",
+      "section": "Examples",
+      "sql": "SELECT Name, IFNULL(FavoriteColors,'No Preference','Preference') AS ColorPref FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_b2faab84",
+      "section": "Examples",
+      "sql": "SELECT Name, {fn IFNULL(FavoriteColors,$LISTBUILD('No Preference'))} AS ColorPref FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_3878992b",
+      "section": "Examples",
+      "sql": "SELECT Name, {fn IFNULL(FavoriteColors,'No Preference')} AS ColorChoice FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_56ed04b6",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors,Age FROM Sample.Person WHERE 21 > IFNULL(FavoriteColors,Age) ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_b1220c11",
+      "section": "Examples",
+      "sql": "SELECT TOP 20 Name, IFNULL(FavoriteColors'No Preference',FavoriteColors) AS ColorChoice FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 56.\n  SELECT TOP 20 Name, IFNULL(FavoriteColors\u001b[4m'No Preference'\u001b[0m,FavoriteColors) AS ColorChoice FROM Sample.Person"
+    }
+  ]
+}

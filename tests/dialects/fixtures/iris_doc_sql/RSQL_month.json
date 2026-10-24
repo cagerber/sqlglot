@@ -1,0 +1,32 @@
+{
+  "doc_key": "RSQL_month",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_month",
+  "title": "MONTH (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_f923f6d4",
+      "section": "Examples",
+      "sql": "SELECT MONTH('2018-02-22') AS Month_Given",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_930f5f9c",
+      "section": "Examples",
+      "sql": "SELECT {fn MONTH(64701)} AS Month_Given",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_c1bb0fc2",
+      "section": "Examples",
+      "sql": "SELECT Name,DOB AS Birthdays FROM Sample.Person ORDER BY MONTH(DOB),DAY(DOB),Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_0c6d4360",
+      "section": "Examples",
+      "sql": "SELECT {fn MONTH({fn NOW()})} AS MNow, MONTH(CURRENT_DATE) AS MCurrD, {fn MONTH(CURRENT_TIMESTAMP)} AS MCurrTS, MONTH($HOROLOG) AS MHorolog, {fn MONTH($ZTIMESTAMP)} AS MZTS",
+      "roundtrip": false
+    }
+  ]
+}

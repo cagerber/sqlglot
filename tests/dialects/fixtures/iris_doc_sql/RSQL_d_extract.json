@@ -1,0 +1,52 @@
+{
+  "doc_key": "RSQL_d_extract",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_extract",
+  "title": "$EXTRACT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_278b4335",
+      "section": "Examples",
+      "sql": "SELECT $EXTRACT('ABCD',2) AS Extracted",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_cb901d56",
+      "section": "Examples",
+      "sql": "SELECT $EXTRACT('1234Alabama567',5,11) AS Extracted",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_b6582f81",
+      "section": "Examples",
+      "sql": "SELECT $EXTRACT('THIS IS A TEST',4) AS Extracted",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_a090713c",
+      "section": "Examples",
+      "sql": "SELECT $EXTRACT('THIS IS A TEST',1,7) AS Extracted",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_e1568d5f",
+      "section": "Examples",
+      "sql": "SELECT $EXTRACT(\"ABCD\",2)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_5f17a07d",
+      "section": "Examples",
+      "sql": "SELECT $EXTRACT('THIS IS A TEST',-7,7)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_011141ae",
+      "section": "Examples",
+      "sql": "SELECT $EXTRACT(\"HELLO\") SELECT $EXTRACT(\"HELLO\",1)",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 31.\n  SELECT $EXTRACT(\"HELLO\") \u001b[4mSELECT\u001b[0m $EXTRACT(\"HELLO\",1)"
+    }
+  ]
+}

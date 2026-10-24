@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_predicates",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_predicates",
+  "title": "Overview of Predicates | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_1f973e83",
+      "section": "Examples",
+      "sql": "SELECT FavoriteColors FROM Sample.Person WHERE FavoriteColors = $LISTBUILD('Red') OR FavoriteColors IS NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_d2fc6563",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE FOR SOME %ELEMENT(FavoriteColors)(%VALUE='Red' OR %Value='White' OR %Value %STARTSWITH 'B') AND (Name BETWEEN 'A' AND 'F' OR Name %STARTSWITH 'S') ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_ca5a5f18",
+      "section": "Examples",
+      "sql": "SELECT PurchaseOrder FROM MyTable WHERE OrderTotal >= 1000 AND ItemName %STARTSWITH :partname AND AnnualOrders BETWEEN 50000 AND 100000 AND City LIKE 'Ch%' AND CustomerNumber IN (SELECT CustNum FROM TheTop100 WHERE TheTop100.City='Boston') AND :minorder > SOME (SELECT OrderTotal FROM Orders WHERE Orders.Customer = :cust)",
+      "roundtrip": false
+    }
+  ]
+}

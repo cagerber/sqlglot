@@ -16,6 +16,22 @@ EXPRESSION_METADATA = {
         expr_type: {"returns": exp.DType.TEXT}
         for expr_type in {
             exp.Encode,
+            exp.Left,
+            exp.Right,
+            exp.Overlay,
+            exp.Reverse,
+            exp.Pad,
+            exp.Format,
+            exp.Hex,
+            exp.SplitPart,
+            exp.Normalize,
         }
     },
+    **{
+        expr_type: {"returns": exp.DType.VARBINARY}
+        for expr_type in {
+            exp.Decode,
+        }
+    },
+    exp.ToNumber: {"returns": exp.DType.DECIMAL},
 }

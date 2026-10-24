@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_userfunction",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_userfunction",
+  "title": "USER (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_96bf4dbc",
+      "section": "Examples",
+      "sql": "SELECT USER AS CurrentUser",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_3b3a0fe4",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE %SQLUPPER(USER)=%SQLUPPER($PIECE(Name,',',1)) OR %SQLUPPER(USER)=%SQLUPPER($PIECE($PIECE(Name,',',2),' ',1))",
+      "roundtrip": false
+    }
+  ]
+}

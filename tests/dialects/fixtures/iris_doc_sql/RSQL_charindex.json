@@ -1,0 +1,56 @@
+{
+  "doc_key": "RSQL_charindex",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_charindex",
+  "title": "CHARINDEX (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_dff6a2f1",
+      "section": "Examples",
+      "sql": "SELECT POSITION('br' IN 'The broken brown briefcase') AS Position, CHARINDEX('br','The broken brown briefcase',6) AS Charindex, $FIND('The broken brown briefcase','br',6) AS Find, INSTR('The broken brown briefcase','br',6,2) AS Inst",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_b5ffbc8f",
+      "section": "Examples",
+      "sql": "SELECT CHARINDEX('TTAGGG','TTAGTCTTAGGGACATTAGGG')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_60d5ca60",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE CHARINDEX('Fred',Name)>0",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_4319a8e3",
+      "section": "Examples",
+      "sql": "SELECT CHARINDEX('TTAGGG',SUBSTRING(DNASeq,1,1000)) FROM Sample.DNASequences",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_709820de",
+      "section": "Examples",
+      "sql": "SELECT CHARINDEX('Re','Reduce, Reuse, Recycle',10)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_d6906544",
+      "section": "Examples",
+      "sql": "SELECT CHARINDEX('Re','Reduce, Reuse, Recycle',99)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_540a47a6",
+      "section": "Examples",
+      "sql": "SELECT CHARINDEX('','Fred Astare'), CHARINDEX('A',''), CHARINDEX('','')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_d719ca05",
+      "section": "Examples",
+      "sql": "SELECT CHARINDEX(NULL,'Fred Astare'), CHARINDEX('A',NULL), CHARINDEX(NULL,NULL)",
+      "roundtrip": false
+    }
+  ]
+}

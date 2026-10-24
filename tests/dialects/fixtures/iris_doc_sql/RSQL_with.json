@@ -1,0 +1,52 @@
+{
+  "doc_key": "RSQL_with",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_with",
+  "title": "WITH (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_f807a536",
+      "section": "Examples",
+      "sql": "WITH cte1 AS (SELECT * FROM Rooms) SELECT ID FROM cte1",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_ad65ce8a",
+      "section": "Examples",
+      "sql": "WITH cte1 AS (SELECT Age FROM Occupants), cte2 AS (SELECT ID FROM Occupants) SELECT * FROM cte2",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_8a6bd2f9",
+      "section": "Examples",
+      "sql": "WITH joincte AS (SELECT Occupants.Species, Rooms.FavFood FROM Occupants FULL JOIN Rooms ON Occupants.ID=Rooms.ID) SELECT * FROM joincte",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_62a41912",
+      "section": "Examples",
+      "sql": "WITH cte1 AS (SELECT ID FROM Rooms) SELECT ID FROM cte1 UNION SELECT * FROM cte1",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_967bf99f",
+      "section": "Examples",
+      "sql": "WITH cte1 AS (SELECT * FROM Occupants), ctewithincte AS (SELECT Age FROM cte1) SELECT * FROM ctewithincte",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_17bdeb7b",
+      "section": "Examples",
+      "sql": "SELECT ID FROM cte1",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_b7791066",
+      "section": "Examples",
+      "sql": "WITH [subquery-alias] AS ([subquery]) [main-query]",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expected CTE to have alias. Line 1, Col: 6.\n  WITH \u001b[4m[\u001b[0msubquery-alias] AS ([subquery]) [main-query]"
+    }
+  ]
+}

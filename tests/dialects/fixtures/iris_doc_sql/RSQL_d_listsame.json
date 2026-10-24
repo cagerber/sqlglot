@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_d_listsame",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_listsame",
+  "title": "$LISTSAME (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_d31b7669",
+      "section": "Examples",
+      "sql": "SELECT $LISTSAME($LISTBUILD(\"Red\",,\"Yellow\",\"Green\",\"\",\"Violet\"), $LISTBUILD(\"Red\",,\"Yellow\",\"Green\",\"\",\"Violet\"))",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_da8d802a",
+      "section": "Examples",
+      "sql": "SELECT $LISTSAME($LISTBUILD('Red',NULL,'Blue'),$LISTBUILD('Red',,'Blue')) AS NullAbsent, $LISTSAME($LISTBUILD('Red',NULL,'Blue'),$LISTBUILD('Red','','Blue')) AS NullEmpty, $LISTSAME($LISTBUILD('Red',,'Blue'),$LISTBUILD('Red','','Blue')) AS AbsentEmpty",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_266b769d",
+      "section": "Examples",
+      "sql": "SELECT $LISTSAME($LISTBUILD('365'),$LISTBUILD(365)), $LISTSAME($LISTBUILD('365'),$LISTBUILD(365.0)), $LISTSAME($LISTBUILD('365.5'),$LISTBUILD(365.5)), $LISTSAME($LISTBUILD('365.0'),$LISTBUILD(365.0))",
+      "roundtrip": false
+    }
+  ]
+}

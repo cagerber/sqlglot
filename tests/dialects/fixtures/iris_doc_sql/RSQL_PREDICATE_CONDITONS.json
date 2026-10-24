@@ -1,0 +1,35 @@
+{
+  "doc_key": "RSQL_PREDICATE_CONDITONS",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_PREDICATE_CONDITONS",
+  "title": "SQL Predicate Conditions",
+  "doc_version": "2026.1",
+  "page_kind": "index",
+  "child_doc_keys": [
+    "RSQL_all",
+    "RSQL_any",
+    "RSQL_some",
+    "RSQL_between",
+    "RSQL_exists",
+    "RSQL_find",
+    "RSQL_forsome",
+    "RSQL_forsomeelement",
+    "RSQL_in",
+    "RSQL_inlist",
+    "RSQL_inset",
+    "RSQL_json",
+    "RSQL_like",
+    "RSQL_matches",
+    "RSQL_null",
+    "RSQL_pattern",
+    "RSQL_predicates",
+    "RSQL_startswith"
+  ],
+  "examples": [
+    {
+      "id": "index_predicate_smoke",
+      "section": "Cross-reference smoke (curated)",
+      "sql": "SELECT Name FROM Sample.Person WHERE Name %STARTSWITH 'M' AND Home_State %INLIST $LISTBUILD('VT','NH') AND FavoriteColors IS NOT NULL",
+      "roundtrip": false
+    }
+  ]
+}

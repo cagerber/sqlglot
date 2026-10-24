@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_dayofweek",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_dayofweek",
+  "title": "DAYOFWEEK (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_d79e48c4",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFWEEK('2018-02-22')}||' '||DATENAME('dw','2018-02-22') AS ODBCDoW, {fn DAYOFWEEK(64701)}||' '||DATENAME('dw','64701') AS HorologDoW",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_6f7034d9",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFWEEK({fn NOW()})} AS DoW_Now, {fn DAYOFWEEK(CURRENT_DATE)} AS DoW_CurrDate, {fn DAYOFWEEK(CURRENT_TIMESTAMP)} AS DoW_CurrTstamp, {fn DAYOFWEEK($ZTIMESTAMP)} AS DoW_ZTstamp, {fn DAYOFWEEK($HOROLOG)} AS DoW_Horolog",
+      "roundtrip": false
+    }
+  ]
+}

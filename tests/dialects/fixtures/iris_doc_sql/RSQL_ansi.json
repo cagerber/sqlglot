@@ -1,0 +1,28 @@
+{
+  "doc_key": "RSQL_ansi",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_ansi",
+  "title": "FETCH (SQL Clause) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_54b82d36",
+      "section": "Examples",
+      "sql": "SELECT Home_State FROM Sample.Person ORDER BY Home_State FETCH 20",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_c8b3fc1d",
+      "section": "Examples",
+      "sql": "SELECT Home_State FROM Sample.Person ORDER BY Home_State OFFSET 5 FETCH FIRST 20",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_5d9b10a5",
+      "section": "Examples",
+      "sql": "SELECT ... FROM ... [ ORDER BY ... ] [ OFFSET start [ ROW | ROWS ] ] FETCH [ FIRST | NEXT ] count [ ROW | ROWS ] [ ONLY ]",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "doc_key": "RSQL_distinct",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_distinct",
+  "title": "DISTINCT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_42d8e5a6",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT Home_State,Age FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_81c1c0ce",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (Home_State,Age) Name,Age FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_975d47aa",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT FavoriteColors FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_ca2b4acd",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (FavoriteColors) Name,FavoriteColors FROM Sample.Person ORDER BY FavoriteColors",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_dac39060",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (ROUND(Age,-1)) Age,AVG(Age) AS AvgAge FROM Sample.Person /* AVG(Age) returns average of all ages in table */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_729c79b3",
+      "section": "Examples",
+      "sql": "SELECT Age,AVG(Age) AS AvgAge FROM Sample.Person GROUP BY ROUND(Age,-1) /* AVG(Age) returns an average age for each age group */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_8114f4d8",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (AVG(Age)) Name,Age,AVG(Age) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_31cfb4ce",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (Home_City) Name,Home_City FROM Sample.Person /* groups together Home_City values by their uppercase letter values returns the name of each grouped city in uppercase letters. Thus, 'NEW YORK' is returned. */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_7bd44190",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (Home_City) Name,%EXACT(Home_City) FROM Sample.Person /* groups together Home_City values by their uppercase letter values returns the name of each grouped city in original letter case. Thus, 'New York' or 'new york' may be returned, but not both. */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_ee27742b",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (%EXACT(Home_City)) Name,Home_City FROM Sample.Person /* groups together Home_City values by their original letter case returns the name of each grouped city in original letter case. Thus, both 'New York' and 'new york' are returned. Optimization is not used. */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_19b41721",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT Home_State FROM Sample.Person ORDER BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_013_4c54bcc5",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (Home_State) %ID,Name,Home_State,Office_State FROM Sample.Person ORDER BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_014_bd7cd2b0",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (Home_State,Office_State) %ID,Name,Home_State,Office_State FROM Sample.Person ORDER BY Home_State,Office_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_015_a767587e",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY ($LENGTH(Name)) Name,$LENGTH(Name) AS lname FROM Sample.Person ORDER BY lname",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_016_d3a634c8",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY ($LIST(FavoriteColors,1)) Name,FavoriteColors,$LIST(FavoriteColors,1) AS FirstColor FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_017_cf5edd4e",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT TOP 20 Home_State FROM Sample.Person ORDER BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_018_321e6202",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT TOP 20 Home_State FROM Sample.Person WHERE Home_State IN(SELECT DISTINCT TOP 20 Home_State FROM Sample.Employee) ORDER BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_019_51b26b07",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (FavoriteColors) TOP 20 FavoriteColors,Name FROM Sample.Person ORDER BY FavoriteColors",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_12682491",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT BY (item {,item2}) select-item {,select-item2} SELECT DISTINCT [ALL] select-item {,select-item2}",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    }
+  ]
+}

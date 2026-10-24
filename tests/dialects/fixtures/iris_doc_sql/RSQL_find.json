@@ -1,0 +1,28 @@
+{
+  "doc_key": "RSQL_find",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_find",
+  "title": "%FIND (SQL)",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "synopsis_find",
+      "section": "Synopsis",
+      "sql": "scalar-expression %FIND valueset [SIZE ((nn))]",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "curated_age_index",
+      "section": "Curated (doc has no runnable SELECT)",
+      "sql": "SELECT Name FROM Sample.Person WHERE Age %FIND Sample.Person_AgeIndex",
+      "roundtrip": false
+    },
+    {
+      "id": "curated_sql_sample",
+      "section": "Curated (RSQL_select %SQL.SAMPLE pattern)",
+      "sql": "SELECT Name FROM Sample.Person WHERE %ID %FIND %SQL.SAMPLE(Sample.Person, 50, 1)",
+      "roundtrip": false
+    }
+  ]
+}

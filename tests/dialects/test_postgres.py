@@ -86,6 +86,13 @@ class TestPostgres(Validator):
         self.validate_identity("SELECT CAST(e'\\176' AS BYTEA)")
         self.validate_identity("SELECT * FROM x WHERE SUBSTRING('Thomas' FROM '...$') IN ('mas')")
         self.validate_identity("SELECT TRIM(' X' FROM ' XXX ')")
+        self.validate_all(
+            "SELECT BTRIM(x, 'ab')",
+            write={
+                "postgres": "SELECT TRIM('ab' FROM x)",
+                "duckdb": "SELECT TRIM(x, 'ab')",
+            },
+        )
         self.validate_identity("SELECT TRIM(LEADING 'bla' FROM ' XXX ' COLLATE utf8_bin)")
         self.validate_identity("""SELECT * FROM JSON_TO_RECORDSET(z) AS y("rank" INT)""")
         self.validate_identity("SELECT ~x")
@@ -460,10 +467,11 @@ FROM json_data, field_ids""",
         self.validate_all(
             "x ? y",
             write={
-                "": "JSONB_CONTAINS(x, y)",
+                "": "x ? y",
                 "postgres": "x ? y",
             },
         )
+        self.validate_identity("JSONB_CONTAINS(x, y)").assert_is(exp.JSONBContains)
         self.validate_all(
             "SELECT E'a\\tb'",
             write={
@@ -1081,6 +1089,11 @@ FROM json_data, field_ids""",
         self.validate_identity("SELECT * FROM foo WHERE id = %s")
         self.validate_identity("SELECT * FROM foo WHERE id = %(id_param)s")
         self.validate_identity("SELECT * FROM foo WHERE id = ?")
+
+        self.validate_identity("a ? b").assert_is(exp.JSONBContainsTopKey)
+
+        # `@>` is polymorphic in Postgres (arrays, ranges, jsonb), so it parses to ArrayContainsAll
+        self.validate_identity("a @> b").assert_is(exp.ArrayContainsAll)
 
         self.validate_identity("a ?| b").assert_is(exp.JSONBContainsAnyTopKeys)
         self.validate_identity(

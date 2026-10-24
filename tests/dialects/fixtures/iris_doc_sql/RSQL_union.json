@@ -1,0 +1,124 @@
+{
+  "doc_key": "RSQL_union",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_union",
+  "title": "UNION (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_57d0d5fd",
+      "section": "Examples",
+      "sql": "SELECT Name,Salary,BirthDate FROM Sample.Employee UNION ALL SELECT Name,NULL,BirthDate FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_3cf84899",
+      "section": "Examples",
+      "sql": "SELECT MyTinyIntField FROM Table1 UNION ALL SELECT MyDateField FROM Table2",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_52087d57",
+      "section": "Examples",
+      "sql": "SELECT CAST(MyTinyInt AS DATE) FROM Table1 UNION ALL SELECT MyDateField FROM Table2",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_7e870745",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_Zip FROM Sample.Person WHERE Home_Zip %STARTSWITH 9 UNION SELECT Name,Office_Zip FROM Sample.Employee WHERE Office_Zip %STARTSWITH 8 ORDER BY Home_Zip",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_282a92eb",
+      "section": "Examples",
+      "sql": "SELECT TOP 10 Name,Home_Zip FROM (SELECT Name,Home_Zip FROM Sample.Person WHERE Name %STARTSWITH 'A' UNION SELECT Name,Home_Zip FROM Sample.Person WHERE Home_Zip %STARTSWITH 8) ORDER BY Home_Zip",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_55e353ca",
+      "section": "Examples",
+      "sql": "SELECT TOP 10 Name,Home_Zip FROM Sample.Person WHERE Name %STARTSWITH 'A' UNION SELECT Name,Home_Zip FROM Sample.Person WHERE Home_Zip %STARTSWITH 8 ORDER BY Home_Zip",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_a888a179",
+      "section": "Examples",
+      "sql": "SELECT Name,Age FROM (SELECT Name,Age FROM Sample.Person UNION SELECT Name,Age FROM Sample.Employee) WHERE Age IN (SELECT TOP 5 Age FROM Sample.Employee WHERE Age>55 ORDER BY Age)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_0e9c9536",
+      "section": "Examples",
+      "sql": "SELECT COUNT(*) FROM (SELECT item1 FROM table1 UNION ALL SELECT item2 FROM table2)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_37b2e534",
+      "section": "Examples",
+      "sql": "SELECT SUM(y) FROM (SELECT COUNT(*) AS y FROM table1 UNION ALL SELECT COUNT(*) AS y FROM table2)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_014_8aeb0e26",
+      "section": "Examples",
+      "sql": "SELECT COUNT(Name) FROM (SELECT Name FROM Sample.Person UNION ALL SELECT Name FROM Sample.Employee)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_015_681b4267",
+      "section": "Examples",
+      "sql": "SELECT SUM(y) FROM (SELECT COUNT(Name) AS y FROM Sample.Person UNION ALL SELECT COUNT(Name) AS y FROM Sample.Employee)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_016_7b5b0e69",
+      "section": "Examples",
+      "sql": "SELECT Name,Office_State||' office' AS State,Title FROM Sample.Employee UNION SELECT Name,Home_State||' home',NULL FROM Sample.Person ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_017_70f78fb0",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Employee WHERE Name %STARTSWITH 'A' UNION SELECT Name FROM Sample.Person WHERE Name %STARTSWITH 'A' ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_018_4250f8ad",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Employee WHERE Name %STARTSWITH 'A' UNION ALL SELECT Name FROM Sample.Person WHERE Name %STARTSWITH 'A' ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_11e9c658",
+      "section": "Examples",
+      "sql": "select-statement {UNION [ALL] [%PARALLEL] select-statement} select-statement {UNION [ALL] [%PARALLEL] (query)} (query) {UNION [ALL] [%PARALLEL] select-statement} (query) {UNION [ALL] [%PARALLEL] (query)}",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expression' missing for <class 'sqlglot.expressions.core.ContainsFollows'>. Line 1, Col: 48.\n  select-statement {UNION [ALL] [%PARALLEL] \u001b[4mselect\u001b[0m-statement} select-statement {"
+    },
+    {
+      "id": "ex_006_a0f499c7",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 Name,Home_Zip FROM Sample.Person WHERE Home_Zip %STARTSWITH 9 ORDER BY Name UNION SELECT TOP 5 Name,Office_Zip FROM Sample.Employee WHERE Office_Zip %STARTSWITH 8 ORDER BY Office_Zip ORDER BY Home_Zip",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Found multiple 'ORDER BY' clauses. Line 1, Col: 204.\n  ELECT TOP 5 Name,Office_Zip FROM Sample.Employee WHERE Office_Zip %STARTSWITH 8 ORDER BY Office_Zip \u001b[4mORDER BY\u001b[0m Home_Zip"
+    },
+    {
+      "id": "ex_012_a311a64f",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Employee WHERE Name %STARTSWITH 'A' UNION %PARALLEL SELECT Name FROM Sample.Person WHERE Name %STARTSWITH 'A' ORDER BY Name",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expression' missing for <class 'sqlglot.expressions.query.Union'>. Line 1, Col: 67.\n  SELECT Name FROM Sample.Employee WHERE Name %STARTSWITH 'A' UNION \u001b[4m%\u001b[0mPARALLEL SELECT Name"
+    },
+    {
+      "id": "ex_013_d7521b16",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Employee WHERE Name %STARTSWITH 'A' UNION ALL %PARALLEL SELECT Name FROM Sample.Person WHERE Name %STARTSWITH 'A' ORDER BY Name",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expression' missing for <class 'sqlglot.expressions.query.Union'>. Line 1, Col: 71.\n  SELECT Name FROM Sample.Employee WHERE Name %STARTSWITH 'A' UNION ALL \u001b[4m%\u001b[0mPARALLEL SELECT "
+    }
+  ]
+}

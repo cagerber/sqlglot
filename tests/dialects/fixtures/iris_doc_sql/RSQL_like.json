@@ -1,0 +1,82 @@
+{
+  "doc_key": "RSQL_like",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_like",
+  "title": "LIKE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_dddb7a49",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE Name LIKE '%Ro%'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_c38f70df",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE Name [ 'Ro'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_6b274e1d",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE %SQLSTRING(Name) LIKE '%Ro%'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_ea20a24e",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE %SQLSTRING(Name) LIKE %SQLSTRING('%Ro%')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_03c3b5fb",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE FavoriteColors LIKE '%'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_9dfe436d",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE FavoriteColors LIKE ''",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_0e39806c",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE FavoriteColors LIKE NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_553c0036",
+      "section": "Examples",
+      "sql": "SELECT * FROM MyTable WHERE symbol_field LIKE '%\\_SYS%' ESCAPE '\\'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_963095d8",
+      "section": "Examples",
+      "sql": "SELECT Name,DOB FROM Sample.Person WHERE %ODBCOUT(DOB) LIKE '195%'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_c5b6c1ad",
+      "section": "Examples",
+      "sql": "SELECT %ID,Name FROM Sample.Person WHERE Name LIKE '%son%'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_c565bf70",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE FavoriteColors LIKE '%blue%'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_9d4595e4",
+      "section": "Examples",
+      "sql": "SELECT Name, Age, AVG(Age) AS AvgAge, AVG(Age %AFTERHAVING) AS AvgTeen FROM Sample.Person HAVING Age LIKE '1_' ORDER BY Age",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 47.\n  SELECT Name, Age, AVG(Age) AS AvgAge, AVG(Age \u001b[4m%\u001b[0mAFTERHAVING) AS AvgTeen FROM Sample.Person HAVING Age LIKE '1_' ORDER BY Age"
+    }
+  ]
+}

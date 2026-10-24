@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_vectorcosine",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_vectorcosine",
+  "title": "VECTOR_COSINE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_014d5b3c",
+      "section": "Examples",
+      "sql": "SELECT VECTOR_COSINE(TO_VECTOR('6,4,5',integer), TO_VECTOR('1,4,3',integer))",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_78c0fd86",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 Description FROM Sample.DescAndEmbedding emb ORDER BY VECTOR_COSINE(Embedding,TO_VECTOR('0.3,0.4,0.6',double)) DESC",
+      "roundtrip": false
+    }
+  ]
+}

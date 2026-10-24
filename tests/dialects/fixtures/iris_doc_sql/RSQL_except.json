@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_except",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_except",
+  "title": "EXCEPT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_68335b8e",
+      "section": "Examples",
+      "sql": "SELECT Name,Address,NULL FROM Sample.Employee EXCEPT SELECT Name,Address,Age FROM Sample.Person ORDER BY Name",
+      "roundtrip": false
+    }
+  ]
+}

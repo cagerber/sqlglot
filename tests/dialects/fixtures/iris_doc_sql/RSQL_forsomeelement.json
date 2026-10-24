@@ -1,0 +1,32 @@
+{
+  "doc_key": "RSQL_forsomeelement",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_forsomeelement",
+  "title": "FOR SOME %ELEMENT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_1a0e882a",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE FOR SOME %ELEMENT(FavoriteColors) (%VALUE='Red')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_57750d4b",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE FOR SOME %ELEMENT(FavoriteColors) (%KEY=2)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_148473fe",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE FOR SOME %ELEMENT(FavoriteColors) (%VALUE IN ('Red','Blue'))",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_3ae36ef3",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors AS Preferences FROM Sample.Person WHERE FOR SOME %ELEMENT(FavoriteColors) AS fc (fc.%VALUE [ 'l' AND fc.%VALUE [ 'e')",
+      "roundtrip": false
+    }
+  ]
+}

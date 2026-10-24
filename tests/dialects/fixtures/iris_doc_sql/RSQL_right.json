@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_right",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_right",
+  "title": "RIGHT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_332c3edd",
+      "section": "Examples",
+      "sql": "SELECT Name,{fn RIGHT(Name,2)}AS MiddleInitial FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_517fe9c5",
+      "section": "Examples",
+      "sql": "SELECT Name,{fn RIGHT(Name,40)} FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

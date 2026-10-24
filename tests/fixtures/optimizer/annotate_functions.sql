@@ -7402,12 +7402,56 @@ BOOLEAN;
 BOOLEAN;
 
 # dialect: postgres
+LEFT(tbl.str_col, tbl.int_col);
+TEXT;
+
+# dialect: postgres
+RPAD(tbl.str_col, 10, 'x');
+TEXT;
+
+# dialect: postgres
+TO_HEX(2147483647);
+TEXT;
+
+# dialect: postgres
+SPLIT_PART(tbl.str_col, '~@~', 2);
+TEXT;
+
+# dialect: postgres
+NORMALIZE(tbl.str_col);
+TEXT;
+
+# dialect: postgres
 WIDTH_BUCKET(5, 1, 10, 5);
 INT;
 
 # dialect: postgres
+TO_NUMBER('123.45', '999.99');
+NUMERIC;
+
+# dialect: postgres
+FORMAT('Hello %s, %1$s', 'World');
+TEXT;
+
+# dialect: postgres
 ENCODE(tbl.bin_col, 'base64');
 TEXT;
+
+# dialect: postgres
+RIGHT(tbl.str_col, tbl.int_col);
+TEXT;
+
+# dialect: postgres
+OVERLAY(tbl.str_col PLACING tbl.str_col FROM tbl.int_col FOR tbl.int_col);
+TEXT;
+
+# dialect: postgres
+REVERSE(tbl.str_col);
+TEXT;
+
+# dialect: postgres
+DECODE(tbl.str_col, 'base64');
+VARBINARY;
 
 --------------------------------------
 -- Presto / Trino

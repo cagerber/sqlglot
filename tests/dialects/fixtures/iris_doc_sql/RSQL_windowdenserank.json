@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_windowdenserank",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_windowdenserank",
+  "title": "DENSE_RANK() (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_e9e60e14",
+      "section": "Examples",
+      "sql": "SELECT DENSE_RANK() OVER (PARTITION BY Department ORDER BY Salary) FROM Company.Employee",
+      "roundtrip": false
+    }
+  ]
+}

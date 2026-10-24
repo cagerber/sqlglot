@@ -1,0 +1,80 @@
+{
+  "doc_key": "RSQL_totimestamp",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_totimestamp",
+  "title": "TO_TIMESTAMP (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_3cc42d07",
+      "section": "Examples",
+      "sql": "SELECT TO_TIMESTAMP('June 29, 2022 12:34 PM', 'MONTH DD, YYYY')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_82522ae1",
+      "section": "Examples",
+      "sql": "SELECT TO_TIMESTAMP('29 Jun 2022 12:34')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_38265063",
+      "section": "Examples",
+      "sql": "SELECT TO_TIMESTAMP('29 JUN 2022'), TO_TIMESTAMP('2022 Jun 29','YYYY MON DD'), TO_TIMESTAMP('JUNE 29, 2022','month dd, YYYY'), TO_TIMESTAMP('2022***06***29','YYYY***MM***DD'), TO_TIMESTAMP('06/29/2022','MM/DD/YYYY'), TO_TIMESTAMP('29/6/2022','DD/MM/YYYY')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_0a327bc7",
+      "section": "Examples",
+      "sql": "SELECT TO_TIMESTAMP('202206','YYYYMM')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_5ba91fad",
+      "section": "Examples",
+      "sql": "SELECT TO_TIMESTAMP('11:34','HH:MI:SS.FF'), TO_TIMESTAMP('11:34:22','HH:MI:SS.FF'), TO_TIMESTAMP('11:34:22.00','HH:MI:SS.FF'), TO_TIMESTAMP('11:34:22.7','HH:MI:SS.FF'), TO_TIMESTAMP('11:34:22.7000000','HH:MI:SS.FF')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_b62931cf",
+      "section": "Examples",
+      "sql": "SELECT TO_TIMESTAMP('113422.9678','HHMISS.FF'), TO_TIMESTAMP('9678.113422','FF.HHMISS'), TO_TIMESTAMP('9678.20220629113422','FF.YYYYMMDDHHMISS')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_cc8cab85",
+      "section": "Examples",
+      "sql": "INSERT INTO Sample.MyEmpReviews (EmpNum) VALUES (1)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_a5184bbc",
+      "section": "Examples",
+      "sql": "SELECT TO_TIMESTAMP('29 September 00','DD MONTH RR'), -- 2000-09-29 00:00:00 TO_TIMESTAMP('29 September 18','DD MONTH RR'), -- 2018-09-29 00:00:00 TO_TIMESTAMP('29 September 49','DD MONTH RR'), -- 2049-09-29 00:00:00 TO_TIMESTAMP('29 September 50','DD MONTH RR'), -- 1950-09-29 00:00:00 TO_TIMESTAMP('29 September 77','DD MONTH RR') -- 1977-09-29 00:00:00",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_0df996b5",
+      "section": "Examples",
+      "sql": "SELECT TO_TIMESTAMP('29 September 00','DD MONTH RR'), -- 2000-09-29 00:00:00 TO_TIMESTAMP('29 September 21','DD MONTH RR'), -- 2021-09-29 00:00:00 TO_TIMESTAMP('29 September 49','DD MONTH RR'), -- 2049-09-29 00:00:00 TO_TIMESTAMP('29 September 50','DD MONTH RR'), -- 1950-09-29 00:00:00 TO_TIMESTAMP('29 September 77','DD MONTH RR') -- 1977-09-29 00:00:00",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_2074148f",
+      "section": "Examples",
+      "sql": "SELECT TO_TIMESTAMP('29 September 2021','DD MONTH RRRR'), -- 2021-09-29 00:00:00 TO_TIMESTAMP('29 September 21','DD MONTH RRRR'), -- 2021-09-29 00:00:00 TO_TIMESTAMP('29 September 1949','DD MONTH RRRR'), -- 1949-09-29 00:00:00 TO_TIMESTAMP('29 September 49','DD MONTH RRRR'), -- 2049-09-29 00:00:00 TO_TIMESTAMP('29 September 1950','DD MONTH RRRR'), -- 1950-09-29 00:00:00 TO_TIMESTAMP('29 September 50','DD MONTH RRRR') -- 1950-09-29 00:00:00",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_4cf35051",
+      "section": "Examples",
+      "sql": "SELECT TO_TIMESTAMP('2022:60','YYYY:DDD') --2022-03-01 00:00:00",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_360efafd",
+      "section": "Examples",
+      "sql": "SELECT TO_TIMESTAMP('2020-12-31-60','YYYY-MM-DD-DDD')",
+      "roundtrip": false
+    }
+  ]
+}

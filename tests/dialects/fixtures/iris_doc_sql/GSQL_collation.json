@@ -1,0 +1,64 @@
+{
+  "doc_key": "GSQL_collation",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_collation",
+  "title": "Collation | Using SQL | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_2a3b982c",
+      "section": "Examples",
+      "sql": "CREATE TABLE Sample.MyNames ( LastName CHAR(30), FirstName CHAR(30) COLLATE SQLstring)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_b713a010",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 Name,$LENGTH(Name) AS NLen, %SQLUPPER(Name) AS UpCollN,$LENGTH(%SQLUPPER(Name)) AS UpCollLen, UPPER(Name) AS UpN,$LENGTH(UPPER(Name)) AS UpLen FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_a1d39380",
+      "section": "Examples",
+      "sql": "SELECT Home_City FROM Sample.Person WHERE Home_City = 'albany'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_3a207498",
+      "section": "Examples",
+      "sql": "SELECT Home_City FROM Sample.Person WHERE %EXACT(Home_City) = 'albany'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_370ad98f",
+      "section": "Examples",
+      "sql": "SELECT Home_City FROM Sample.Person WHERE Home_City [ 'c' ORDER BY Home_City",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_7237af92",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT %EXACT(Name) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_812e74e1",
+      "section": "Examples",
+      "sql": "SELECT %EXACT(Name) FROM Sample.Person GROUP BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_3b18341f",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person GROUP BY %EXACT(Name)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_24d3d920",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 Name,$LENGTH(Name) AS NLen, %TRUNCATE(Name,8) AS TruncN,$LENGTH(%TRUNCATE(Name,8)) AS TruncLen FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 42.\n  SELECT TOP 5 Name,$LENGTH(Name) AS NLen, \u001b[4m%\u001b[0mTRUNCATE(Name,8) AS TruncN,$LENGTH(%TRUNCATE(Name,8)) AS TruncLen FROM Sample.Person"
+    }
+  ]
+}

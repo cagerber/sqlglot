@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_plus_pct",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_plus_pct",
+  "title": "%PLUS (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_96f587a1",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_Street FROM Sample.Person ORDER BY %PLUS(Home_Street)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_e60fa0f2",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_Street FROM Sample.Person ORDER BY Home_Street",
+      "roundtrip": false
+    }
+  ]
+}

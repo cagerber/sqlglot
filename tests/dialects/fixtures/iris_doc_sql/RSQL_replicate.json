@@ -1,0 +1,13 @@
+{
+  "doc_key": "RSQL_replicate",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_replicate",
+  "title": "REPLICATE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "curated_replicate",
+      "section": "DocBook synopsis (curated)",
+      "sql": "SELECT REPLICATE('x', 5)"
+    }
+  ]
+}

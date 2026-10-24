@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_sqrt",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_sqrt",
+  "title": "SQRT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_f474c093",
+      "section": "Examples",
+      "sql": "SELECT SQRT(49) AS SRoot,{fn SQRT(49)} AS ODBCSRoot",
+      "roundtrip": false
+    }
+  ]
+}

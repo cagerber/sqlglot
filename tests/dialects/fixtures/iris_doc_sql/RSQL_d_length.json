@@ -1,0 +1,50 @@
+{
+  "doc_key": "RSQL_d_length",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_length",
+  "title": "$LENGTH (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_3d6c3fca",
+      "section": "Examples",
+      "sql": "SELECT $LENGTH('ABCDEG') AS StringLength",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_b130a8d4",
+      "section": "Examples",
+      "sql": "SELECT $LENGTH('ABC$DEF$EFG','$') AS SubStrings",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_75cdd0e4",
+      "section": "Examples",
+      "sql": "SELECT $LENGTH('ABCDEG','$') AS SubStrings",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_30fa2bd4",
+      "section": "Examples",
+      "sql": "SELECT $LENGTH(\"HELLO WORLD\"), $LENGTH(\"HELLO WORLD\",\" \")",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_7f557284",
+      "section": "Examples",
+      "sql": "SELECT $LENGTH(NULL) AS StringLength",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_b97340dd",
+      "section": "Examples",
+      "sql": "SELECT $LENGTH(NULL,'$') AS SubStrings",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_e0b9950c",
+      "section": "Examples",
+      "sql": "SELECT $LENGTH('ABCDEFG',NULL) AS SubStrings",
+      "roundtrip": false
+    }
+  ]
+}

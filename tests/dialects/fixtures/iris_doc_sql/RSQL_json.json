@@ -1,0 +1,22 @@
+{
+  "doc_key": "RSQL_json",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_json",
+  "title": "IS JSON (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_443dfb36",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 Name FROM Sample.Person WHERE '{\"\"name\"\":\"\"Fred\"\",\"\"spouse\"\":\"\"Wilma\"\"}' IS JSON",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_2e254df0",
+      "section": "Examples",
+      "sql": "SELECT Title,%OBJECT(Picture) AS PhotoOref FROM Sample.Employee WHERE Picture IS NOT JSON",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 14.\n  SELECT Title,\u001b[4m%\u001b[0mOBJECT(Picture) AS PhotoOref FROM Sample.Employee WHERE Picture IS NOT JSON"
+    }
+  ]
+}

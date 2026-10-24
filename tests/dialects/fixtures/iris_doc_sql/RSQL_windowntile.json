@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_windowntile",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_windowntile",
+  "title": "NTILE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_41742e32",
+      "section": "Examples",
+      "sql": "SELECT NTILE(4) OVER (PARTITION BY Department ORDER BY Salary) FROM Company.Employee",
+      "roundtrip": false
+    }
+  ]
+}

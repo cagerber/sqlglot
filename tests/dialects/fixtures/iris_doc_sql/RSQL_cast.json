@@ -1,0 +1,188 @@
+{
+  "doc_key": "RSQL_cast",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_cast",
+  "title": "CAST (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_748e05a5",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT CAST(Name AS VARCHAR) AS VarCharName, CAST(Age AS VARCHAR) AS VarCharAge, CAST(DOB AS VARCHAR) AS VarCharDOB FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_ab70a65a",
+      "section": "Examples",
+      "sql": "SELECT CAST('True' AS CHAR) -- T",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_81e5184a",
+      "section": "Examples",
+      "sql": "SELECT CAST({fn PI()} AS CHAR VARYING) AS StringPi -- 3.141592653589793238",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_03d4b458",
+      "section": "Examples",
+      "sql": "SELECT CAST('Grabscheid,Alfred N.' AS CHAR(8)) -- Grabsche",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_35913bd2",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT AVG(Age) AS AvgAge, CAST(AVG(Age) AS INTEGER) AS IntAvgAge FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_4ec144da",
+      "section": "Examples",
+      "sql": "SELECT CAST({fn SIN(1)} AS DECIMAL) AS DecimalValue -- 0.841470984807897",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_6f3d23c4",
+      "section": "Examples",
+      "sql": "SELECT CAST({fn SIN(1)} AS DECIMAL(8,4)) AS ScaledDecimalValue -- 0.8415",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_36525e06",
+      "section": "Examples",
+      "sql": "SELECT CAST({fn SIN(1)} AS DOUBLE) AS DoubleValue -- .84147098480789650487",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_72282915",
+      "section": "Examples",
+      "sql": "SELECT CAST(10 AS MONEY) AS MoneyValue -- 10.0000 (Display Mode)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_f2d89829",
+      "section": "Examples",
+      "sql": "SELECT CAST('1936-11-26' As DATE) AS StringToDate",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_a6a18af1",
+      "section": "Examples",
+      "sql": "SELECT CAST('14:33:45.78' AS TIME) AS StringToTime",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_7ea818ce",
+      "section": "Examples",
+      "sql": "SELECT CAST('November 26, 1936 14:33:45.78' AS TIMESTAMP) AS StringToTS",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_013_1008dba9",
+      "section": "Examples",
+      "sql": "SELECT CAST('November 26, 1936 14:33:45.78' AS POSIXTIME) AS StringToPosix",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_014_4e72d366",
+      "section": "Examples",
+      "sql": "SELECT CAST('1' AS BIT) As BitTrue, CAST('0' AS BIT) As BitFalse",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_015_810202a8",
+      "section": "Examples",
+      "sql": "SELECT CAST('Hello World' AS CHAR) AS StringToChar, -- H CAST('Hello World' AS CHAR(5)) AS StringToCharLength, -- Hello CAST('Hello World' AS CHAR VARYING) AS StringToCharVary -- Hello World",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_016_17f1577a",
+      "section": "Examples",
+      "sql": "SELECT CAST('Can''t' AS VARCHAR) AS EmbeddedQuote, -- Can't CAST('Can'||'not' AS VARCHAR) AS StringConcatenation -- Cannot",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_017_d0f143a2",
+      "section": "Examples",
+      "sql": "SELECT CAST('Hello World' AS DOUBLE) AS StringToNumeric -- 0",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_018_40be4a74",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT CAST(Name As INT) As IntName, CAST(Name As SMALLINT) As SmallIntName, CAST(Name As DEC) As DecName, CAST(Name As NUMERIC) As NumericName FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_019_7ea5d367",
+      "section": "Examples",
+      "sql": "SELECT CAST('2022-3-1' AS DATE) AS DateValue -- 03/01/2022 (Display Mode)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_020_c95dd429",
+      "section": "Examples",
+      "sql": "SELECT CAST('2021-02-29' AS DATE) AS InvalidDate -- 12/31/1840 (Display Mode)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_021_b65e5170",
+      "section": "Examples",
+      "sql": "SELECT CAST('2:45' AS TIME) AS StringToTime1, -- 02:45:00 (Display Mode) CAST('2:45:59' AS TIME) AS StringToTime2, -- 02:45:59 (Display Mode) CAST('2:45:59.98' AS TIME) AS StringToTime3 -- 02:45:59.98 (Display Mode)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_022_7947b807",
+      "section": "Examples",
+      "sql": "SELECT CAST('11:52:60' AS TIME) AS InvalidTime -- 00:00:00 (Display Mode)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_023_7bde838a",
+      "section": "Examples",
+      "sql": "SELECT CAST('1 MAR 2022 1:33pm' AS TIMESTAMP) As DateToTS1, -- 2022-03-01 13:33:00 CAST('3/1/2022 13:33:00' AS TIMESTAMP) As DateToTS2 -- 2022-03-01 13:33:00",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_024_ee470943",
+      "section": "Examples",
+      "sql": "SELECT CAST(CAST('14:33:45.78' AS TIME) As TIMESTAMP) AS TimeToTstamp",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_025_56ce2fb0",
+      "section": "Examples",
+      "sql": "SELECT CAST(CURRENT_DATE AS CHAR(5)) AS TruncatedDate",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_026_b82ae8ab",
+      "section": "Examples",
+      "sql": "SELECT CAST(CURRENT_TIME AS CHAR VARYING) AS FullDate",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_027_b7a58b9b",
+      "section": "Examples",
+      "sql": "SELECT CAST(TO_DATE('03/01/2022','MM/DD/YYYY') AS VARCHAR) AS DateFormat -- 2022-03-01",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_028_aa4f2a9e",
+      "section": "Examples",
+      "sql": "SELECT CAST(TO_DATE('01 MAR 2022') AS DECIMAL) AS DateToNumeric -- 66169",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_029_db1356e4",
+      "section": "Examples",
+      "sql": "SELECT CAST(CURRENT_DATE AS POSIXTIME) As PosixDate",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_030_786ec14b",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 DOB, CAST(DOB AS TIMESTAMP) AS TStamp, CAST(DOB AS POSIXTIME) AS Posix FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

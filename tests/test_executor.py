@@ -2,6 +2,7 @@ import ast
 import csv
 import datetime
 import unittest
+from collections import Counter
 from datetime import date, time
 from concurrent.futures import ProcessPoolExecutor
 
@@ -426,6 +427,91 @@ class TestExecutor(unittest.TestCase):
             [(2,)],
         )
 
+    def test_set_operation_order_by(self):
+        schema = {"x": {"a": "int"}, "y": {"b": "int"}}
+        tables = {"x": [{"a": 3}, {"a": 1}], "y": [{"b": 1}, {"b": 2}]}
+
+        for sql, expected in (
+            ("SELECT a FROM x UNION ALL SELECT b FROM y ORDER BY a", [(1,), (1,), (2,), (3,)]),
+            ("SELECT a FROM x UNION SELECT b FROM y ORDER BY a", [(1,), (2,), (3,)]),
+            ("SELECT a FROM x UNION ALL SELECT b FROM y ORDER BY a DESC", [(3,), (2,), (1,), (1,)]),
+            ("SELECT a FROM x UNION ALL SELECT b FROM y ORDER BY a LIMIT 2", [(1,), (1,)]),
+            ("SELECT a FROM x UNION ALL (SELECT b FROM y LIMIT 1) ORDER BY a", [(1,), (1,), (3,)]),
+            ("SELECT a FROM x EXCEPT SELECT b FROM y ORDER BY a", [(3,)]),
+            ("SELECT a FROM x INTERSECT SELECT b FROM y ORDER BY a", [(1,)]),
+        ):
+            with self.subTest(sql):
+                self.assertEqual(execute(sql, schema, tables=tables).rows, expected)
+
+    def test_offset_order_by(self):
+        schema = {"x": {"a": "int"}, "y": {"b": "int"}}
+        tables = {"x": [{"a": a} for a in (3, 1, 5, 2, 4)], "y": [{"b": 7}, {"b": 6}]}
+
+        for sql, expected in (
+            ("SELECT a FROM x ORDER BY a OFFSET 2", [(3,), (4,), (5,)]),
+            ("SELECT a FROM x ORDER BY a LIMIT 2 OFFSET 1", [(2,), (3,)]),
+            ("SELECT a FROM x ORDER BY a LIMIT 2 OFFSET 10", []),
+            ("SELECT a FROM x WHERE a > 1 ORDER BY a LIMIT 2 OFFSET 1", [(3,), (4,)]),
+            (
+                "SELECT a, COUNT(*) AS c FROM x GROUP BY a ORDER BY a LIMIT 2 OFFSET 2",
+                [(3, 1), (4, 1)],
+            ),
+            (
+                "SELECT a FROM x UNION ALL SELECT b FROM y ORDER BY a LIMIT 3 OFFSET 2",
+                [(3,), (4,), (5,)],
+            ),
+        ):
+            with self.subTest(sql):
+                self.assertEqual(execute(sql, schema, tables=tables).rows, expected)
+
+    def test_offset_no_order_by(self):
+        x_values = (3, 1, 5, 2, 4)
+        y_values = (7, 6)
+        g_values = (1, 2, 2, 3, 4, 4, 5, 5)
+
+        schema = {"x": {"a": "int"}, "y": {"b": "int"}, "g": {"v": "int"}}
+        tables = {
+            "x": [{"a": a} for a in x_values],
+            "y": [{"b": b} for b in y_values],
+            "g": [{"v": v} for v in g_values],
+        }
+
+        rows_x = {(a,) for a in x_values}
+        rows_union = rows_x | {(b,) for b in y_values}
+        groups = set(Counter(g_values).items())
+        groups_having_count = {group for group in groups if group[1] > 1}
+        groups_having_key = {group for group in groups if group[0] > 2}
+
+        # Row order is unspecified without ORDER BY, so assert cardinality and membership.
+        for sql, count, allowed in (
+            ("SELECT a FROM x OFFSET 2", 3, rows_x),
+            ("SELECT a FROM x LIMIT 2 OFFSET 1", 2, rows_x),
+            ("SELECT v, COUNT(*) AS c FROM g GROUP BY v LIMIT 2 OFFSET 1", 2, groups),
+            ("SELECT v, COUNT(*) AS c FROM g GROUP BY v OFFSET 3", 2, groups),
+            (
+                "SELECT v, COUNT(*) AS c FROM g GROUP BY v HAVING COUNT(*) > 1 LIMIT 2",
+                2,
+                groups_having_count,
+            ),
+            (
+                "SELECT v, COUNT(*) AS c FROM g GROUP BY v HAVING COUNT(*) > 1 LIMIT 2 OFFSET 1",
+                2,
+                groups_having_count,
+            ),
+            (
+                "SELECT v, COUNT(*) AS c FROM g GROUP BY v HAVING v > 2 LIMIT 2 OFFSET 1",
+                2,
+                groups_having_key,
+            ),
+            ("SELECT a FROM x UNION ALL SELECT b FROM y LIMIT 3 OFFSET 2", 3, rows_union),
+            ("SELECT a FROM x UNION ALL SELECT b FROM y OFFSET 2", 5, rows_union),
+            ("SELECT COUNT(*) AS c FROM x LIMIT 1 OFFSET 1", 0, {(5,)}),
+        ):
+            with self.subTest(sql):
+                rows = execute(sql, schema, tables=tables).rows
+                self.assertEqual(len(rows), count)
+                self.assertLessEqual(set(rows), allowed)
+
     def test_outer_joins_preserve_unmatched_rows(self):
         tables = {
             "x": [{"id": 1}, {"id": 2}],
@@ -591,20 +677,140 @@ class TestExecutor(unittest.TestCase):
         self.assertEqual(executed.rows, [])
         self.assertEqual(executed.columns, ("id_alias", "sub_type"))
 
-    def test_unsupported_subqueries(self):
-        tables = {
-            "x": [{"id": 1}, {"id": 2}, {"id": 3}],
-            "y": [{"id": 1}, {"id": 2}],
+    def test_subqueries(self):
+        # expected rows are duckdb's, which postgres agrees with on every case here
+        schema = {
+            "x": {"a": "int"},
+            "y": {"b": "int"},
+            "empty_table": {"b": "int"},
+            "tbl_with_null": {"b": "int"},
         }
+        tables = {
+            "x": [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 5}],
+            "y": [{"b": 2}, {"b": 3}],
+            "empty_table": [],
+            "tbl_with_null": [{"b": 2}, {"b": None}],
+        }
+        cases = (
+            ("SELECT a FROM x WHERE NOT EXISTS (SELECT 1 FROM y WHERE b = x.a OR b = 3)", []),
+            (
+                "SELECT a FROM x WHERE EXISTS (SELECT 1 FROM y WHERE NOT b = x.a)",
+                [(1,), (2,), (3,), (5,)],
+            ),
+            ("SELECT a FROM x WHERE EXISTS (SELECT 1 FROM empty_table)", []),
+            (
+                "SELECT a, (SELECT MAX(b) FROM y WHERE b > x.a) AS m FROM x",
+                [(1, 3), (2, 3), (3, None), (5, None)],
+            ),
+            ("SELECT a FROM x WHERE (SELECT COUNT(*) FROM y WHERE b > x.a) > 0", [(1,), (2,)]),
+            ("SELECT a FROM x WHERE a IN (SELECT b FROM y WHERE b = x.a OR b = 3)", [(2,), (3,)]),
+            ("SELECT a FROM x WHERE a NOT IN (SELECT b FROM y)", [(1,), (5,)]),
+            ("SELECT a FROM x WHERE a IN (SELECT b FROM tbl_with_null)", [(2,)]),
+            ("SELECT a FROM x WHERE a NOT IN (SELECT b FROM tbl_with_null)", []),
+            ("SELECT a FROM x WHERE a IN (5, (SELECT MIN(b) FROM y WHERE b > x.a))", [(5,)]),
+            ("SELECT a FROM x WHERE (SELECT MIN(b) FROM y WHERE b > x.a) IN (1, 2)", [(1,)]),
+            ("SELECT a FROM x WHERE a > ANY (SELECT b FROM tbl_with_null)", [(3,), (5,)]),
+            ("SELECT a FROM x WHERE a > ALL (SELECT b FROM tbl_with_null)", []),
+            ("SELECT a FROM x WHERE a > ANY (SELECT b FROM empty_table)", []),
+            (
+                "SELECT a FROM x WHERE a > ALL (SELECT b FROM empty_table)",
+                [(1,), (2,), (3,), (5,)],
+            ),
+            ("SELECT a FROM x WHERE a > SOME (SELECT b FROM y)", [(3,), (5,)]),
+            (
+                "SELECT a FROM x WHERE EXISTS (SELECT 1 FROM y WHERE b = x.a AND EXISTS "
+                "(SELECT 1 FROM tbl_with_null WHERE tbl_with_null.b = y.b))",
+                [(2,)],
+            ),
+            (
+                "SELECT a FROM x WHERE EXISTS (SELECT 1 FROM y WHERE b = 99 OR EXISTS "
+                "(SELECT 1 FROM tbl_with_null WHERE tbl_with_null.b = x.a OR tbl_with_null.b = 99))",
+                [(2,)],
+            ),
+            (
+                "SELECT a FROM x WHERE a IN (SELECT b FROM y WHERE b = x.a) "
+                "OR a IN (SELECT b FROM tbl_with_null WHERE b = x.a)",
+                [(2,), (3,)],
+            ),
+            (
+                "SELECT a FROM x WHERE a IN (SELECT b FROM y UNION SELECT b FROM tbl_with_null)",
+                [(2,), (3,)],
+            ),
+            (
+                "SELECT a FROM x WHERE EXISTS ((SELECT 1 FROM y WHERE b = x.a OR b = 99))",
+                [(2,), (3,)],
+            ),
+            ("SELECT a FROM x GROUP BY a HAVING MAX(a) > (SELECT MIN(b) FROM y)", [(3,), (5,)]),
+            (
+                "WITH w AS (SELECT b, COUNT(*) AS k FROM y GROUP BY b) SELECT a FROM x "
+                "WHERE EXISTS (SELECT 1 FROM w WHERE w.b = x.a OR w.k = 2)",
+                [(2,), (3,)],
+            ),
+            (
+                "WITH c AS (SELECT b FROM y) SELECT a FROM x WHERE a IN (SELECT b FROM c) "
+                "AND NOT EXISTS (SELECT 1 FROM c WHERE b = x.a OR b = 99)",
+                [],
+            ),
+            (
+                "SELECT a FROM x WHERE EXISTS (SELECT 1 FROM y WHERE b = x.a OR EXISTS "
+                "(SELECT 1 FROM tbl_with_null WHERE tbl_with_null.b = x.a))",
+                [(2,), (3,)],
+            ),
+        )
 
-        for sql in (
-            "SELECT x.id FROM x WHERE EXISTS (SELECT 1 FROM y WHERE NOT (y.id = x.id))",
-            "SELECT x.id FROM x WHERE NOT EXISTS (SELECT 1 FROM y WHERE NOT (y.id = x.id))",
-            "SELECT x.id, (SELECT MAX(y.id) FROM y) AS max_id FROM x",
+        for sql, expected in cases:
+            with self.subTest(sql):
+                self.assertCountEqual(execute(sql, schema, tables=tables).rows, expected)
+
+    def test_subquery_memoization(self):
+        schema = {"x": {"a": "int"}, "y": {"b": "int"}}
+        tables = {"x": [{"a": i % 3} for i in range(12)], "y": [{"b": 1}, {"b": 2}]}
+
+        for sql, expected_plans in (
+            ("SELECT a FROM x WHERE NOT EXISTS (SELECT 1 FROM y WHERE b = x.a OR b = 9)", 1),
+            (
+                "SELECT a FROM x WHERE NOT EXISTS (SELECT 1 FROM y WHERE b = 9 OR EXISTS "
+                "(SELECT 1 FROM y AS y2 WHERE y2.b = x.a OR y2.b = 9))",
+                2,
+            ),
+        ):
+            with self.subTest(sql):
+                executor = PythonExecutor(tables=ensure_tables(tables))
+                executor.execute(Plan(optimize(sql, schema, leave_tables_isolated=True)))
+
+                # one plan per subquery, and one run per distinct correlated value of the 12 rows
+                self.assertEqual(len(executor._subquery_plans), expected_plans)
+                self.assertEqual(
+                    [len(cache) for _, cache in executor._subquery_plans.values()],
+                    [3] * expected_plans,
+                )
+
+    def test_subquery_execution_does_not_mutate_the_plan(self):
+        schema = {"x": {"a": "int"}, "y": {"b": "int"}}
+        tables = {"x": [{"a": 1}, {"a": 2}], "y": [{"b": 2}]}
+        sql = "SELECT a FROM x WHERE NOT EXISTS (SELECT 1 FROM y WHERE b = x.a OR b = 9)"
+
+        plan = Plan(optimize(sql, schema, leave_tables_isolated=True))
+        before = plan.expression.sql()
+        PythonExecutor(tables=ensure_tables(tables)).execute(plan)
+
+        self.assertEqual(plan.expression.sql(), before)
+
+    def test_subquery_cardinality(self):
+        # a scalar subquery must yield a single row and column, as in duckdb and postgres
+        for sql, tables in (
+            (
+                "SELECT a, (SELECT b FROM y) AS m FROM x",
+                {"x": [{"a": 1}], "y": [{"b": 2}, {"b": 3}]},
+            ),
+            ("SELECT a, (SELECT b, b FROM y) AS m FROM x", {"x": [{"a": 1}], "y": [{"b": 2}]}),
+            # the column count is a property of the query, so it is rejected even when no
+            # outer row would have evaluated it -- duckdb reports this as a binder error
+            ("SELECT a, (SELECT b, b FROM y) AS m FROM x", {"x": [], "y": [{"b": 2}]}),
         ):
             with self.subTest(sql):
                 with self.assertRaises(ExecuteError):
-                    execute(sql, tables=tables)
+                    execute(sql, schema={"x": {"a": "int"}, "y": {"b": "int"}}, tables=tables)
 
     def test_correlated_count(self):
         tables = {
@@ -703,6 +909,17 @@ class TestExecutor(unittest.TestCase):
                 self.assertEqual(result.columns, tuple(cols))
                 self.assertEqual(result.rows, rows)
 
+    def test_operators_apply_to_a_whole_case_expression(self):
+        tables = {"t": [{"a": 1}, {"a": 2}]}
+
+        for sql, expected in (
+            ("SELECT (CASE WHEN a = 1 THEN 'x' END) IS NOT NULL AS c FROM t", [(True,), (False,)]),
+            ("SELECT (CASE WHEN a = 1 THEN 'x' END) IS NULL AS c FROM t", [(False,), (True,)]),
+            ("SELECT (CASE WHEN a = 1 THEN 1 ELSE 2 END) + 10 AS c FROM t", [(11,), (12,)]),
+        ):
+            with self.subTest(sql):
+                self.assertEqual(execute(sql, tables=tables).rows, expected)
+
     def test_negated_like(self):
         """NOT LIKE must exclude what LIKE matches, and match no NULL either."""
         tables = {"t": [{"s": "Bump version"}, {"s": "Add feature"}, {"s": None}]}
@@ -746,6 +963,36 @@ class TestExecutor(unittest.TestCase):
             with self.subTest(func):
                 rows = execute(f"SELECT {func}(s) FROM t", tables=tables).rows
                 self.assertEqual(rows, [(3,), (0,), (None,)])
+
+    def test_dpipe(self):
+        tables = {"t": [{"a": "x", "b": "y", "n": 1, "arr": [1, 2], "nul": None}]}
+
+        for expression, expected in (
+            ("a || b", "xy"),
+            ("a || b || a", "xyx"),
+            ("a || n", "x1"),
+            ("n || a", "1x"),
+            ("a || nul", None),
+            ("nul || a", None),
+            ("arr || arr", [1, 2, 1, 2]),
+            ("arr || n", [1, 2, 1]),
+            ("n || arr", [1, 1, 2]),
+            ("arr || nul", None),
+            ("ARRAY_CONCAT(arr, arr)", [1, 2, 1, 2]),
+            ("ARRAY_CAT(arr, arr, arr)", [1, 2, 1, 2, 1, 2]),
+        ):
+            with self.subTest(expression):
+                rows = execute(f"SELECT {expression} FROM t", tables=tables).rows
+                self.assertEqual(rows, [(expected,)])
+
+    def test_dpipe_source_dialect_coercion(self):
+        tables = {"t": [{"a": "x", "n": 1}]}
+
+        rows = execute("SELECT a || n FROM t", tables=tables, dialect="postgres").rows
+        self.assertEqual(rows, [("x1",)])
+
+        with self.assertRaises(ExecuteError):
+            execute("SELECT a || n FROM t", tables=tables, dialect="trino")
 
     def test_ilike_semantics(self):
         tables = {"t": [{"s": "Bump Version"}, {"s": "B.mp Version"}, {"s": "Add feature"}]}
@@ -791,6 +1038,44 @@ class TestExecutor(unittest.TestCase):
 
         result = execute("SELECT n / 3 AS x FROM t", tables=tables, dialect="postgres")
         self.assertEqual(result.rows, [(3,)])
+
+    def test_typed_division_of_null_is_null(self):
+        schema = {"t": {"n": "INT"}}
+        tables = {"t": [{"n": None}]}
+
+        for sql in ("SELECT n / 3 AS x FROM t", "SELECT 3 / n AS x FROM t"):
+            for dialect in ("postgres", "sqlite"):
+                with self.subTest(f"{dialect}: {sql}"):
+                    result = execute(sql, schema=schema, tables=tables, dialect=dialect)
+                    self.assertEqual(result.rows, [(None,)])
+
+    def test_null_ordering_honors_nulls_first_and_dialect_defaults(self):
+        schema = {"t": {"a": "INT"}}
+        tables = {"t": [{"a": 1}, {"a": None}, {"a": 3}, {"a": None}]}
+
+        for sql, expected in (
+            ("SELECT a FROM t ORDER BY a NULLS FIRST", [None, None, 1, 3]),
+            ("SELECT a FROM t ORDER BY a NULLS LAST", [1, 3, None, None]),
+            ("SELECT a FROM t ORDER BY a DESC NULLS FIRST", [None, None, 3, 1]),
+            ("SELECT a FROM t ORDER BY a DESC NULLS LAST", [3, 1, None, None]),
+        ):
+            for dialect in ("postgres", "duckdb", "mysql"):
+                with self.subTest(f"{dialect}: {sql}"):
+                    result = execute(sql, schema=schema, tables=tables, dialect=dialect)
+                    self.assertEqual([row[0] for row in result.rows], expected)
+
+        for dialect, ascending, descending in (
+            ("postgres", [1, 3, None, None], [None, None, 3, 1]),
+            ("mysql", [None, None, 1, 3], [3, 1, None, None]),
+            ("duckdb", [1, 3, None, None], [3, 1, None, None]),
+        ):
+            for sql, expected in (
+                ("SELECT a FROM t ORDER BY a", ascending),
+                ("SELECT a FROM t ORDER BY a DESC", descending),
+            ):
+                with self.subTest(f"{dialect}: {sql}"):
+                    result = execute(sql, schema=schema, tables=tables, dialect=dialect)
+                    self.assertEqual([row[0] for row in result.rows], expected)
 
     def test_aggregate_without_group_by(self):
         result = execute("SELECT SUM(x) FROM t", tables={"t": [{"x": 1}, {"x": 2}]})
@@ -892,6 +1177,8 @@ class TestExecutor(unittest.TestCase):
             ("DATEDIFF('2022-01-03'::date, '2022-01-01'::TIMESTAMP::DATE)", 2),
             ("TRIM(' foo ')", "foo"),
             ("TRIM('afoob', 'ab')", "foo"),
+            ("REVERSE('foo')", "oof"),
+            ("REVERSE(NULL)", None),
             ("ARRAY_JOIN(['foo', 'bar'], ':')", "foo:bar"),
             ("ARRAY_JOIN(['hello', null ,'world'], ' ', ',')", "hello , world"),
             ("ARRAY_JOIN(['', null ,'world'], ' ', ',')", " , world"),
@@ -900,6 +1187,10 @@ class TestExecutor(unittest.TestCase):
             ("ROUND(1.2)", 1),
             ("ROUND(1.2345, 2)", 1.23),
             ("ROUND(NULL)", None),
+            ("POWER(2, 3)", 8),
+            ("POWER(NULL, 3)", None),
+            ("POWER(2, NULL)", None),
+            ("POWER(NULL, NULL)", None),
             (
                 "UNIXTOTIME(1659981729)",
                 datetime.datetime(2022, 8, 8, 18, 2, 9, tzinfo=datetime.timezone.utc),

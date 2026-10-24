@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_variance",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_variance",
+  "title": "VARIANCE, VAR_SAMP, VAR_POP (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_171c6602",
+      "section": "Examples",
+      "sql": "SELECT VARIANCE(Age) AS AgeVar,VARIANCE(DISTINCT Age) AS PerAgeVar FROM Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_f1462409",
+      "section": "Examples",
+      "sql": "SELECT VAR_POP(Age) AS AgePopVar,VAR_POP(DISTINCT Age) AS PerAgePopVar FROM Sample.Employee",
+      "roundtrip": false
+    }
+  ]
+}

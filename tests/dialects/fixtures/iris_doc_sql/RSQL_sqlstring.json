@@ -1,0 +1,28 @@
+{
+  "doc_key": "RSQL_sqlstring",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_sqlstring",
+  "title": "%SQLSTRING (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_dcdd71ec",
+      "section": "Examples",
+      "sql": "SELECT Name, %SQLSTRING(Name,3) AS FirstTwo FROM Sample.Person ORDER BY FirstTwo",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_0442e6e6",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 Name, %SQLSTRING((SELECT Name FROM Sample.Company),10) AS Company FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_6d15c32d",
+      "section": "Examples",
+      "sql": "SELECT Name FROM Sample.Person WHERE %SQLSTRING Name %STARTSWITH %SQLSTRING 'Al' ORDER BY Name",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 52.\n  SELECT Name FROM Sample.Person WHERE %SQLSTRING \u001b[4mName\u001b[0m %STARTSWITH %SQLSTRING 'Al' ORDER BY Name"
+    }
+  ]
+}

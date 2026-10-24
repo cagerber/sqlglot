@@ -1,0 +1,58 @@
+{
+  "doc_key": "RSQL_jsontable",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_jsontable",
+  "title": "JSON_TABLE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_37260229",
+      "section": "Examples",
+      "sql": "SELECT my_value FROM JSON_TABLE( '[{\"number\":\"two\"}, {\"number\":\"three\"}, {\"number\":\"four\"}]', '$' COLUMNS ( my_value varchar(20) PATH '$.number' ) )",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_74b801c1",
+      "section": "Examples",
+      "sql": "SELECT TOP 10 state, name FROM JSON_TABLE(%Net.GetJson('https://www.govtrack.us/api/v2/role?current=true&role_type=senator','{\"SSLConfiguration\":\"Default\"}'), '$.content.objects' COLUMNS ( name VARCHAR(100) PATH '$.person.name', sortname VARCHAR(100) PATH '$.person.sortname', state VARCHAR(50) PATH '$.state' ) ) as jt ORDER BY state, sortname",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_9758e932",
+      "section": "Examples",
+      "sql": "SELECT TOP 10 jtp.name, state, jtp.birth_date, jte.address FROM Senators as Sen, JSON_TABLE(Sen.person, '$' COLUMNS ( name VARCHAR(60) path '$.sortname', birth_date VARCHAR(10) path '$.birthday' ) ) as jtp, JSON_TABLE(Sen.extra, '$' COLUMNS ( address VARCHAR(100) path '$.address' ) ) as jte",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_62e09ecb",
+      "section": "Examples",
+      "sql": "INSERT INTO Example.JsonValues (numbers) VALUES ('[{\"number\":0},{\"number\":1},{\"number\":2}]')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_198b4994",
+      "section": "Examples",
+      "sql": "SELECT number FROM Example.JsonValues, JSON_TABLE(JsonValues.numbers, '$' COLUMNS ( number INTEGER PATH '$.number' ) )",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_c12caa8d",
+      "section": "Examples",
+      "sql": "SELECT numbers FROM Example.JsonValues",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_6c74c588",
+      "section": "Examples",
+      "sql": "SELECT * FROM Example.JsonValues, JSON_TABLE(JsonValues, '$' COLUMNS ( number INTEGER PATH '$.number' ) )",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_2e13d2f9",
+      "section": "Examples",
+      "sql": "SELECT firstName, lastName FROM JSON_TABLE( NBATeams FORMAT COLLECTION, '$' COLUMNS ( teamId BIGINT path '$.teamId', teamName VARCHAR(50) path '$.teamName' ) ) AS Teams JOIN JSON_TABLE( NBAPlayers FORMAT COLLECTION, '$' COLUMNS ( teamId BIGINT path '$.teamId', firstName VARCHAR(50) path '$.firstName', lastName VARCHAR(50) path '$.lastName' ) ) AS Players ON teams.teamId = players.teamId WHERE teams.teamName = 'Boston Celtics' ORDER BY lastName, firstName",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 159.\n  T COLLECTION, '$' COLUMNS ( teamId BIGINT path '$.teamId', teamName VARCHAR(50) path '$.teamName' ) \u001b[4m)\u001b[0m AS Teams JOIN JSON_TABLE( NBAPl"
+    }
+  ]
+}

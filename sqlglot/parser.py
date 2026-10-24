@@ -325,8 +325,10 @@ def build_jsonb_extract_scalar(
     return self.expression(exp.JSONBExtractScalar(this=this, expression=path))
 
 
-def build_jsonb_contains(self: Parser, this: exp.Expr, key: exp.Expr) -> exp.JSONBContains:
-    return self.expression(exp.JSONBContains(this=this, expression=key))
+def build_jsonb_contains_top_key(
+    self: Parser, this: exp.Expr, key: exp.Expr
+) -> exp.JSONBContainsTopKey:
+    return self.expression(exp.JSONBContainsTopKey(this=this, expression=key))
 
 
 SENTINEL_NONE: Token = Token(TokenType.SENTINEL, "SENTINEL")
@@ -1102,7 +1104,7 @@ class Parser:
             exp.JSONBExtractScalar(this=this, expression=path)
         ),
         TokenType.PLACEHOLDER: lambda self, this, key: self.expression(
-            exp.JSONBContains(this=this, expression=key)
+            exp.JSONBContainsTopKey(this=this, expression=key)
         ),
     }
 
@@ -1886,6 +1888,9 @@ class Parser:
     # Whether implicit unnesting is supported, e.g. SELECT 1 FROM y.z AS z, z.a (Redshift)
     SUPPORTS_IMPLICIT_UNNEST: t.ClassVar = False
 
+    # Whether field names can be digit-prefixed, e.g. data.144A_FLAG or data.144 (BigQuery)
+    SUPPORTS_DIGIT_PREFIXED_FIELD_NAMES: t.ClassVar = False
+
     # Whether or not interval spans are supported, INTERVAL 1 YEAR TO MONTHS
     INTERVAL_SPANS: t.ClassVar = True
 
@@ -1933,6 +1938,10 @@ class Parser:
     # Whether adjacent string literals like 'foo' 'bar' require a whitespace or comment between them
     # to be considered valid syntactically. Such expressions evaluate to the strings' concatenation.
     ADJACENT_STRINGS_CANNOT_BE_CONNECTED: t.ClassVar = False
+
+    # Whether NTH_VALUE accepts the FROM FIRST | LAST modifier before its OVER clause,
+    # e.g. NTH_VALUE(x, 2) FROM LAST IGNORE NULLS OVER (...) (Oracle, Snowflake)
+    SUPPORTS_NTH_VALUE_FROM_MODIFIER: t.ClassVar = False
 
     SHOW_TRIE: t.ClassVar[dict] = new_trie(key.split(" ") for key in SHOW_PARSERS)
     SET_TRIE: t.ClassVar[dict] = new_trie(key.split(" ") for key in SET_PARSERS)
@@ -2005,6 +2014,21 @@ class Parser:
     def _retreat(self, index: i64) -> None:
         if index != self._index:
             self._advance(index - self._index)
+
+    def _ensure_parse_progress(self, index: i64, context: str) -> None:
+        """
+        Fail fast when a parse loop iteration does not advance the token cursor.
+
+        Guards against infinite loops when a handler returns without consuming input.
+        """
+        if self._index != index:
+            return
+        token = self._curr
+        if token is SENTINEL_NONE or not token:
+            detail = "EOF"
+        else:
+            detail = f"{token.token_type.name} {token.text!r}"
+        self.raise_error(f"Parser stuck ({context}) at {detail}")
 
     def _add_comments(self, expression: exp.Expr | None) -> None:
         if expression and self._prev_comments:
@@ -2408,6 +2432,12 @@ class Parser:
         else:
             this = self._parse_table_parts(schema=True, is_db_reference=kind == "SCHEMA")
 
+        tables = (
+            self._parse_csv(lambda: self._parse_table_parts(schema=True))
+            if kind == "TABLE" and self._match(TokenType.COMMA)
+            else None
+        )
+
         cluster = self._parse_on_property() if self._match(TokenType.ON) else None
 
         if self._match(TokenType.L_PAREN, advance=False):
@@ -2421,6 +2451,7 @@ class Parser:
             exp.Drop(
                 exists=if_exists,
                 this=this,
+                tables=tables,
                 expressions=expressions,
                 kind=self.dialect.CREATABLE_KIND_MAPPING.get(kind) or kind,
                 temporary=temporary,
@@ -4061,13 +4092,7 @@ class Parser:
             )
 
             distinct: exp.Expr | None = (
-                self.expression(
-                    exp.Distinct(
-                        on=self._parse_value(values=False) if self._match(TokenType.ON) else None
-                    )
-                )
-                if matched_distinct
-                else None
+                self._parse_distinct_on_select(matched_distinct) if matched_distinct else None
             )
 
             operation_modifiers = []
@@ -4080,13 +4105,7 @@ class Parser:
             if limit and not matched_distinct and not all_:
                 matched_distinct = self._match_set(self.DISTINCT_TOKENS)
                 if matched_distinct:
-                    distinct = self.expression(
-                        exp.Distinct(
-                            on=self._parse_value(values=False)
-                            if self._match(TokenType.ON)
-                            else None
-                        )
-                    )
+                    distinct = self._parse_distinct_on_select(matched_distinct)
                 else:
                     all_ = self._match(TokenType.ALL)
 
@@ -5944,6 +5963,12 @@ class Parser:
         if isinstance(expression, exp.Values):
             expression = self._values_to_select(expression)
 
+        if isinstance(this, exp.Alias) and isinstance(this.this, exp.Subquery):
+            subquery = this.this
+            subquery.set("alias", exp.TableAlias(this=this.args["alias"]))
+            subquery.add_comments(this.pop_comments())
+            this = subquery
+
         return self.expression(
             operation(
                 this=this,
@@ -5999,6 +6024,15 @@ class Parser:
             )
 
         return this
+
+    def _parse_distinct_on_select(self, matched_distinct: bool) -> exp.Distinct | None:
+        if not matched_distinct:
+            return None
+        return self.expression(
+            exp.Distinct(
+                on=self._parse_value(values=False) if self._match(TokenType.ON) else None
+            )
+        )
 
     def _parse_disjunction(self) -> exp.Expr | None:
         this = self._parse_conjunction()
@@ -6411,12 +6445,11 @@ class Parser:
                 if parser:
                     return parser(self, this, data_type)
 
-                if (
-                    self.ZONE_AWARE_TIMESTAMP_CONSTRUCTOR
-                    and data_type.is_type(exp.DType.TIMESTAMP)
-                    and TIME_ZONE_RE.search(literal)
-                ):
-                    data_type = exp.DType.TIMESTAMPTZ.into_expr()
+                if self.ZONE_AWARE_TIMESTAMP_CONSTRUCTOR and TIME_ZONE_RE.search(literal):
+                    if data_type.is_type(exp.DType.TIMESTAMP):
+                        data_type = exp.DType.TIMESTAMPTZ.into_expr()
+                    elif data_type.is_type(exp.DType.TIME):
+                        data_type = exp.DType.TIMETZ.into_expr()
 
                 return self.expression(exp.Cast(this=this, to=data_type))
 
@@ -6995,11 +7028,14 @@ class Parser:
 
     def _parse_column_ops(self, this: exp.Expr | None) -> exp.Expr | None:
         while self._curr.token_type in self.BRACKETS:
+            index = self._index
             this = self._parse_bracket(this)
+            self._ensure_parse_progress(index, "column_ops brackets")
 
         column_operators = self.COLUMN_OPERATORS
         cast_column_operators = self.CAST_COLUMN_OPERATORS
         while self._curr:
+            index = self._index
             op_token = self._curr.token_type
 
             if op_token not in column_operators:
@@ -7058,6 +7094,7 @@ class Parser:
                 t.cast(exp.Expr, this).add_comments(field.pop_comments())
 
             this = self._parse_bracket(this)
+            self._ensure_parse_progress(index, "column_ops")
 
         return this
 
@@ -7133,6 +7170,10 @@ class Parser:
         tokens: t.Collection[TokenType] | None = None,
         anonymous_func: bool = False,
     ) -> exp.Expr | None:
+        after_dot = (
+            self.SUPPORTS_DIGIT_PREFIXED_FIELD_NAMES and self._prev.token_type == TokenType.DOT
+        )
+
         if anonymous_func:
             field = (
                 self._parse_function(anonymous=anonymous_func, any_token=any_token)
@@ -7142,7 +7183,17 @@ class Parser:
             field = self._parse_primary() or self._parse_function(
                 anonymous=anonymous_func, any_token=any_token
             )
-        return field or self._parse_id_var(any_token=any_token, tokens=tokens)
+
+        field = field or self._parse_id_var(any_token=any_token, tokens=tokens)
+
+        if after_dot and isinstance(field, exp.Literal) and field.is_number:
+            name = field.name
+            if self._is_connected() and self._parse_var(any_token=True):
+                name += self._prev.text
+
+            field = exp.Identifier(this=name, quoted=True).update_positions(field)
+
+        return field
 
     def _parse_function(
         self,
@@ -8605,6 +8656,13 @@ class Parser:
     def _parse_window(self, this: exp.Expr | None, alias: bool = False) -> exp.Expr | None:
         func = this
         comments = func.comments if isinstance(func, exp.Expr) else None
+
+        # https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/img_text/nth_value.html
+        if self.SUPPORTS_NTH_VALUE_FROM_MODIFIER and isinstance(this, exp.NthValue):
+            if self._match_text_seq("FROM", "FIRST"):
+                this.set("from_first", True)
+            elif self._match_text_seq("FROM", "LAST"):
+                this.set("from_first", False)
 
         # T-SQL allows the OVER (...) syntax after WITHIN GROUP.
         # https://learn.microsoft.com/en-us/sql/t-sql/functions/percentile-disc-transact-sql?view=sql-server-ver16

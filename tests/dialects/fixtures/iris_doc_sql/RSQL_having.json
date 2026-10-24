@@ -1,0 +1,182 @@
+{
+  "doc_key": "RSQL_having",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_having",
+  "title": "HAVING (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_f11b35a8",
+      "section": "Examples",
+      "sql": "SELECT Name,Age,AVG(Age) AS AvgAge FROM Sample.Person HAVING Age > AVG(Age) ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_b0af4f9b",
+      "section": "Examples",
+      "sql": "SELECT Name,Age,AVG(Age) AS AvgAge FROM Sample.Person HAVING Age > 65 ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_7c7b7eaf",
+      "section": "Examples",
+      "sql": "SELECT Name,Age,AVG(Age) AS AvgAge FROM Sample.Person WHERE Age > 65 ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_84c7e5b4",
+      "section": "Examples",
+      "sql": "SELECT AVG(Age) FROM Sample.Person HAVING COUNT(*)>99",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_b6280fb4",
+      "section": "Examples",
+      "sql": "SELECT AVG(Age) FROM Sample.Person HAVING %ID<10",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_132f104f",
+      "section": "Examples",
+      "sql": "SELECT AVG(Age) FROM Sample.Person WHERE %ID<10",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_0daabd91",
+      "section": "Examples",
+      "sql": "SELECT Name, Age FROM Sample.Person GROUP BY Age HAVING Age < 21 ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_894896f6",
+      "section": "Examples",
+      "sql": "SELECT Name, Age FROM Sample.Person GROUP BY Age HAVING Age BETWEEN 18 AND 35 ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_013_88106ea8",
+      "section": "Examples",
+      "sql": "SELECT Name, Home_State FROM Sample.Person GROUP BY Home_State HAVING Home_State IN ('ME','NH','VT','MA','RI','CT')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_014_77056397",
+      "section": "Examples",
+      "sql": "SELECT Name,DOB FROM Sample.Person GROUP BY DOB HAVING DOB IN ({d '1951-02-02'},{d '1987-02-28'})",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_015_bb16f67d",
+      "section": "Examples",
+      "sql": "SELECT Name,DOB FROM Sample.Person GROUP BY DOB HAVING DOB IN ({ts '1951-02-02 02:37:00'},{ts '1987-02-28 16:58:10'})",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_016_47543ad2",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person HAVING 'Red' %INLIST FavoriteColors",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_017_2a76f618",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_State FROM Sample.Person HAVING Home_State %INLIST $LISTBUILD(\"VT\",\"NH\",\"ME\")",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_018_f184c7d1",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_State FROM Sample.Person HAVING Name IN (SELECT Name FROM Sample.Employee HAVING Salary < 50000)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_019_47b31d24",
+      "section": "Examples",
+      "sql": "SELECT Name,Age FROM Sample.Person WHERE Age > 30 HAVING Name %STARTSWITH 'S' ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_021_d9f36c8a",
+      "section": "Examples",
+      "sql": "SELECT Name,Age FROM Sample.Person HAVING FOR SOME (Sample.Person)(Age>20) ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_022_dad1d5a3",
+      "section": "Examples",
+      "sql": "SELECT Name, FavoriteColors FROM Sample.Person HAVING FavoriteColors IS NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_023_55d54545",
+      "section": "Examples",
+      "sql": "SELECT Name, FavoriteColors FROM Sample.Person HAVING FavoriteColors IS NOT NULL ORDER BY FavoriteColors",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_024_969ceeab",
+      "section": "Examples",
+      "sql": "SELECT Name, FavoriteColors FROM Sample.Person GROUP BY FavoriteColors HAVING FavoriteColors IS NOT NULL ORDER BY FavoriteColors",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_025_85327ed9",
+      "section": "Examples",
+      "sql": "SELECT t1.disease FROM illness_tab t1 WHERE EXISTS (SELECT t2.disease FROM disease_registry t2 WHERE t1.disease = t2.disease HAVING COUNT(t2.disease) > 100)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_026_8c5d6355",
+      "section": "Examples",
+      "sql": "SELECT Home_State, MIN(Age) AS Youngest, AVG(Age) AS AvgAge, MAX(Age) AS Oldest FROM Sample.Person GROUP BY Home_State HAVING Age < 21 ORDER BY Youngest",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_36018511",
+      "section": "Examples",
+      "sql": "SELECT field FROM table GROUP BY field HAVING condition-expression SELECT aggregatefunc(field %AFTERHAVING) FROM table [GROUP BY field] HAVING condition-expression",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_003_499e82af",
+      "section": "Examples",
+      "sql": "SELECT Y AS TeenYear,AVG(Y %AFTERHAVING) AS AvgTeenAge FROM HAVING TeenYear > 12 ORDER BY TeenYear",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 28.\n  SELECT Y AS TeenYear,AVG(Y \u001b[4m%\u001b[0mAFTERHAVING) AS AvgTeenAge FROM HAVING TeenYear > 12 ORDER BY TeenYear"
+    },
+    {
+      "id": "ex_009_fac5e95a",
+      "section": "Examples",
+      "sql": "SELECT Name,Age,AVG(Age) AS AvgAge, AVG(Age %AFTERHAVING) AS AvgMiddleAge FROM Sample.Person HAVING Age > 40 AND Age < 65 ORDER BY Age",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 45.\n  SELECT Name,Age,AVG(Age) AS AvgAge, AVG(Age \u001b[4m%\u001b[0mAFTERHAVING) AS AvgMiddleAge FROM Sample.Person HAVING Age > 40 AND Age < 65 ORDER BY Age"
+    },
+    {
+      "id": "ex_010_7a83b9a3",
+      "section": "Examples",
+      "sql": "SELECT Home_State,(SELECT AVG(Age) FROM Sample.Person) AS AvgAgeAllRecs, AVG(Age) AS AvgAgeByState,AVG(Age %AFTERHAVING) AS AvgOlderByState FROM Sample.Person GROUP BY Home_State HAVING Age > AVG(Age) ORDER BY Home_State",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 108.\n  Home_State,(SELECT AVG(Age) FROM Sample.Person) AS AvgAgeAllRecs, AVG(Age) AS AvgAgeByState,AVG(Age \u001b[4m%\u001b[0mAFTERHAVING) AS AvgOlderByState FROM Sample.Person GROUP B"
+    },
+    {
+      "id": "ex_020_f3809df6",
+      "section": "Examples",
+      "sql": "SELECT Home_State,COUNT(Home_State) AS States, COUNT(Home_State %AFTERHAVING) AS KStates FROM Sample.Person HAVING Home_State [ 'K'",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 65.\n  SELECT Home_State,COUNT(Home_State) AS States, COUNT(Home_State \u001b[4m%\u001b[0mAFTERHAVING) AS KStates FROM Sample.Person HAVING Home_State [ 'K'"
+    },
+    {
+      "id": "ex_027_1e4473e9",
+      "section": "Examples",
+      "sql": "SELECT Home_State,AVG(Age) AS AvgAge, AVG(Age %AFTERHAVING) AS AvgYouth, MIN(Age) AS Youngest, MAX(Age) AS Oldest, MAX(Age %AFTERHAVING) AS OldestYouth FROM Sample.Person GROUP BY Home_State HAVING Age < 21 ORDER BY AvgAge",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 47.\n  SELECT Home_State,AVG(Age) AS AvgAge, AVG(Age \u001b[4m%\u001b[0mAFTERHAVING) AS AvgYouth, MIN(Age) AS Youngest, MAX(Age) AS Oldest, MAX(Age %AFTERHAVING) AS OldestY"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "doc_key": "RSQL_in",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_in",
+  "title": "IN (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_71a4c6d8",
+      "section": "Examples",
+      "sql": "SELECT Name, Home_State FROM Sample.Person WHERE Home_State IN ('ME','NH','VT','MA','RI','CT')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_ebaf27cb",
+      "section": "Examples",
+      "sql": "SELECT Name, Home_State FROM Sample.Person WHERE Home_State IN ('ME','nH','VT')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_37b58b88",
+      "section": "Examples",
+      "sql": "SELECT Name, Home_State FROM Sample.Person WHERE %EXACT(Home_State) IN ('ME','nH','VT')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_2935c62b",
+      "section": "Examples",
+      "sql": "SELECT FavoriteColors FROM Sample.Person WHERE FavoriteColors IN ($LISTBUILD('Red'),$LISTBUILD('Blue'),NULL) /* NULL here is meaningless. No FavoriteColor NULL fields returned */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_ab8b0c15",
+      "section": "Examples",
+      "sql": "SELECT FavoriteColors FROM Sample.Person WHERE FavoriteColors IN ($LISTBUILD('Red'),$LISTBUILD('Blue')) OR FavoriteColors IS NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_dd1b07cf",
+      "section": "Examples",
+      "sql": "SELECT Name,DOB FROM Sample.Person WHERE DOB IN ({d '1951-02-02'},{d '1987-02-28'})",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_9846121e",
+      "section": "Examples",
+      "sql": "SELECT Name,DOB FROM Sample.Person WHERE DOB IN ({ts '1951-02-02 02:37:00'},{ts '1987-02-28 16:58:10'})",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_8ab16ae7",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_State FROM Sample.Person WHERE Name IN (SELECT Name FROM Sample.Employee HAVING Salary < 50000)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_9f3a3f45",
+      "section": "Examples",
+      "sql": "SELECT Home_State FROM Sample.Employee WHERE Home_State NOT IN (SELECT Address_State FROM Sample.Vendor) GROUP BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_a2bd59ac",
+      "section": "Examples",
+      "sql": "SELECT Name,Id FROM Sample.Person WHERE %EXACT(Spouse) NOT IN (SELECT Id FROM Sample.Person WHERE Age < 65)",
+      "roundtrip": false
+    }
+  ]
+}

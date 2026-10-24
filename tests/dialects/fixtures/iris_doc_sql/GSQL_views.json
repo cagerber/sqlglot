@@ -1,0 +1,68 @@
+{
+  "doc_key": "GSQL_views",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_views",
+  "title": "Defining and Using Views | Using SQL | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_84d7529e",
+      "section": "Examples",
+      "sql": "SELECT * FROM Sample.VSrStaff ORDER BY Vage",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_09ecbf06",
+      "section": "Examples",
+      "sql": "CREATE VIEW GoodStudent AS SELECT Name, GPA FROM Student WHERE GPA > 3.0 WITH CHECK OPTION",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_8c084cd4",
+      "section": "Examples",
+      "sql": "SELECT *,%VID AS ViewID FROM Sample.VSrStaff",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_05d9e892",
+      "section": "Examples",
+      "sql": "SELECT *,%VID AS ViewID FROM Sample.VSrStaff WHERE %VID BETWEEN 5 AND 10",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_b1a33361",
+      "section": "Examples",
+      "sql": "SELECT *,%VID AS SubQueryID FROM (SELECT TOP 10 Name,Age FROM Sample.Person WHERE Age > 75 ORDER BY Name) WHERE %VID > 4",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_479aa7ac",
+      "section": "Examples",
+      "sql": "SELECT View_Definition FROM INFORMATION_SCHEMA.VIEWS",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_66a52799",
+      "section": "Examples",
+      "sql": "SELECT Table_Name,Owner FROM INFORMATION_SCHEMA.VIEWS",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_e15c49b3",
+      "section": "Examples",
+      "sql": "SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE Owner != '_SYSTEM'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_699fc018",
+      "section": "Examples",
+      "sql": "SELECT * FROM INFORMATION_SCHEMA.VIEW_COLUMN_USAGE WHERE View_Name='MyView'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_e9c2c1c3",
+      "section": "Examples",
+      "sql": "SELECT View_Schema,View_Name,Table_Schema,Table_Name FROM INFORMATION_SCHEMA.VIEW_TABLE_USAGE",
+      "roundtrip": false
+    }
+  ]
+}

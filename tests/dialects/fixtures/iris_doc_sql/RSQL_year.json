@@ -1,0 +1,32 @@
+{
+  "doc_key": "RSQL_year",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_year",
+  "title": "YEAR (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_98caaacd",
+      "section": "Examples",
+      "sql": "SELECT YEAR('2018-02-22 12:45:37') AS ODBCDate_Year",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_ebca3a93",
+      "section": "Examples",
+      "sql": "SELECT {fn YEAR(64701)} AS HorologDate_Year",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_fd2a7bff",
+      "section": "Examples",
+      "sql": "SELECT YEAR(GETDATE()) AS Year_Now",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_b8a014e6",
+      "section": "Examples",
+      "sql": "SELECT {fn YEAR(CURRENT_DATE)}, {fn YEAR({fn NOW()})}",
+      "roundtrip": false
+    }
+  ]
+}

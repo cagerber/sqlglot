@@ -1,0 +1,69 @@
+{
+  "doc_key": "RSQL_predict",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_predict",
+  "title": "PREDICT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_112b929c",
+      "section": "Examples",
+      "sql": "SELECT PREDICT(Trained_Model WITH age = year) FROM dataset",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expression' missing for <class 'sqlglot.expressions.functions.Predict'>. Line 1, Col: 33.\n  SELECT PREDICT(Trained_Model \u001b[4mWITH\u001b[0m age = year) FROM dataset"
+    },
+    {
+      "id": "ex_002_e02a5782",
+      "section": "Examples",
+      "sql": "SELECT PREDICT(Trained_Model WITH {age = year, income = salary}) FROM dataset",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expression' missing for <class 'sqlglot.expressions.functions.Predict'>. Line 1, Col: 33.\n  SELECT PREDICT(Trained_Model \u001b[4mWITH\u001b[0m {age = year, income = salary}) FROM dataset"
+    },
+    {
+      "id": "ex_003_a8bbb78c",
+      "section": "Examples",
+      "sql": "SELECT PREDICT(Flower_Model WITH (5.1, 3.5, 1.4, 0.2, 'setosa'))",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expression' missing for <class 'sqlglot.expressions.functions.Predict'>. Line 1, Col: 32.\n  SELECT PREDICT(Flower_Model \u001b[4mWITH\u001b[0m (5.1, 3.5, 1.4, 0.2, 'setosa'))"
+    },
+    {
+      "id": "ex_004_087f2589",
+      "section": "Examples",
+      "sql": "SELECT PREDICT(Flower_Model WITH (5.1, , 1.4, , 'setosa'))",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expression' missing for <class 'sqlglot.expressions.functions.Predict'>. Line 1, Col: 32.\n  SELECT PREDICT(Flower_Model \u001b[4mWITH\u001b[0m (5.1, , 1.4, , 'setosa'))"
+    },
+    {
+      "id": "ex_005_46686d54",
+      "section": "Examples",
+      "sql": "SELECT PREDICT(Flower_Model WITH ({5.1, 3.5, 1.4, 0.2, 'setosa'}, {6.4, 3.2, 4.3, 1.2, 'versicolor'}))",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expression' missing for <class 'sqlglot.expressions.functions.Predict'>. Line 1, Col: 32.\n  SELECT PREDICT(Flower_Model \u001b[4mWITH\u001b[0m ({5.1, 3.5, 1.4, 0.2, 'setosa'}, {6.4, 3.2, 4.3,"
+    },
+    {
+      "id": "ex_006_31515678",
+      "section": "Examples",
+      "sql": "SELECT * FROM housing_data_2020 WHERE PREDICT( HousePriceModel ) > 500000",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expression' missing for <class 'sqlglot.expressions.functions.Predict'>. Line 1, Col: 64.\n  SELECT * FROM housing_data_2020 WHERE PREDICT( HousePriceModel \u001b[4m)\u001b[0m > 500000"
+    },
+    {
+      "id": "ex_007_5327b0f3",
+      "section": "Examples",
+      "sql": "SELECT *, PREDICT( PatientReadmission ) FROM new_patient_data",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'expression' missing for <class 'sqlglot.expressions.functions.Predict'>. Line 1, Col: 39.\n  SELECT *, PREDICT( PatientReadmission \u001b[4m)\u001b[0m FROM new_patient_data"
+    },
+    {
+      "id": "curated_predict_two_arg",
+      "section": "Two-argument call shape (curated)",
+      "sql": "SELECT PREDICT(Trained_Model, age) FROM dataset"
+    }
+  ]
+}

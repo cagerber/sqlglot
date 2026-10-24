@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_string",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_string",
+  "title": "STRING (SQL)",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "string_literals_variadic",
+      "section": "Examples",
+      "sql": "SELECT STRING('a','b','c'), STRING('a',' ','c'), STRING('a','','c'), STRING('a',NULL,'c')",
+      "roundtrip": false
+    },
+    {
+      "id": "string_numeric_canonical",
+      "section": "Examples",
+      "sql": "SELECT STRING(123), STRING(+00123.00), STRING('1',23), STRING(1,(10*2)+3)",
+      "roundtrip": false
+    },
+    {
+      "id": "string_columns",
+      "section": "Examples",
+      "sql": "SELECT STRING(Name,Age) FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_space",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_space",
+  "title": "SPACE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_777bd4e0",
+      "section": "Examples",
+      "sql": "SELECT SPACE(LENGTH(name)) FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

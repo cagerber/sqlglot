@@ -1,0 +1,56 @@
+{
+  "doc_key": "RSQL_dayofmonth",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_dayofmonth",
+  "title": "DAYOFMONTH (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_b14d1cb7",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFMONTH(-306)} AS DayOfMonthFeb, /* February 29, 1840 */ {fn DAYOFMONTH(-305)} AS DayOfMonthMar, /* March 1, 1840 */ {fn DAYOFMONTH(-127410)} AS DayOfMonthFeb /* February 29, 1492 */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_4767b2f1",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFMONTH('2018-02-25')} AS DayNumTS, {fn DAYOFMONTH(64704)} AS DayNumH",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_10f70b7d",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFMONTH('-02-25 11:45:32')} AS DayNum",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_3a925d49",
+      "section": "Examples",
+      "sql": "SELECT{fn DAYOFMONTH('2018-02-00 11:45:32')} AS DayNum",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_f582c436",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFMONTH('2018-02 11:45:32')} AS DayNum",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_98f479a2",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFMONTH('11:45:32')} AS DayNum",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_1156c0f2",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFMONTH({fn NOW()})} AS DoM_Now, {fn DAYOFMONTH(CURRENT_DATE)} AS DoM_CurrD, {fn DAYOFMONTH(CURRENT_TIMESTAMP)} AS DoM_CurrTS, {fn DAYOFMONTH($HOROLOG)} AS DoM_Horolog, {fn DAYOFMONTH($ZTIMESTAMP)} AS DoM_ZTS",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_841aca4f",
+      "section": "Examples",
+      "sql": "SELECT LENGTH({fn DAYOFMONTH('2018-02-05')}), LENGTH({fn DAYOFMONTH('2018-02-15')})",
+      "roundtrip": false
+    }
+  ]
+}

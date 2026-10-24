@@ -1,0 +1,34 @@
+{
+  "doc_key": "RSQL_WINDOW_FUNCTIONS",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_WINDOW_FUNCTIONS",
+  "title": "SQL Window Functions",
+  "doc_version": "2026.1",
+  "page_kind": "index",
+  "child_doc_keys": [
+    "RSQL_windowfunctions",
+    "RSQL_windowavg",
+    "RSQL_windowcount",
+    "RSQL_windowcumedist",
+    "RSQL_windowdenserank",
+    "RSQL_windowfirstvalue",
+    "RSQL_windowlag",
+    "RSQL_windowlastvalue",
+    "RSQL_windowlead",
+    "RSQL_windowmax",
+    "RSQL_windowmin",
+    "RSQL_windownthvalue",
+    "RSQL_windowntile",
+    "RSQL_windowpercentrank",
+    "RSQL_windowrank",
+    "RSQL_windowrownumber",
+    "RSQL_windowsum"
+  ],
+  "examples": [
+    {
+      "id": "index_window_smoke",
+      "section": "Cross-reference smoke (curated)",
+      "sql": "SELECT Name, ROW_NUMBER() OVER (ORDER BY Name) AS RowNum, RANK() OVER (PARTITION BY Home_State ORDER BY Age) AS AgeRank FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

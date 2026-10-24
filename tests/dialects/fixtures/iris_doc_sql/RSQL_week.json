@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_week",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_week",
+  "title": "WEEK (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_d56f2198",
+      "section": "Examples",
+      "sql": "SELECT {fn DAYOFWEEK(\"2005-1-2\")},{fn WEEK(\"2005-1-2\")}, {fn DAYOFWEEK(\"2006-1-1\")},{fn WEEK(\"2006-1-1\")}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_5902f530",
+      "section": "Examples",
+      "sql": "SELECT {fn WEEK('2004-02-25')} AS Wk_Date, {fn WEEK('2004-02-25 08:35:22')} AS Wk_Tstamp, {fn WEEK(59590)} AS Wk_DInt",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_c84d31d4",
+      "section": "Examples",
+      "sql": "SELECT {fn WEEK('2000-12-31')} AS Week",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_55ece1eb",
+      "section": "Examples",
+      "sql": "SELECT {fn WEEK('2000-01-01')}||{fn DAYNAME('2000-01-01')} AS WeekofDay1, {fn WEEK('2000-01-02')}||{fn DAYNAME('2000-01-02')} AS WeekofDay2",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_b7173c1b",
+      "section": "Examples",
+      "sql": "SELECT {fn WEEK({fn NOW()})} AS Wk_Now, {fn WEEK(CURRENT_DATE)} AS Wk_CurrD, {fn WEEK(CURRENT_TIMESTAMP)} AS Wk_CurrTS, {fn WEEK($HOROLOG)} AS Wk_Horolog, {fn WEEK($ZTIMESTAMP)} AS Wk_ZTS",
+      "roundtrip": false
+    }
+  ]
+}

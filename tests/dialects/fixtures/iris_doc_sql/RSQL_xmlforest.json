@@ -1,0 +1,44 @@
+{
+  "doc_key": "RSQL_xmlforest",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_xmlforest",
+  "title": "XMLFOREST (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_fb59a671",
+      "section": "Examples",
+      "sql": "INSERT INTO Sample.Xmltest (f1,f2,f3) values (NULL,'Row 1',NULL)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_f1ba53e0",
+      "section": "Examples",
+      "sql": "SELECT XMLFOREST(f1,f2,f3) from Sample.Xmltest",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_16868a51",
+      "section": "Examples",
+      "sql": "SELECT Name,XMLFOREST(Name) AS ExportName FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_19d2e979",
+      "section": "Examples",
+      "sql": "SELECT XMLFOREST(Home_City, Home_State AS Home_State, AVG(Age) AS AvAge) AS ExportData FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_fb3c3625",
+      "section": "Examples",
+      "sql": "SELECT XMLFOREST(name AS Para,Notes AS Para) AS XMLJobHistory FROM Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_1339c936",
+      "section": "Examples",
+      "sql": "SELECT XMLFOREST(Name,DOB,Age, (SELECT XMLFOREST(Name,DOB) FROM Sample.Person WHERE %ID=2) AS ExportName) FROM Sample.Person where %ID=1",
+      "roundtrip": false
+    }
+  ]
+}

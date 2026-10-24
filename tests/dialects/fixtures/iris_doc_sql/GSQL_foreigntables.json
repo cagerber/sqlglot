@@ -1,0 +1,38 @@
+{
+  "doc_key": "GSQL_foreigntables",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_foreigntables",
+  "title": "Foreign Tables | Using SQL | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_28f2fd20",
+      "section": "Examples",
+      "sql": "CREATE FOREIGN SERVER Sample.TestFile FOREIGN DATA WRAPPER CSV HOST '\\path\\to\\file'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_f5c6a4a6",
+      "section": "Examples",
+      "sql": "CREATE FOREIGN SERVER Sample.PostgresDB FOREIGN DATA WRAPPER JDBC CONNECTION 'postgresConnection'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_4b45a140",
+      "section": "Examples",
+      "sql": "CREATE FOREIGN TABLE Sample.AccountTeam ( TeamID BIGINT, Name VARCHAR(50), CountryCode VARCHAR(10) ) SERVER Sample.PostgresDB TABLE 'Sample.Teams'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_4d21987f",
+      "section": "Examples",
+      "sql": "SELECT Name, CountryCode FROM Sample.AccountTeam ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_348d4280",
+      "section": "Examples",
+      "sql": "SELECT t.Name, COUNT(m.*) FROM Sample.AccountManager m JOIN Sample.AccountTeam t ON m.TeamID = t.TeamID WHERE t.CountryCode = 'UK' AND m.Salary > 100000 GROUP BY t.Name",
+      "roundtrip": false
+    }
+  ]
+}

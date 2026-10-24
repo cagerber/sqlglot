@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_d_translate",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_d_translate",
+  "title": "$TRANSLATE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_d567f055",
+      "section": "Examples",
+      "sql": "SELECT TOP 20 Name,$TRANSLATE(Name,', .''-') AS AlphaName FROM Sample.Person WHERE Name %STARTSWITH 'O'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_60634d0b",
+      "section": "Examples",
+      "sql": "SELECT TOP 20 Name,$TRANSLATE(Name,', ','^^') AS PiecesNamePunc FROM Sample.Person WHERE Name %STARTSWITH 'O'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_168e2659",
+      "section": "Examples",
+      "sql": "SELECT TOP 20 Name,$TRANSLATE(Name,', .''-','^^') AS PiecesNameNoPunc FROM Sample.Person WHERE Name %STARTSWITH 'O'",
+      "roundtrip": false
+    }
+  ]
+}

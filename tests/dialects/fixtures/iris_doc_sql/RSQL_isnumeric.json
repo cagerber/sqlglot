@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_isnumeric",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_isnumeric",
+  "title": "ISNUMERIC (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_22ed1deb",
+      "section": "Examples",
+      "sql": "SELECT ISNUMERIC(99) AS MyInt, ISNUMERIC('-99') AS MyNegInt, ISNUMERIC('-0.99') AS MyNegFrac, ISNUMERIC('-0.00') AS MyNegZero, ISNUMERIC('-0.09'+7) AS MyAdd, ISNUMERIC('5E2') AS MyExponent",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_a82498fd",
+      "section": "Examples",
+      "sql": "SELECT Name, ISNUMERIC(FavoriteColors) AS ColorPref FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

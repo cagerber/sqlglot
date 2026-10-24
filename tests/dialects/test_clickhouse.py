@@ -93,6 +93,15 @@ class TestClickhouse(Validator):
         self.validate_identity("WITH final AS (SELECT 1) SELECT * FROM final")
         self.validate_identity("SELECT * FROM x FINAL")
         self.validate_identity("SELECT * FROM x AS y FINAL")
+        self.validate_identity('SELECT event_id FROM "analytics"."events_view"(final = 1)')
+        self.validate_identity(
+            'SELECT event_id FROM "analytics"."uniqExactIf"(final = 1)',
+            'SELECT event_id FROM "analytics".uniqExactIf(final = 1)',
+        )
+        self.validate_identity(
+            'SELECT event_id FROM "analytics"."sum"(final = 1)',
+            'SELECT event_id FROM "analytics".sum(final = 1)',
+        )
         self.validate_identity("'a' IN mapKeys(map('a', 1, 'b', 2))")
         self.validate_identity("CAST((1, 2) AS Tuple(a Int8, b Int16))")
         self.validate_identity("SELECT * FROM foo LEFT ANY JOIN bla")
@@ -814,6 +823,11 @@ class TestClickhouse(Validator):
             "INSERT INTO t (col1, col2) FORMAT Values('abcd', 1234)",
             "INSERT INTO t (col1, col2) VALUES (('abcd'), (1234))",
         )
+
+        # Wrapping the values in tuples must be idempotent, otherwise re-parsing
+        # generated SQL keeps adding a layer of parentheses on every roundtrip
+        self.validate_identity("INSERT INTO t (col1, col2) VALUES (('abcd'), (1234))")
+        self.validate_identity("SELECT * FROM VALUES ((1), (2), (3))")
 
         self.validate_all(
             "SELECT col FROM (SELECT 1 AS col) AS _t",

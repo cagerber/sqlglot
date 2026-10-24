@@ -1,0 +1,26 @@
+{
+  "doc_key": "RSQL_embedding",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_embedding",
+  "title": "EMBEDDING (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_9cfe9eab",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 Name FROM Store.RunningShoes ORDER BY VECTOR_DOT_PRODUCT(DescriptionEmbedding, EMBEDDING('comfortable and lightweight')) DESC",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_d157538e",
+      "section": "Examples",
+      "sql": "INSERT INTO %Embedding.Config (Name, Configuration, EmbeddingClass, Description) VALUES ('huggingface', '{\"hfCachePath\":\"/InterSystems/VEC147/hfCache\", \"modelName\":\"sentence-transformers/all-MiniLM-L6-v2\"}', '%Embedding.SentenceTransformers', 'a generic open source embedding model')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_17c2ff76",
+      "section": "Examples",
+      "sql": "SELECT EMBEDDING('comfortable and lightweight','huggingface')",
+      "roundtrip": false
+    }
+  ]
+}

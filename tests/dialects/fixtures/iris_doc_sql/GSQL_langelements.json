@@ -1,0 +1,86 @@
+{
+  "doc_key": "GSQL_langelements",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=GSQL_langelements",
+  "title": "Language Elements | Using SQL | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_163dcffd",
+      "section": "Examples",
+      "sql": "SELECT {fn CONCAT('fred',NULL)} AS FuncCat, -- returns <null> 'fred'||NULL AS OpCat -- returns <null>",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_8fe95d59",
+      "section": "Examples",
+      "sql": "SELECT LENGTH(NULL) AS NullLen, -- returns <null> LENGTH('') AS EmpStrLen -- returns 0",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_a66b3c08",
+      "section": "Examples",
+      "sql": "SELECT LENGTH(NULL) AS NullLen, -- returns <null> LENGTH({fn ASCII('')}) AS AsciiEmpStrLen, -- returns <null> LENGTH('') AS EmpStrLen -- returns 0",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_46c23e3c",
+      "section": "Examples",
+      "sql": "SELECT $LENGTH(NULL) AS NullLen, -- returns 0 $LENGTH('') AS EmpStrLen, -- returns 0 $LENGTH('a') AS OneCharStrLen, -- returns 1 $LENGTH(CHAR(0)) AS CharZero -- returns 0",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_4990a5ee",
+      "section": "Examples",
+      "sql": "SELECT CHAR_LENGTH(%STRING(NULL)) AS NullLen, -- returns 1 CHAR_LENGTH(%STRING('')) AS EmpStrLen -- returns 2",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_b5d77aad",
+      "section": "Examples",
+      "sql": "SELECT Name,Age FROM Sample.Person WHERE NOT Age>21 ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_5c4ce41e",
+      "section": "Examples",
+      "sql": "SELECT Name,Age FROM Sample.Person WHERE NOT Name %STARTSWITH('A') ORDER BY Name",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_6f8616d9",
+      "section": "Examples",
+      "sql": "SELECT Name,Age FROM Sample.Person WHERE Age>20 AND Age<40 AND (Age # 3)=0 OR Age>=40 AND (Age # 2)=0 OR Age>=65 ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_0ed91836",
+      "section": "Examples",
+      "sql": "SELECT Name,Age FROM Sample.Person WHERE Age>20 & Age<40 & (Age # 3)=0 ! Age>=40 & (Age # 2)=0 ! Age>=65 ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_5e3c33ab",
+      "section": "Examples",
+      "sql": "SELECT Name,Age,Home_State FROM Sample.Person WHERE Home_State='MA' OR Home_State='NY' AND Age < 25 ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_8c0c8336",
+      "section": "Examples",
+      "sql": "SELECT Name,Age,Home_State FROM Sample.Person WHERE (Home_State='MA' OR Home_State='NY') AND Age < 25 ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_94f548ce",
+      "section": "Examples",
+      "sql": "SELECT TOP 10 Name,Age, -- Two columns selected",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_013_ef7ad72a",
+      "section": "Examples",
+      "sql": "SELECT TOP 10 Name,Age /* Two fields selected */",
+      "roundtrip": false
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "doc_key": "RSQL_jsonarray",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_jsonarray",
+  "title": "JSON_ARRAY (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_889f15be",
+      "section": "Examples",
+      "sql": "SELECT TOP 3 JSON_ARRAY(%ID,Name,Age,Home_State) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_9be070f5",
+      "section": "Examples",
+      "sql": "SELECT TOP 3 JSON_ARRAY(Name) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_a95bee28",
+      "section": "Examples",
+      "sql": "SELECT JSON_ARRAY(Name,FavoriteColors) FROM Sample.Person WHERE Name %STARTSWITH 'S'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_b0ef9381",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_City,Home_State FROM Sample.Person WHERE JSON_ARRAY(Name,Home_City,Home_State) [ 'X'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_e9261868",
+      "section": "Examples",
+      "sql": "SELECT JSON_ARRAY(%ID,Name,FavoriteColors,Age ABSENT ON NULL) FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 52.\n  SELECT JSON_ARRAY(%ID,Name,FavoriteColors,Age \u001b[4mABSENT\u001b[0m ON NULL) FROM Sample.Person"
+    },
+    {
+      "id": "ex_004_fa1fc048",
+      "section": "Examples",
+      "sql": "SELECT TOP 3 JSON_ARRAY('Employee from',%TABLENAME,Name,SSN) FROM Sample.Employee",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    },
+    {
+      "id": "ex_006_cf80ecbd",
+      "section": "Examples",
+      "sql": "SELECT TOP 3 JSON_ARRAY(E.%TABLENAME,E.Name,C.%TABLENAME,C.Name) FROM Sample.Employee AS E,Sample.Company AS C",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    }
+  ]
+}

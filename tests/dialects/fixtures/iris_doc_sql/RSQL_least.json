@@ -1,0 +1,32 @@
+{
+  "doc_key": "RSQL_least",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_least",
+  "title": "LEAST (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_9e412ee0",
+      "section": "Examples",
+      "sql": "SELECT LEAST(22,2.2,-21) AS HighNum, LEAST('2.2','22','-21') AS HighNumStr",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_660be166",
+      "section": "Examples",
+      "sql": "SELECT LEAST('22','+2.2','21'), LEAST('0.2','22','21')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_c6b42dc8",
+      "section": "Examples",
+      "sql": "SELECT LEAST('A','a',''), LEAST('a','aa','abc'), LEAST('#','0','7'), LEAST('##','00','77')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_d3b3278b",
+      "section": "Examples",
+      "sql": "SELECT Name,LEAST(DOB,TO_DATE(58074)) AS NewMillenium FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}

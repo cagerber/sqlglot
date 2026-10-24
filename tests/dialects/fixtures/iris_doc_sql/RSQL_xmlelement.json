@@ -1,0 +1,64 @@
+{
+  "doc_key": "RSQL_xmlelement",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_xmlelement",
+  "title": "XMLELEMENT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_975dc99c",
+      "section": "Examples",
+      "sql": "SELECT Name, XMLELEMENT(\"Para\",Name) AS ExportName FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_494310a8",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT XMLELEMENT(NAME \"Address\",Home_City,' ',Home_State) AS CityState FROM Sample.Person ORDER BY Home_City",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_0996396f",
+      "section": "Examples",
+      "sql": "SELECT XMLELEMENT(\"Para\",Name) AS XMLNotes,XMLELEMENT(\"Para\",Notes) AS XMLText FROM Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_2dcd3198",
+      "section": "Examples",
+      "sql": "SELECT XMLELEMENT(\"Para\",Home_State, XMLELEMENT(\"Emphasis\",Name),Age) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_c5068dfe",
+      "section": "Examples",
+      "sql": "SELECT XMLELEMENT(\"Para\",Name,DOB, XMLELEMENT(\"Emphasis\",%ID),Age, (SELECT XMLELEMENT(\"NameSub\",Name) FROM Sample.Person WHERE %ID=2)) AS ExportName FROM Sample.Person WHERE %ID=1",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_109ee6b5",
+      "section": "Examples",
+      "sql": "SELECT XMLELEMENT(\"Para\",Home_State, XMLELEMENT(\"Para\",Name), CASE WHEN Age < 21 THEN NULL ELSE XMLELEMENT(\"Para\",Age) END ) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_7f323b9e",
+      "section": "Examples",
+      "sql": "SELECT XMLELEMENT(\"Para\",XMLATTRIBUTES(%ID),Name) AS ExportName FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_39f07231",
+      "section": "Examples",
+      "sql": "SELECT XMLELEMENT(\"Para\",XMLATTRIBUTES(%ID AS ItemKey),Name) FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_3e1c934b",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT XMLELEMENT(NAME,Home_City,' ',Home_State) AS CityState FROM Sample.Person ORDER BY Home_City",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Required keyword: 'this' missing for <class 'sqlglot.expressions.functions.XMLElement'>. Line 1, Col: 57.\n  SELECT DISTINCT XMLELEMENT(NAME,Home_City,' ',Home_State\u001b[4m)\u001b[0m AS CityState FROM Sample.P"
+    }
+  ]
+}

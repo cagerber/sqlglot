@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_charlength",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_charlength",
+  "title": "CHAR_LENGTH (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_2c9b5167",
+      "section": "Examples",
+      "sql": "SELECT CHAR_LENGTH(007.0000) AS NumLen, CHAR_LENGTH('007.0000') AS NumStringLen",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_35211f95",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT CHAR_LENGTH(Home_State) AS StateLength FROM Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_e0491df2",
+      "section": "Examples",
+      "sql": "SELECT Name, CHAR_LENGTH(Name) AS NameLength FROM Sample.Employee ORDER BY NameLength",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_2016bbce",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT CHAR_LENGTH(Notes) AS NoteLen FROM Sample.Employee WHERE Notes IS NOT NULL",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_077eb08f",
+      "section": "Examples",
+      "sql": "SELECT DISTINCT CHAR_LENGTH(Picture) AS PicLen FROM Sample.Employee WHERE Picture IS NOT NULL",
+      "roundtrip": false
+    }
+  ]
+}

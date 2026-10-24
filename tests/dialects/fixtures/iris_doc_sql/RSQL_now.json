@@ -1,0 +1,28 @@
+{
+  "doc_key": "RSQL_now",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_now",
+  "title": "NOW (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_2b35ff61",
+      "section": "Examples",
+      "sql": "SELECT NOW(), GETUTCDATE()",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_06b988e5",
+      "section": "Examples",
+      "sql": "UPDATE Orders SET LastUpdate = {fn NOW()} WHERE Orders.OrderNumber=:ord",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_6686d095",
+      "section": "Examples",
+      "sql": "SELECT NOW(),{fn NOW},{fn NOW()}",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 21.\n  SELECT NOW(),{fn NOW\u001b[4m}\u001b[0m,{fn NOW()}"
+    }
+  ]
+}

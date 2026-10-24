@@ -137,6 +137,12 @@ SELECT _0.a AS a, _0.d AS d FROM (SELECT 1 AS a, 3 AS d UNION ALL BY NAME SELECT
 SELECT a, b FROM (WITH cte1 AS (SELECT 1 AS a, 2 AS b, 3 AS c, 4 AS d) (SELECT a, b, c FROM cte1));
 SELECT _0.a AS a, _0.b AS b FROM (WITH cte1 AS (SELECT 1 AS a, 2 AS b) SELECT cte1.a AS a, cte1.b AS b FROM cte1 AS cte1) AS _0;
 
+SELECT c FROM (SELECT 1 AS c UNION ALL BY NAME SELECT 2 AS c, 3 AS d) AS t;
+SELECT t.c AS c FROM (SELECT 1 AS c UNION ALL BY NAME SELECT 2 AS c) AS t;
+
+SELECT c FROM (SELECT 1 AS c UNION ALL BY NAME SELECT 2 AS d, 3 AS c) AS t;
+SELECT t.c AS c FROM (SELECT 1 AS c UNION ALL BY NAME SELECT 3 AS c) AS t;
+
 --------------------------------------
 -- Star used by a function
 --------------------------------------
@@ -204,6 +210,34 @@ WITH agg AS (SELECT x.a AS a FROM x AS x) SELECT t.n AS n FROM (SELECT COUNT(*) 
 # title: shadowed clause column resolves to the correct side of a join
 SELECT t.n FROM (SELECT ARRAY_AGG(q.b) AS q, COUNT(*) AS n FROM (SELECT a, b FROM x) AS q CROSS JOIN (SELECT c FROM y) AS r GROUP BY a HAVING a > 0) AS t;
 SELECT t.n AS n FROM (SELECT COUNT(*) AS n FROM (SELECT x.a AS a FROM x AS x) AS q CROSS JOIN (SELECT 1 AS _ FROM y AS y) AS r GROUP BY a HAVING a > 0) AS t;
+
+--------------------------------------
+-- Set operation's own ORDER BY keeps referenced columns
+--------------------------------------
+
+SELECT t.a FROM (SELECT a, b FROM x UNION ALL SELECT a, b FROM x ORDER BY b, a LIMIT 3) AS t;
+SELECT t.a AS a FROM (SELECT x.a AS a, x.b AS b FROM x AS x UNION ALL SELECT x.a AS a, x.b AS b FROM x AS x ORDER BY b, a LIMIT 3) AS t;
+
+WITH t AS (SELECT a, b FROM x UNION ALL SELECT a, b FROM x ORDER BY b LIMIT 3) SELECT a FROM t;
+WITH t AS (SELECT x.a AS a, x.b AS b FROM x AS x UNION ALL SELECT x.a AS a, x.b AS b FROM x AS x ORDER BY b LIMIT 3) SELECT t.a AS a FROM t AS t;
+
+SELECT t.a FROM (SELECT a, b FROM x UNION ALL SELECT a, b FROM x UNION ALL SELECT a, b FROM x ORDER BY b) AS t;
+SELECT t.a AS a FROM (SELECT x.a AS a, x.b AS b FROM x AS x UNION ALL SELECT x.a AS a, x.b AS b FROM x AS x UNION ALL SELECT x.a AS a, x.b AS b FROM x AS x ORDER BY b) AS t;
+
+SELECT t.a FROM (SELECT a, b FROM x UNION SELECT a, b FROM x ORDER BY b LIMIT 3) AS t;
+SELECT t.a AS a FROM (SELECT x.a AS a, x.b AS b FROM x AS x UNION SELECT x.a AS a, x.b AS b FROM x AS x ORDER BY b LIMIT 3) AS t;
+
+SELECT t.a FROM (SELECT a, b FROM x UNION ALL SELECT a, b FROM x LIMIT 3) AS t;
+SELECT t.a AS a FROM (SELECT x.a AS a FROM x AS x UNION ALL SELECT x.a AS a FROM x AS x LIMIT 3) AS t;
+
+# dialect: bigquery
+# title: set operation's own ORDER BY keeps referenced columns with BY NAME
+SELECT t.a FROM (SELECT 1 AS a, 2 AS c, 3 AS d UNION ALL BY NAME SELECT 6 AS c, 7 AS d, 8 AS a ORDER BY c) AS t;
+SELECT t.a AS a FROM (SELECT 1 AS a, 2 AS c UNION ALL BY NAME SELECT 6 AS c, 8 AS a ORDER BY c) AS t;
+
+# title: a column referenced only inside a correlated subquery in the set operation's ORDER BY is not treated as an output reference
+SELECT t.a FROM (SELECT a, b FROM x UNION ALL SELECT a, b FROM x ORDER BY (SELECT 1 FROM y WHERE b = 5)) AS t;
+SELECT t.a AS a FROM (SELECT x.a AS a FROM x AS x UNION ALL SELECT x.a AS a FROM x AS x ORDER BY (SELECT 1 FROM y WHERE b = 5)) AS t;
 
 --------------------------------------
 -- GROUP BY ALL implicitly groups by every non-aggregate projection, so those

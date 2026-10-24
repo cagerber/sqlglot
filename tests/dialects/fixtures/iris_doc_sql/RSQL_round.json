@@ -1,0 +1,56 @@
+{
+  "doc_key": "RSQL_round",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_round",
+  "title": "ROUND (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_87212a19",
+      "section": "Examples",
+      "sql": "SELECT ROUND(CONVERT(DOUBLE,1234.5678),2),CONVERT(DOUBLE,ROUND(CONVERT(DOUBLE,1234.5678),2))",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_0ad60157",
+      "section": "Examples",
+      "sql": "SELECT ROUND(5.99,0) AS RoundUp, ROUND(5.5,0) AS Round5, {fn ROUND(5.329,0)} AS Roundoff",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_0052e1c6",
+      "section": "Examples",
+      "sql": "SELECT ROUND(5.99,0,1) AS Trunc1, ROUND(5.5,0,1) AS Trunc2, {fn ROUND(5.329,0,1)} AS Trunc3",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_f560697a",
+      "section": "Examples",
+      "sql": "SELECT ROUND(-0.987,2,0) AS Round1, ROUND(-0.987,2,1) AS Trunc1",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_3f415886",
+      "section": "Examples",
+      "sql": "SELECT {fn PI()} AS ExactPi, ROUND({fn PI()},4) AS ApproxPi",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_a0f962bb",
+      "section": "Examples",
+      "sql": "SELECT {fn ROUND(654.98700,9)} AS Rounded",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_591a75d2",
+      "section": "Examples",
+      "sql": "SELECT Salary,ROUND(Salary, -3) AS PayBracket FROM Sample.Employee ORDER BY Salary",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_16987435",
+      "section": "Examples",
+      "sql": "SELECT {fn ROUND(987,-3)} AS Round1, {fn ROUND(487,-3)} AS Round2, {fn ROUND(987,-4)} AS Round3, {fn ROUND(987,-5)} AS Round4",
+      "roundtrip": false
+    }
+  ]
+}

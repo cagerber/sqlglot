@@ -1,0 +1,113 @@
+{
+  "doc_key": "RSQL_datatype",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_datatype",
+  "title": "Data Types (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ddl_iris_class_string",
+      "section": "InterSystems class DDL — %String",
+      "sql": "CREATE TABLE MyTable (FirstName %String(MAXLEN=30), LastName %String(MAXLEN=30))"
+    },
+    {
+      "id": "ddl_iris_class_library_date",
+      "section": "InterSystems class DDL — %Library.Date",
+      "sql": "CREATE TABLE MyTable (Born %Library.Date(MINVAL=-672045))"
+    },
+    {
+      "id": "ddl_timestamp_minval",
+      "section": "TIMESTAMP named parameter",
+      "sql": "CREATE TABLE MyTable (MyTS TIMESTAMP(MINVAL=\"1492-01-01 00:00:00\"))"
+    },
+    {
+      "id": "ddl_user_defined_truncstr",
+      "section": "Package class user-defined type",
+      "sql": "CREATE TABLE MyTable (Label Sample.TruncStr(MAXLEN=10))"
+    },
+    {
+      "id": "ddl_posixtime",
+      "section": "IRIS-specific — POSIXTIME",
+      "sql": "CREATE TABLE MyTable (EventAt POSIXTIME)"
+    },
+    {
+      "id": "ddl_rowversion",
+      "section": "IRIS-specific — ROWVERSION",
+      "sql": "CREATE TABLE MyTable (RowVer ROWVERSION)"
+    },
+    {
+      "id": "ddl_serial",
+      "section": "IRIS-specific — SERIAL",
+      "sql": "CREATE TABLE MyTable (Id SERIAL)"
+    },
+    {
+      "id": "ddl_guid",
+      "section": "IRIS-specific — GUID",
+      "sql": "CREATE TABLE MyTable (Uid GUID)"
+    },
+    {
+      "id": "ddl_uniqueidentifier",
+      "section": "TSQL-compat — UNIQUEIDENTIFIER",
+      "sql": "CREATE TABLE MyTable (Uid UNIQUEIDENTIFIER)"
+    },
+    {
+      "id": "ddl_vector",
+      "section": "IRIS-specific — VECTOR",
+      "sql": "CREATE TABLE MyTable (Embedding VECTOR(FLOAT, 128))"
+    },
+    {
+      "id": "ddl_longvarchar",
+      "section": "IRIS-specific — LONGVARCHAR",
+      "sql": "CREATE TABLE MyTable (Notes LONGVARCHAR)"
+    },
+    {
+      "id": "ddl_longvarbinary",
+      "section": "IRIS-specific — LONGVARBINARY",
+      "sql": "CREATE TABLE MyTable (Payload LONGVARBINARY)"
+    },
+    {
+      "id": "ddl_oref",
+      "section": "IRIS-specific — OREF",
+      "sql": "CREATE TABLE MyTable (Ref OREF)"
+    },
+    {
+      "id": "ddl_varchar_max",
+      "section": "TSQL-compat — VARCHAR(MAX)",
+      "sql": "CREATE TABLE MyTable (Body VARCHAR(MAX))"
+    },
+    {
+      "id": "ddl_varchar_empty",
+      "section": "VARCHAR empty MAXLEN",
+      "sql": "CREATE TABLE MyTable (Code VARCHAR(''))"
+    },
+    {
+      "id": "ddl_varbinary_empty",
+      "section": "VARBINARY empty MAXLEN",
+      "sql": "CREATE TABLE MyTable (Blob VARBINARY(''))"
+    },
+    {
+      "id": "ddl_numeric_precision_scale",
+      "section": "Standard — NUMERIC(p,s)",
+      "sql": "CREATE TABLE MyTable (Amount NUMERIC(6, 2))"
+    },
+    {
+      "id": "ddl_time_precision",
+      "section": "Standard — TIME(p)",
+      "sql": "CREATE TABLE MyTable (At TIME(3))"
+    },
+    {
+      "id": "cast_posixtime",
+      "section": "CAST — POSIXTIME",
+      "sql": "SELECT CAST(EventAt AS POSIXTIME) FROM MyTable"
+    },
+    {
+      "id": "cast_vector",
+      "section": "CAST — VECTOR",
+      "sql": "SELECT CAST(Embedding AS VECTOR(DOUBLE, 64)) FROM MyTable"
+    },
+    {
+      "id": "cast_timestamp",
+      "section": "CAST — TIMESTAMP",
+      "sql": "SELECT CAST(EventAt AS TIMESTAMP) FROM MyTable"
+    }
+  ]
+}

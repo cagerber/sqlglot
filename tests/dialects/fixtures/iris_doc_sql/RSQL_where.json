@@ -1,0 +1,88 @@
+{
+  "doc_key": "RSQL_where",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_where",
+  "title": "WHERE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_002_1ef9aede",
+      "section": "Examples",
+      "sql": "SELECT Interns FROM (SELECT Name AS Interns FROM Sample.Employee WHERE Age<21) WHERE Interns %STARTSWITH 'A'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_c44f2f96",
+      "section": "Examples",
+      "sql": "SELECT Name,Age,AvgAge FROM (SELECT Name,Age,AVG(Age) AS AvgAge FROM Sample.Person) WHERE Age < AvgAge ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_c5591ed1",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE %EXTERNAL(FavoriteColors)='Red'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_bd8b78e2",
+      "section": "Examples",
+      "sql": "SELECT Name,FavoriteColors FROM Sample.Person WHERE %EXTERNAL(FavoriteColors)='Orange'||CHAR(13)||CHAR(10)||'Black'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_3cecff43",
+      "section": "Examples",
+      "sql": "SELECT Name, Age FROM Sample.Person WHERE Age < 21",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_4dc78558",
+      "section": "Examples",
+      "sql": "SELECT Name,Age FROM Sample.Person WHERE Age BETWEEN 18 AND 21",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_715cb0f4",
+      "section": "Examples",
+      "sql": "SELECT Name,Age FROM Sample.Person WHERE Age NOT BETWEEN 20 AND 55 ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_e8dc4b2e",
+      "section": "Examples",
+      "sql": "SELECT Name,Age FROM Sample.Person WHERE Name %STARTSWITH 'S'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_5bce86cc",
+      "section": "Examples",
+      "sql": "SELECT Name,Home_City,Home_State FROM Sample.Person WHERE Home_City %STARTSWITH Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_6fca1e2b",
+      "section": "Examples",
+      "sql": "SELECT Name, Age FROM Sample.Person WHERE Name [ 'S'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_85327ed9",
+      "section": "Examples",
+      "sql": "SELECT t1.disease FROM illness_tab t1 WHERE EXISTS (SELECT t2.disease FROM disease_registry t2 WHERE t1.disease = t2.disease HAVING COUNT(t2.disease) > 100)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_013_7ab2fdd7",
+      "section": "Examples",
+      "sql": "SELECT Name,Age AS AgeWithWorkers FROM Sample.Person WHERE FOR SOME (Sample.Person) (Age<65) ORDER BY Age",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_5c5b91cc",
+      "section": "Examples",
+      "sql": "SELECT fields FROM table WHERE condition-expression",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "doc synopsis placeholder, not runnable SQL"
+    }
+  ]
+}

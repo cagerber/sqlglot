@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_windowcumedist",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_windowcumedist",
+  "title": "CUME_DIST() (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_ad40ce00",
+      "section": "Examples",
+      "sql": "SELECT CUME_DIST() OVER (PARTITION BY Department ORDER BY Salary) FROM Company.Employee",
+      "roundtrip": false
+    }
+  ]
+}

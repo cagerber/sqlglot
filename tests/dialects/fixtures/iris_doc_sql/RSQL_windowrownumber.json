@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_windowrownumber",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_windowrownumber",
+  "title": "ROW_NUMBER() (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_ed6b978e",
+      "section": "Examples",
+      "sql": "SELECT ROW_NUMBER() OVER (PARTITION BY Department ORDER BY Salary) FROM Company.Employee",
+      "roundtrip": false
+    }
+  ]
+}

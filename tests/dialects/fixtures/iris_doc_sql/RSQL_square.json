@@ -1,0 +1,13 @@
+{
+  "doc_key": "RSQL_square",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_square",
+  "title": "SQUARE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "curated_square",
+      "section": "DocBook synopsis (curated)",
+      "sql": "SELECT SQUARE(12)"
+    }
+  ]
+}

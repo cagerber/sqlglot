@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_truncate",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_truncate",
+  "title": "TRUNCATE (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_37f5189e",
+      "section": "Examples",
+      "sql": "SELECT {fn TRUNCATE(654.321888,2)}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_ce804e0c",
+      "section": "Examples",
+      "sql": "SELECT {fn TRUNCATE(654.321000,9)}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_72e8a0a0",
+      "section": "Examples",
+      "sql": "SELECT {fn TRUNCATE(654.321888,0)}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_4fb009cf",
+      "section": "Examples",
+      "sql": "SELECT {fn TRUNCATE(654.321888,-2)}",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_f8cd54eb",
+      "section": "Examples",
+      "sql": "SELECT {fn TRUNCATE(654.321888,-3)}",
+      "roundtrip": false
+    }
+  ]
+}

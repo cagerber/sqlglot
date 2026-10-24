@@ -1,0 +1,116 @@
+{
+  "doc_key": "RSQL_tochar",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_tochar",
+  "title": "TO_CHAR (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_92a3907d",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(CURRENT_DATE,'MONTH DD, YYYY')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_1d917b6d",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(CURRENT_TIMESTAMP)",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_003_5187d2ec",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(66256,'YYYY-MM-DD') AS Date2FormattedDate, TO_CHAR(66256,'YYYY-MM-DD HH24:MI:SS') AS Date2FormattedDateTime, TO_CHAR('66256,50278','YYYY-MM-DD') AS DateTime2FormattedDate, TO_CHAR('66256,50278','YYYY-MM-DD HH24:MI:SS') AS DateTime2FormattedDateTime",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_bc054ad3",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(66256,'MM/DD/YYYY'), /* returns 02/22/2018 */ TO_CHAR(66256,'DAY MONTH DD, YYYY') /* returns Thursday February 22, 2018 */",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_90b3b8ec",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(66256,'The date MM/DD/YYYY should be noted')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_006_231d1dc4",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR('66235','DDD days into YYYY'), TO_CHAR('66235,12345','Year YY: DDD days elapsed')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_007_cd28d30f",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(2022-05-02,'YYYY-MM-DD') -- Incorrect usage",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_008_cbf50fe5",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR('66256','HH12:MI:SS PM')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_009_2a08c79d",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(SYSDATE,'HH12:MI:SS PM'), TO_CHAR(CURRENT_TIMESTAMP(6),'HH12:MI:SS PM')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_010_d595c731",
+      "section": "Examples",
+      "sql": "SELECT SYSDATE, TO_CHAR(SYSDATE,'MM/DD/YYYY HH:MI:SS'), TO_CHAR(SYSDATE,'DD MONTH YYYY at SSSSS seconds')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_011_3e591078",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(1000,'999'), -- '####' TO_CHAR(1000,'9999'), -- ' 1000' TO_CHAR(1000,'99999') -- ' 1000'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_012_f9be5ce8",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(1000,'9,999.99'), TO_CHAR(1000,'9G999D99')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_013_af166bbe",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(10,'99.99'), -- ' 10.00' TO_CHAR(-10,'99.99'), -- '-10.00' TO_CHAR(10,'S99.99'), -- '+10.00' TO_CHAR(-10,'S99.99'), -- '-10.00' TO_CHAR(10,'99.99S'), -- '10.00+' TO_CHAR(-10,'99.99S') -- '10.00-'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_014_aca0b140",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(12345678.90,'99,999,999.99'), -- ' 12,345,678,90' TO_CHAR(12345678.90,'FM99,999,999.99') -- '12,345,678,90'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_015_8ec7773e",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(1234567890,'$9G999G999G999'), -- ' $1,234,567,890' TO_CHAR(1234567890,'S$9G999G999G999'), -- '+$1,234,567,890' TO_CHAR(12345678.90,'$99G999G999D99') -- ' $1,234,567,8.90'",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_016_1c543b9a",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR(1234567.4999,'9999999.9'), TO_CHAR(1234567.91,'9999999')",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_017_36fb2bf5",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR('1776-07-04','J') AS UnitedStatesStart, --2369916 TO_CHAR('-0031-09-02','J') AS RomanEmpireStart --1709980",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_018_f77fe123",
+      "section": "Examples",
+      "sql": "SELECT TO_CHAR('1776-07-04','J') AS JulianCount, -- 2369916 TO_DATE(2369916,'J') AS JulianDate -- 1776-07-04",
+      "roundtrip": false
+    }
+  ]
+}

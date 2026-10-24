@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_exp",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_exp",
+  "title": "EXP (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_b6cb5b7a",
+      "section": "Examples",
+      "sql": "SELECT {fn EXP(1)} AS e_constant",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_db909cba",
+      "section": "Examples",
+      "sql": "SELECT {fn EXP(7)} AS Exp, {fn LOG(7)} AS Log, {fn EXP({fn LOG(7)})} AS ExpOfLog",
+      "roundtrip": false
+    }
+  ]
+}

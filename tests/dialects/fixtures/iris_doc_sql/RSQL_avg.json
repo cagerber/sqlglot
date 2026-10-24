@@ -1,0 +1,74 @@
+{
+  "doc_key": "RSQL_avg",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_avg",
+  "title": "AVG (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_003_de8ac32e",
+      "section": "Examples",
+      "sql": "SELECT '$' || AVG(Salary) AS AverageSalary FROM Sample.Employee",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_004_da9dd8c8",
+      "section": "Examples",
+      "sql": "SELECT Home_State,'$' || AVG(Salary) AS AverageSalary FROM Sample.Employee GROUP BY Home_State",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_005_fcaa0e42",
+      "section": "Examples",
+      "sql": "SELECT Name,Salary, '$' || AVG(Salary) AS AverageAllSalary FROM Sample.Employee HAVING Salary>AVG(Salary) ORDER BY Salary",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_001_f90211ea",
+      "section": "Examples",
+      "sql": "SELECT {fn PI} AS Pi, AVG({fn PI}) AS AvgPiDividedBy1 FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 14.\n  SELECT {fn PI\u001b[4m}\u001b[0m AS Pi, AVG({fn PI}) AS AvgPiDividedBy1 FROM Sample.Person"
+    },
+    {
+      "id": "ex_002_bf5ef5ac",
+      "section": "Examples",
+      "sql": "SELECT Name, {fn PI} AS Pi, AVG({fn PI}) AS AvgPiDividedByNumRows FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Invalid expression / Unexpected token. Line 1, Col: 20.\n  SELECT Name, {fn PI\u001b[4m}\u001b[0m AS Pi, AVG({fn PI}) AS AvgPiDividedByNumRows FROM Sample.Person"
+    },
+    {
+      "id": "ex_006_574a4cc4",
+      "section": "Examples",
+      "sql": "SELECT Name,Salary, '$' || AVG(Salary %AFTERHAVING) AS AverageHighSalary FROM Sample.Employee HAVING Salary>AVG(Salary) ORDER BY Salary",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 39.\n  SELECT Name,Salary, '$' || AVG(Salary \u001b[4m%\u001b[0mAFTERHAVING) AS AverageHighSalary FROM Sample.Employee HAVING Salary>AVG(Salary) ORDER BY Salary"
+    },
+    {
+      "id": "ex_007_45b606b1",
+      "section": "Examples",
+      "sql": "SELECT Home_State, '$' || AVG(Salary) AS AvgStateSalary, '$' || AVG(Salary %AFTERHAVING) AS AvgLargerSalaries FROM Sample.Employee GROUP BY Home_State HAVING COUNT(*) > 3 AND Salary > 20000 ORDER BY Home_State",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 76.\n  SELECT Home_State, '$' || AVG(Salary) AS AvgStateSalary, '$' || AVG(Salary \u001b[4m%\u001b[0mAFTERHAVING) AS AvgLargerSalaries FROM Sample.Employee GROUP BY Home_State HAVING CO"
+    },
+    {
+      "id": "ex_008_cad3ed8b",
+      "section": "Examples",
+      "sql": "SELECT AVG(Age) AS AveAge,AVG(ALL Age) AS Synonym, AVG(DISTINCT Age) AS AveDistAge, AVG(DISTINCT BY(Home_City) Age) AS AvgAgeDistCity, AVG(DISTINCT BY(Home_City,Home_State) Age) AS AvgAgeDistCityState FROM Sample.Person",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 114.\n  Age) AS AveAge,AVG(ALL Age) AS Synonym, AVG(DISTINCT Age) AS AveDistAge, AVG(DISTINCT BY(Home_City) \u001b[4mAge\u001b[0m) AS AvgAgeDistCity, AVG(DISTINCT BY(Home_City,Home_Stat"
+    },
+    {
+      "id": "ex_009_b399038c",
+      "section": "Examples",
+      "sql": "SELECT Home_State, LIST(Age %FOREACH(Home_State)) AS StateAgeList, AVG(Age %FOREACH(Home_State)) AS StateAgeAvg, AVG(Age %AFTERHAVING ) AS AgeAvgHaving, LIST(Age %FOREACH(Home_State)%AFTERHAVING ) AS StateAgeListHaving, AVG(Age %FOREACH(Home_State)%AFTERHAVING ) AS StateAgeAvgHaving FROM Sample.Person GROUP BY Home_State HAVING Name LIKE 'A%' OR Name LIKE 'M%' OR Name LIKE 'W%' ORDER BY Home_State",
+      "roundtrip": false,
+      "skip_parse": true,
+      "skip_reason": "Expecting ). Line 1, Col: 29.\n  SELECT Home_State, LIST(Age \u001b[4m%\u001b[0mFOREACH(Home_State)) AS StateAgeList, AVG(Age %FOREACH(Home_State)) AS StateAgeAvg, AVG(Age %AFTERHA"
+    }
+  ]
+}

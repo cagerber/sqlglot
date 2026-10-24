@@ -1,0 +1,38 @@
+{
+  "doc_key": "RSQL_concat",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_concat",
+  "title": "CONCAT (SQL)",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "nested_concat_fullname",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 {fn CONCAT({fn CONCAT(LastName, ',')}, FirstName)} AS FullName FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "location_concat_fn_and_operator",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 {fn CONCAT({fn CONCAT(HomeCity,', ')}, HomeState)} AS LocationWithConcatFunction, HomeCity||', '||HomeState AS LocationWithConcatOperator FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "concat_null",
+      "section": "Examples",
+      "sql": "SELECT {fn CONCAT(HomeState,NULL)} AS StrNull FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "concat_numeric",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 {fn CONCAT(HomeState,0012.00E2)} AS StrNum, {fn CONCAT(HomeState,'0012.00E2')} AS StrStrNum FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "char_length_concat",
+      "section": "Examples",
+      "sql": "SELECT TOP 5 CHAR_LENGTH({fn CONCAT(HomeState,'          ')}) AS StrSpace FROM Sample.Person2",
+      "roundtrip": false
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "doc_key": "RSQL_COMMANDS",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_COMMANDS",
+  "title": "SQL Commands",
+  "doc_version": "2026.1",
+  "page_kind": "index",
+  "child_doc_keys": [
+    "RSQL_select",
+    "RSQL_insert",
+    "RSQL_insertorupdate",
+    "RSQL_update",
+    "RSQL_delete",
+    "RSQL_truncatetable"
+  ],
+  "examples": [
+    {
+      "id": "ex_001_cmds_smoke",
+      "section": "Examples (curated smoke)",
+      "sql": "SELECT Name, Age FROM Sample.Person WHERE Age > 21 ORDER BY Name",
+      "roundtrip": false
+    }
+  ]
+}

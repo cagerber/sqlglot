@@ -1,0 +1,14 @@
+{
+  "doc_key": "RSQL_tsqlnewid",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_tsqlnewid",
+  "title": "$TSQL_NEWID (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_b2b8c98c",
+      "section": "Examples",
+      "sql": "SELECT $TSQL_NEWID()",
+      "roundtrip": false
+    }
+  ]
+}

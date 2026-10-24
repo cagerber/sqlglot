@@ -1,0 +1,20 @@
+{
+  "doc_key": "RSQL_left",
+  "doc_url": "https://docs.intersystems.com/iris20261/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_left",
+  "title": "LEFT (SQL) | InterSystems SQL Reference | InterSystems IRIS Data Platform 2026.1",
+  "doc_version": "2026.1",
+  "examples": [
+    {
+      "id": "ex_001_f291d8bd",
+      "section": "Examples",
+      "sql": "SELECT Name,{fn LEFT(Name,7)}AS ShortName FROM Sample.Person",
+      "roundtrip": false
+    },
+    {
+      "id": "ex_002_4caadd42",
+      "section": "Examples",
+      "sql": "SELECT Name,{fn LEFT(Name,40)} FROM Sample.Person",
+      "roundtrip": false
+    }
+  ]
+}
