@@ -1,6 +1,6 @@
 [project]
-name = "sqlglot"
-version = "30.17.0+trifour.21"
+name = "trifour-sqlglot"
+version = "30.17.0+trifour.22"
 dynamic = ["optional-dependencies"]
 description = "An easily customizable SQL parser and transpiler"
 readme = "README.md"
