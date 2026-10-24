@@ -1,7 +1,7 @@
 [project]
-name = "sqlglot"
+name = "trifour-sqlglot"
 dynamic = ["version", "optional-dependencies"]
-description = "An easily customizable SQL parser and transpiler"
+description = "Trifour fork of sqlglot — an easily customizable SQL parser and transpiler"
 readme = "README.md"
 authors = [{ name = "Toby Mao", email = "toby.mao@gmail.com" }]
 license = "MIT"
